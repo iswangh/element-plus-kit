@@ -1,0 +1,2 @@
+echo "✅ 提交成功!"
+echo "📝 提交信息: $(git log -1 --oneline)"

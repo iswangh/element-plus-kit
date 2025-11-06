@@ -14,6 +14,9 @@ dist-ssr
 coverage
 *.local
 
+/cypress/videos/
+/cypress/screenshots/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -26,11 +29,19 @@ coverage
 
 *.tsbuildinfo
 
+test-results/
+playwright-report/
+
+# Auto import generated files
+.eslintrc-auto-import.json
+src/types/auto-imports.d.ts
+src/types/components.d.ts
+
+.vite-inspect/
+
+# ESLint cache
 .eslintcache
 
-# Cypress
-/cypress/videos/
-/cypress/screenshots/
-
-# Vitest
-__screenshots__/
+# TypeScript build info
+node_modules/.tmp/
+*.tsbuildinfo

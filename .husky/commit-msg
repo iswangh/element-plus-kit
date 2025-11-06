@@ -1,0 +1,34 @@
+echo "📋 正在验证提交信息..."
+echo "────────────────────────────────────────"
+
+# 检查提交信息中是否包含中文冒号
+if grep -m 1 '：' "$1" >/dev/null; then
+  echo "❌ 提交信息中包含中文冒号，请使用英文冒号(:)代替中文冒号(：)"
+  exit 1
+fi
+
+# 使用 commitlint 进行标准验证
+if npx --no -- commitlint --edit "$1"; then
+  echo "✅ 提交信息格式正确!"
+else
+  echo "❌ 提交信息格式验证失败!"
+  echo ""
+  echo "请遵循约定式提交格式:"
+  echo "  <type>(<scope>): <subject>"
+  echo ""
+  echo "常用类型:"
+  echo "  feat:     🚀 新功能"
+  echo "  fix:      🐛 修复bug"
+  echo "  refactor: 🔨 代码重构"
+  echo "  style:    🎨 代码格式调整"
+  echo "  perf:      ⚡ 性能优化"
+  echo "  test:     🧪 测试相关"
+  echo "  build:    📦 构建配置"
+  echo "  ci:       🤖 CI配置"
+  echo "  docs:     📚 文档更新"
+  echo "  chore:    🔧 日常维护"
+  echo "  revert:   🗑️ 回滚操作"
+  exit 1
+fi
+
+echo "🎉 提交信息验证通过!"
