@@ -2,9 +2,9 @@
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
+import { checkCondition } from '@iswangh/element-plus-kit/core'
 import { ElCol, ElRow } from 'element-plus'
 import { computed, ref, useAttrs, useSlots } from 'vue'
-import { checkCondition } from '../../core/src/index'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'

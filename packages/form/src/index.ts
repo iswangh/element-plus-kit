@@ -7,6 +7,7 @@ import './style.css'
 
 export { default } from './Form.vue'
 export { default as WForm } from './Form.vue'
+
 export type {
   ActionConfig,
   ActionConfigButtonItem,
@@ -15,6 +16,8 @@ export type {
   ElFormAttrs,
   EventExtendedParams,
   FormItem,
+  FormItemComp,
+  FormItemCompAttrs,
   FormItems,
   FormItemSlotScope,
   RowAttrs,

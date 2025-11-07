@@ -5,15 +5,16 @@ import { defineConfig } from 'vite'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
+/**
+ * Kit 包构建配置
+ *
+ * 主包，聚合所有组件和工具，提供统一的入口
+ */
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: {
-      // 工作区路径别名：使用相对路径，严禁使用包名
-      '@/core': resolve(__dirname, '../core/src/index.ts'),
-      '@/form': resolve(__dirname, '../form/src/index.ts'),
-      '@/kit': resolve(__dirname, 'src/index.ts'),
-    },
+    // 不需要配置别名，使用包名导入即可
+    // pnpm workspace 会自动解析 @iswangh/element-plus-kit/core 等包名
   },
   build: {
     lib: {

@@ -3,14 +3,9 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-form.tsbuildinfo",
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "baseUrl": ".",
     "rootDir": "./src",
-    "paths": {
-      "@/core": ["../../core/src/index.ts"],
-      "@/form": ["./src/index.ts"]
-    },
-    "allowImportingTsExtensions": false,
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,

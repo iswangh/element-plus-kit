@@ -12,7 +12,7 @@
     "@iswangh/element-plus-kit": "workspace:*",
     "@iswangh/element-plus-kit/form": "workspace:*",
     "element-plus": "^2.11.5",
-    "vue": "^3.5.21"
+    "vue": "^3.5.23"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",

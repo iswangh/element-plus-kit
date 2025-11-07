@@ -3,4 +3,4 @@
  *
  * 核心工具函数包
  */
-export * from './utils/checkCondition'
+export * from './utils'

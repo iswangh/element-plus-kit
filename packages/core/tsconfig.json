@@ -3,14 +3,14 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-core.tsbuildinfo",
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "rootDir": "./src",
     "types": ["node"],
-    "allowImportingTsExtensions": false,
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

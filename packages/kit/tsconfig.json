@@ -3,20 +3,16 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-kit.tsbuildinfo",
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "baseUrl": ".",
     "rootDir": "./src",
-    "paths": {
-      "@/core": ["../../core/src/index.ts"],
-      "@/form": ["../../form/src/index.ts"],
-      "@/kit": ["./src/index.ts"]
-    },
     "types": ["node"],
     "allowImportingTsExtensions": false,
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "skipLibCheck": true
   },
   "references": [
     {

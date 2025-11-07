@@ -5,14 +5,13 @@ import { defineConfig } from 'vite'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
+/**
+ * Form 包构建配置
+ *
+ * 表单组件包，依赖 core 包
+ */
 export default defineConfig({
   plugins: [vue()],
-  resolve: {
-    alias: {
-      '@/core': resolve(__dirname, '../core/src/index.ts'),
-      '@/form': resolve(__dirname, 'src/index.ts'),
-    },
-  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

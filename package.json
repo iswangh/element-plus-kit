@@ -10,6 +10,7 @@
     "prepare": "husky",
     "dev": "vite",
     "preview": "vite preview",
+    "build-only": "vite build",
     "build": "run-p type-check \"build-only {@}\" --",
     "type-check": "vue-tsc --build",
     "lint": "eslint .",

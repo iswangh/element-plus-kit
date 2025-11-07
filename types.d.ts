@@ -9,19 +9,28 @@
  * 注意：此文件仅存在于开发环境，不会被打包发布。
  */
 
-// 从源文件导入类型定义，用于在 declare module 中重新导出
-import type {
-  ActionConfig,
-  ActionConfigButtonItem,
-  Arrayable,
-  ColAttrs,
-  ElFormAttrs,
-  EventExtendedParams,
-  FormItem,
-  FormItems,
-  FormItemSlotScope,
-  RowAttrs,
-} from './packages/form/src/types'
+declare module '@iswangh/element-plus-kit/form' {
+  import type { Component } from 'vue'
+
+  export const WForm: Component
+  export default WForm
+
+  // 重新导出类型，确保类型提示正常工作
+  export type {
+    ActionConfig,
+    ActionConfigButtonItem,
+    Arrayable,
+    ColAttrs,
+    ElFormAttrs,
+    EventExtendedParams,
+    FormItem,
+    FormItemComp,
+    FormItemCompAttrs,
+    FormItems,
+    FormItemSlotScope,
+    RowAttrs,
+  } from '../../packages/form/src/types'
+}
 
 declare module '@iswangh/element-plus-kit' {
   import type { App } from 'vue'
@@ -44,31 +53,12 @@ declare module '@iswangh/element-plus-kit' {
     ElFormAttrs,
     EventExtendedParams,
     FormItem,
+    FormItemComp,
+    FormItemCompAttrs,
     FormItems,
     FormItemSlotScope,
     RowAttrs,
   } from '@iswangh/element-plus-kit/form'
 
   export { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
-}
-
-declare module '@iswangh/element-plus-kit/form' {
-  import type { Component } from 'vue'
-
-  export const WForm: Component
-  export default WForm
-
-  // 重新导出类型（从文件顶部导入的类型）
-  export type {
-    ActionConfig,
-    ActionConfigButtonItem,
-    Arrayable,
-    ColAttrs,
-    ElFormAttrs,
-    EventExtendedParams,
-    FormItem,
-    FormItems,
-    FormItemSlotScope,
-    RowAttrs,
-  }
 }

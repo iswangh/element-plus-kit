@@ -18,13 +18,15 @@ export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compAttrs', 'vIf', 'vShow'] as 
  * 拓展的组件映射
  */
 const EXPAND_COMP_MAP = {
-  custom: 'div',
+
 } as const
 
 /**
  * Element Plus 组件映射
+ *
+ * 使用显式类型注解避免类型推断超出编译器序列化限制
  */
-const EL_COMP_MAP = {
+const EL_COMP_MAP: Record<string, any> = {
   'autocomplete': ElAutocomplete,
   'cascader': ElCascader,
   'checkbox': ElCheckboxGroup,
@@ -50,8 +52,14 @@ const EL_COMP_MAP = {
 
 /**
  * 表单组件类型映射配置
+ *
+ * 使用显式类型注解避免类型推断超出编译器序列化限制
+ * 类型提示通过 keyof 提取键名，不依赖完整的类型定义
  */
-export const FORM_ITEM_COMP_MAP: Record<string, any> = { ...EL_COMP_MAP, ...EXPAND_COMP_MAP } as const
+export const FORM_ITEM_COMP_MAP: Record<string, any> = {
+  ...EL_COMP_MAP,
+  ...EXPAND_COMP_MAP,
+} as const
 
 /**
  * 动态组件默认配置

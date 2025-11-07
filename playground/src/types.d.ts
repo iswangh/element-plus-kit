@@ -1,7 +1,7 @@
 /**
- * Element Plus Kit 类型声明文件
+ * Element Plus Kit 类型声明文件（Playground 专用）
  *
- * 此文件仅用于本地开发环境（monorepo workspace），解决 TypeScript 在解析 workspace 依赖时的类型问题。
+ * 此文件仅用于 playground 开发环境，解决 TypeScript 在解析 workspace 依赖时的类型问题。
  *
  * 当包发布到 npm 后，用户安装使用时，TypeScript 会通过 package.json 中的 "types" 字段
  * 自动解析类型定义文件，无需此声明文件。
@@ -24,6 +24,8 @@ declare module '@iswangh/element-plus-kit/form' {
     ElFormAttrs,
     EventExtendedParams,
     FormItem,
+    FormItemComp,
+    FormItemCompAttrs,
     FormItems,
     FormItemSlotScope,
     RowAttrs,
@@ -52,6 +54,8 @@ declare module '@iswangh/element-plus-kit' {
     ElFormAttrs,
     EventExtendedParams,
     FormItem,
+    FormItemComp,
+    FormItemCompAttrs,
     FormItems,
     FormItemSlotScope,
     RowAttrs,

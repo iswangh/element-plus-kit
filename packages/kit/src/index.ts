@@ -24,6 +24,8 @@ export type {
   ElFormAttrs,
   EventExtendedParams,
   FormItem,
+  FormItemComp,
+  FormItemCompAttrs,
   FormItems,
   FormItemSlotScope,
   RowAttrs,
