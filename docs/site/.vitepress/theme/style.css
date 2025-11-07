@@ -1,0 +1,49 @@
+/**
+ * VitePress 自定义样式
+ */
+
+/* 自定义代码块样式 */
+.vp-code-group {
+  margin: 16px 0;
+}
+
+/* 自定义表格样式 */
+.vp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.vp-table th,
+.vp-table td {
+  border: 1px solid var(--vp-c-divider);
+  padding: 12px;
+  text-align: left;
+}
+
+.vp-table th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+/* 自定义提示框样式 */
+.custom-block {
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.custom-block.tip {
+  background: var(--vp-c-brand-soft);
+  border-left: 4px solid var(--vp-c-brand);
+}
+
+.custom-block.warning {
+  background: var(--vp-c-warning-soft);
+  border-left: 4px solid var(--vp-c-warning);
+}
+
+.custom-block.danger {
+  background: var(--vp-c-danger-soft);
+  border-left: 4px solid var(--vp-c-danger);
+}

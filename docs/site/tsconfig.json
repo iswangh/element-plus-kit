@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    "composite": false,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./.vitepress/*"]
+    },
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
+    "skipLibCheck": true
+  },
+  "include": [
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.vue",
+    "**/*.md"
+  ],
+  "exclude": [
+    "node_modules",
+    ".vitepress/dist",
+    ".vitepress/cache"
+  ],
+  "vueCompilerOptions": {
+    "target": 3
+  }
+}

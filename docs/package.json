@@ -1,0 +1,21 @@
+{
+  "name": "element-plus-kit-docs",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@iswangh/element-plus-kit": "workspace:*",
+    "@iswangh/element-plus-kit-form": "workspace:*",
+    "element-plus": "^2.11.7",
+    "vue": "^3.5.23"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "vitepress": "^1.6.4"
+  }
+}
