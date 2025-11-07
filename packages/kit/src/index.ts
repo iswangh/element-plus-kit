@@ -4,12 +4,11 @@
  * 主包入口，聚合所有组件
  */
 
-export { ElementPlusKitAutoImportResolver } from './auto-import-resolver'
 // 导出全局安装函数
 export { default } from './install'
 
 export { install } from './install'
-// 导出 Resolver
+// 导出 Resolver（统一解析器，同时支持 unplugin-vue-components 和 unplugin-auto-import）
 export { ElementPlusKitResolver } from './resolver'
 
 // 导出 Form 组件

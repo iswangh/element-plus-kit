@@ -39,11 +39,39 @@ export interface ElFormAttrs {
 /** Element Plus FormItem 属性 */
 type ElFormItemAttrs = FormItemInstance['$props']
 
+/**
+ * 支持的表单组件枚举
+ *
+ * 显式定义所有可用的组件键名，确保类型提示正常工作
+ * 注意：由于 FORM_ITEM_COMP_MAP 使用了 Record<string, any> 避免类型推断超出限制，
+ * 我们需要显式定义键名类型，而不是从 typeof FORM_ITEM_COMP_MAP 中提取
+ */
+export type FormItemComp
+  = | 'autocomplete'
+    | 'cascader'
+    | 'checkbox'
+    | 'color-picker'
+    | 'color-picker-panel'
+    | 'date-picker'
+    | 'date-picker-panel'
+    | 'input'
+    | 'input-number'
+    | 'input-tag'
+    | 'mention'
+    | 'radio'
+    | 'rate'
+    | 'select'
+    | 'select-v2'
+    | 'slider'
+    | 'switch'
+    | 'time-picker'
+    | 'time-select'
+    | 'transfer'
+    | 'tree-select'
+    | 'custom'
+
 /** 表单组件配置映射类型 */
 type FormCompConfig = typeof FORM_ITEM_COMP_MAP
-
-/** 支持的表单组件枚举 */
-export type FormItemComp = keyof FormCompConfig
 
 /**
  * 根据组件类型推断对应的属性类型（排除事件处理器）

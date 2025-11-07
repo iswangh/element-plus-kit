@@ -2,6 +2,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -11,7 +12,18 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  * 主包，聚合所有组件和工具，提供统一的入口
  */
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    dts({
+      include: ['src/**/*'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      outDir: 'dist',
+      copyDtsFiles: true,
+      rollupTypes: true,
+      skipDiagnostics: false,
+      logLevel: 'silent',
+    }),
+  ],
   resolve: {
     // 不需要配置别名，使用包名导入即可
     // pnpm workspace 会自动解析 @iswangh/element-plus-kit/core 等包名

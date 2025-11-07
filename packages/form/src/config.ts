@@ -18,7 +18,7 @@ export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compAttrs', 'vIf', 'vShow'] as 
  * 拓展的组件映射
  */
 const EXPAND_COMP_MAP = {
-
+  custom: 'div',
 } as const
 
 /**
@@ -26,7 +26,7 @@ const EXPAND_COMP_MAP = {
  *
  * 使用显式类型注解避免类型推断超出编译器序列化限制
  */
-const EL_COMP_MAP: Record<string, any> = {
+const EL_COMP_MAP = {
   'autocomplete': ElAutocomplete,
   'cascader': ElCascader,
   'checkbox': ElCheckboxGroup,

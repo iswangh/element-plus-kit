@@ -1,16 +1,20 @@
 {
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
-    "composite": false,
     "baseUrl": ".",
+    "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@iswangh/element-plus-kit/form": ["../packages/form"],
+      "@iswangh/element-plus-kit": ["../packages/kit"],
+      "@iswangh/element-plus-kit/core": ["../packages/core"]
     },
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
     "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
   },
   "include": [
-    "src/**/*",
-    "src/types.d.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

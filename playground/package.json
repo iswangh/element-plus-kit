@@ -11,7 +11,7 @@
   "dependencies": {
     "@iswangh/element-plus-kit": "workspace:*",
     "@iswangh/element-plus-kit/form": "workspace:*",
-    "element-plus": "^2.11.5",
+    "element-plus": "^2.11.7",
     "vue": "^3.5.23"
   },
   "devDependencies": {

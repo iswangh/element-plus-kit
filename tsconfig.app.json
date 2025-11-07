@@ -22,9 +22,7 @@
     "globalTypesPath": "./node_modules/.tmp/vue-global-types.d.ts"
   },
   "include": [
-    "packages/**/*",
-    "playground/**/*",
-    "types.d.ts"
+    "packages/**/*"
   ],
   "exclude": [
     "node_modules",

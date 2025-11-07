@@ -19,7 +19,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm build && pnpm type-check"
   },
   "peerDependencies": {
     "vue": "^3.5.23"
@@ -27,6 +28,7 @@
   "devDependencies": {
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
+    "vite-plugin-dts": "^4.5.4",
     "vue": "^3.5.23",
     "vue-tsc": "^3.0.7"
   },

@@ -11,7 +11,6 @@ const formItems: FormItems = [
     prop: 'username',
     label: '用户名',
     comp: 'input',
-
   },
   {
     prop: 'email',

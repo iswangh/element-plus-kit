@@ -6,7 +6,6 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 // 直接导入 resolver 文件，避免通过 index.ts（因为 index.ts 使用了别名，在 Node.js 环境中无法解析）
-import { ElementPlusKitAutoImportResolver } from '../packages/kit/src/auto-import-resolver.ts'
 import { ElementPlusKitResolver } from '../packages/kit/src/resolver.ts'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -17,7 +16,7 @@ export default defineConfig({
     AutoImport({
       resolvers: [
         ElementPlusResolver(),
-        ElementPlusKitAutoImportResolver(),
+        ElementPlusKitResolver(),
       ],
       imports: ['vue'],
     }),

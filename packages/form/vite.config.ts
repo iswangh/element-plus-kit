@@ -2,6 +2,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -11,7 +12,17 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  * 表单组件包，依赖 core 包
  */
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    dts({
+      include: ['src/**/*'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      outDir: 'dist',
+      copyDtsFiles: true,
+      skipDiagnostics: false,
+      logLevel: 'silent',
+    }),
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

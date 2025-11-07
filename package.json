@@ -8,14 +8,17 @@
   },
   "scripts": {
     "prepare": "husky",
-    "dev": "vite",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build:packages": "pnpm --filter \"./packages/*\" build",
+    "dev": "pnpm build:packages && vite",
+    "build": "run-p type-check build:packages",
     "type-check": "vue-tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "eslint:inspect": "eslint-config-inspector --config ./eslint.config.js"
+    "eslint:inspect": "eslint-config-inspector --config ./eslint.config.js",
+    "publish:core": "cd packages/core && npm publish",
+    "publish:form": "cd packages/form && npm publish",
+    "publish:kit": "cd packages/kit && npm publish",
+    "publish:all": "pnpm publish:core && pnpm publish:form && pnpm publish:kit"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",

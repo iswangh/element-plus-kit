@@ -3,15 +3,13 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "lib": ["ES2020"],
+    "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "types": ["node"],
     "noEmit": true
   },
-  "include": [
-    "scripts/**/*.ts"
-  ],
+  "include": [],
   "exclude": [
     "node_modules",
     "dist",
