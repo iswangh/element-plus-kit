@@ -26,6 +26,72 @@ npm install @iswangh/element-plus-kit
 npm install @iswangh/element-plus-kit/form
 ```
 
+## ⚙️ 配置 Element Plus
+
+Element Plus Kit 基于 Element Plus 构建，因此需要在使用 Element Plus Kit 的项目中配置 Element Plus 的全局属性（如语言、尺寸等）。
+
+### 配置语言（中文）
+
+Element Plus 默认使用英文，如果需要使用中文，需要在项目中配置：
+
+#### 方式一：通过 `app.use()` 配置（推荐）
+
+```typescript
+import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import ElementPlusKit from '@iswangh/element-plus-kit'
+import 'element-plus/dist/index.css'
+
+const app = createApp(App)
+
+// 配置 Element Plus 使用中文
+app.use(ElementPlus, {
+  locale: zhCn,
+})
+
+// 注册 Element Plus Kit
+app.use(ElementPlusKit)
+
+app.mount('#app')
+```
+
+#### 方式二：通过 `ConfigProvider` 组件配置
+
+```vue
+<template>
+  <el-config-provider :locale="zhCn" size="default">
+    <App />
+  </el-config-provider>
+</template>
+
+<script setup lang="ts">
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import App from './App.vue'
+</script>
+```
+
+### 配置尺寸
+
+可以通过 `ConfigProvider` 组件全局配置组件尺寸：
+
+```vue
+<template>
+  <el-config-provider :locale="zhCn" size="large">
+    <App />
+  </el-config-provider>
+</template>
+```
+
+可选值：`'large'`、`'default'`、`'small'`
+
+### 其他配置
+
+更多配置选项请参考 [Element Plus ConfigProvider 文档](https://element-plus.org/zh-CN/component/config-provider.html)
+
+> **注意**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中。这样可以保持组件库的灵活性，让不同的项目根据自身需求进行配置。
+
 ## 🚀 快速开始
 
 ### 方式一：全局导入
@@ -298,4 +364,6 @@ const form = ref({
 
 ## 📄 许可证
 
-MIT
+本项目采用 [Apache License 2.0](../../LICENSE) 开源协议。
+
+更多信息请查看项目根目录的 [LICENSE](../../LICENSE) 文件。

@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "description": "Element Plus Kit core utilities",
+  "license": "Apache-2.0",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

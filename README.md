@@ -129,19 +129,63 @@ pnpm --version
 
 ### 开发环境启动
 
-1. **构建所有包**
-
-```bash
-pnpm build:packages
-```
-
-2. **启动开发服务器**
+**启动开发服务器**
 
 ```bash
 pnpm dev
 ```
 
-这将启动 playground 开发服务器，可以在浏览器中查看和测试组件。
+这将：
+- 并行启动所有包的 watch 模式（自动监听文件变化并重新构建）
+- 启动 playground 开发服务器（可在浏览器中查看和测试组件）
+
+**说明**：
+- Playground 通过别名直接使用包源码，支持 HMR（热模块替换）
+- 包的 watch 模式会在后台自动构建，保持 `dist` 目录同步
+- 修改包代码后，playground 会自动更新，无需手动刷新
+
+**单独运行**（可选）：
+
+```bash
+# 只启动包的 watch 模式
+pnpm dev:packages
+
+# 只启动 playground 开发服务器
+pnpm dev:playground
+
+# 构建所有包（一次性构建，不监听）
+pnpm build:packages
+```
+
+### 配置 Element Plus
+
+Element Plus Kit 基于 Element Plus 构建，在使用 Element Plus Kit 的项目中需要配置 Element Plus 的全局属性（如语言、尺寸等）。
+
+**配置中文语言**：
+
+```typescript
+import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import ElementPlusKit from '@iswangh/element-plus-kit'
+import 'element-plus/dist/index.css'
+
+const app = createApp(App)
+
+// 配置 Element Plus 使用中文
+app.use(ElementPlus, {
+  locale: zhCn,
+})
+
+// 注册 Element Plus Kit
+app.use(ElementPlusKit)
+
+app.mount('#app')
+```
+
+更多配置说明请参考 [Element Plus Kit 文档](./packages/kit/README.md#%EF%B8%8F-配置-element-plus)
+
+> **重要**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中。这样可以保持组件库的灵活性，让不同的项目根据自身需求进行配置。
 
 ### 构建和部署
 
@@ -196,7 +240,10 @@ git checkout -b feat/your-feature-name
 2. **开发代码**
 
 ```bash
-# 启动开发模式（监听文件变化）
+# 启动完整开发环境（推荐）
+pnpm dev
+
+# 或单独启动某个包的 watch 模式
 cd packages/core && pnpm dev
 ```
 
@@ -241,8 +288,14 @@ pnpm lint
 # 修复代码问题
 pnpm lint:fix
 
-# 开发模式
+# 开发模式（并行启动包的 watch 模式和 playground）
 pnpm dev
+
+# 单独启动包的 watch 模式
+pnpm dev:packages
+
+# 单独启动 playground 开发服务器
+pnpm dev:playground
 ```
 
 ## 📚 文档
@@ -251,11 +304,12 @@ pnpm dev
   - [主包文档](./packages/kit/README.md)
   - [Form 组件文档](./packages/form/README.md)
   - [核心工具包文档](./packages/core/README.md)
-- **开发文档**: 查看各包的 DEVELOPMENT.md
-  - [主包开发文档](./packages/kit/DEVELOPMENT.md)
-  - [Form 组件开发文档](./packages/form/DEVELOPMENT.md)
-  - [核心工具包开发文档](./packages/core/DEVELOPMENT.md)
-- **详细文档**: 查看 `docs/` 目录
+- **开发文档**: 查看 `docs/development/` 目录
+  - [开发文档索引](./docs/development/README.md)
+  - [Core 包开发文档](./docs/development/core.md)
+  - [Form 包开发文档](./docs/development/form.md)
+  - [Kit 包开发文档](./docs/development/kit.md)
+- **使用指南**: 查看 `docs/guide/` 目录（待完善）
 
 ## 🤝 贡献指南
 
@@ -269,7 +323,31 @@ pnpm dev
 
 ## 📄 许可证
 
-MIT
+本项目采用 [Apache License 2.0](LICENSE) 开源协议。
+
+### 许可证说明
+
+- **许可证类型**：Apache License 2.0
+- **许可证文件**：[LICENSE](./LICENSE)
+- **官方链接**：https://www.apache.org/licenses/LICENSE-2.0
+
+### 主要权利
+
+- ✅ **商业使用**：允许商业使用
+- ✅ **修改**：允许修改代码
+- ✅ **分发**：允许分发代码
+- ✅ **专利授权**：提供专利授权保护
+- ✅ **私有使用**：允许私有使用
+
+### 主要义务
+
+- 📝 **保留版权声明**：必须保留原始版权声明
+- 📝 **包含许可证**：分发时必须包含 LICENSE 文件
+- 📝 **标注修改**：修改的文件需要标注变更
+
+### 免责声明
+
+本软件按"原样"提供，不提供任何明示或暗示的担保。
 
 ## 🔗 相关链接
 

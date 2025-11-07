@@ -195,7 +195,7 @@ import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 
 ```json
 "author": "iswangh",
-"license": "MIT",
+"license": "Apache-2.0",
 "repository": {
   "type": "git",
   "url": "https://github.com/iswangh/element-plus-kit.git"
@@ -206,8 +206,13 @@ import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 
 **说明**：
 - **`author`**：包的作者或组织名称
-- **`license`**：包的许可证类型（MIT 是常用的开源许可证）
+- **`license`**：包的许可证类型（Apache-2.0 是常用的开源许可证，提供专利保护）
 - **`repository`**：代码仓库地址，方便用户查看源代码和提交问题
+
+**许可证说明**：
+- **Apache License 2.0**：允许商业使用、修改、分发，并提供专利授权保护
+- 许可证文件位于项目根目录的 `LICENSE` 文件
+- 更多信息：https://www.apache.org/licenses/LICENSE-2.0
 
 ---
 

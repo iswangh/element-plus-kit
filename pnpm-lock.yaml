@@ -164,7 +164,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/form
       element-plus:
-        specifier: ^2.11.5
+        specifier: ^2.11.7
         version: 2.11.7(vue@3.5.23(typescript@5.9.3))
       vue:
         specifier: ^3.5.23

@@ -62,6 +62,72 @@
 
 ---
 
+## 🚀 开发命令
+
+### 根目录命令
+
+在项目根目录下，可以使用以下命令进行开发：
+
+```bash
+# 启动完整开发环境（推荐）
+# 并行启动所有包的 watch 模式和 playground 开发服务器
+pnpm dev
+
+# 单独启动包的 watch 模式
+# 所有包会监听文件变化并自动重新构建
+pnpm dev:packages
+
+# 单独启动 playground 开发服务器
+# 用于在浏览器中查看和测试组件
+pnpm dev:playground
+
+# 构建所有包（一次性构建，不监听）
+pnpm build:packages
+
+# 类型检查 + 构建所有包
+pnpm build
+
+# 类型检查
+pnpm type-check
+```
+
+### 包内命令
+
+在各个包目录下，可以使用以下命令：
+
+```bash
+# 进入包目录
+cd packages/core  # 或 packages/form、packages/kit
+
+# 启动 watch 模式（监听文件变化并自动重新构建）
+pnpm dev
+
+# 构建生产版本
+pnpm build
+
+# 类型检查
+pnpm type-check
+```
+
+### 开发工作流
+
+1. **启动开发环境**：
+   ```bash
+   pnpm dev
+   ```
+   - 这会并行启动所有包的 watch 模式和 playground 开发服务器
+   - Playground 通过别名直接使用包源码，支持 HMR
+
+2. **修改包代码**：
+   - 包的 watch 模式会自动检测变化并重新构建
+   - Playground 会通过 HMR 自动更新，无需手动刷新
+
+3. **查看效果**：
+   - 浏览器访问 playground 开发服务器地址（通常是 `http://localhost:5173`）
+   - 修改代码后立即看到效果
+
+---
+
 ## 🔗 相关资源
 
 - [项目 README](../../README.md) - 项目概览和快速开始指南

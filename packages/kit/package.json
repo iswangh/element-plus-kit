@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Element Plus Kit - A collection of Vue 3 components based on Element Plus",
   "author": "iswangh",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/iswangh/element-plus-kit.git"
