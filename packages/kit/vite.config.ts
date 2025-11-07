@@ -27,7 +27,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
-        resolver: resolve(__dirname, 'src/utils/resolver/index.ts'),
+        resolver: resolve(__dirname, 'src/utils/resolver.ts'),
       },
       name: 'ElementPlusKit',
       fileName: (format, entryName) => `${entryName}.js`,
