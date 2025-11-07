@@ -35,6 +35,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@vitejs/plugin-vue": "^6.0.1",
     "element-plus": "^2.11.7",
+    "sass": "^1.93.3",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
     "vite-plugin-dts": "^4.5.4",
