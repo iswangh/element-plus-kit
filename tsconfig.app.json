@@ -1,15 +1,16 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "moduleResolution": "bundler",
     "paths": {
-      "@/core": ["./packages/core/src/index.ts"],
-      "@/form": ["./packages/form/src/index.ts"],
-      "@/kit": ["./packages/kit/src/index.ts"]
+      "@iswangh/element-plus-kit/core": ["./packages/core/src/index.ts"],
+      "@iswangh/element-plus-kit/form": ["./packages/form/src/index.ts"],
+      "@iswangh/element-plus-kit": ["./packages/kit/src/index.ts"]
     },
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
@@ -28,7 +29,6 @@
     "node_modules",
     "dist",
     "**/*.config.ts",
-    "**/*.config.js",
-    "scripts"
+    "**/*.config.js"
   ]
 }

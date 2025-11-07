@@ -19,7 +19,6 @@ export default defineConfig({
       exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
       outDir: 'dist',
       copyDtsFiles: true,
-      skipDiagnostics: false,
       logLevel: 'silent',
     }),
   ],

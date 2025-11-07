@@ -20,14 +20,9 @@ export default defineConfig({
       outDir: 'dist',
       copyDtsFiles: true,
       rollupTypes: true,
-      skipDiagnostics: false,
       logLevel: 'silent',
     }),
   ],
-  resolve: {
-    // 不需要配置别名，使用包名导入即可
-    // pnpm workspace 会自动解析 @iswangh/element-plus-kit/core 等包名
-  },
   build: {
     lib: {
       entry: {

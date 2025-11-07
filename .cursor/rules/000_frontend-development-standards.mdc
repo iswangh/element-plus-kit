@@ -258,9 +258,8 @@ interface APIResponse<T> {
 项目根目录/
 ├── README.md           # 项目概览和快速开始指南
 ├── docs/               # 详细文档目录
-│   ├── guide/          # 使用指南和教程
-│   ├── api/            # API 接口文档
-│   └── examples/       # 示例代码和最佳实践
+│   ├── development/    # 开发文档（按功能模块划分）
+│   └── guide/          # 使用指南（按功能模块划分）
 ```
 
 ### README.md 必备内容

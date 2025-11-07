@@ -15,9 +15,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "eslint:inspect": "eslint-config-inspector --config ./eslint.config.js",
-    "publish:core": "cd packages/core && npm publish",
-    "publish:form": "cd packages/form && npm publish",
-    "publish:kit": "cd packages/kit && npm publish",
+    "publish:core": "pnpm --filter \"./packages/core\" publish",
+    "publish:form": "pnpm --filter \"./packages/form\" publish",
+    "publish:kit": "pnpm --filter \"./packages/kit\" publish",
     "publish:all": "pnpm publish:core && pnpm publish:form && pnpm publish:kit"
   },
   "devDependencies": {

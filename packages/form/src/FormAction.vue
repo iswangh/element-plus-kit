@@ -13,7 +13,6 @@ interface Props {
 
 interface Emits {
   (e: 'action', payload: { eventName: string, data?: any }): void
-
 }
 
 defineOptions({ name: 'ElementPlusKitFormItemAction' })
@@ -53,9 +52,9 @@ const btnAttrs = computed(() => {
 </script>
 
 <template>
-  <el-form-item v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow " prop="action">
+  <el-form-item v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow" prop="action">
     <template v-if="!actionSlot">
-      <el-button v-for="(btn, i) in normalizedButtons " :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
+      <el-button v-for="(btn, i) in normalizedButtons" :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
         {{ btn.label ?? '' }}
       </el-button>
     </template>

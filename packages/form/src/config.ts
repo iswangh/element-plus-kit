@@ -161,10 +161,10 @@ export const DEFAULT_FORM_ATTRS = {
  * 表单动作按钮默认配置
  */
 export const DEFAULT_FORM_ACTION_BUTTONS: Record<string, Partial<Omit<ActionConfigButtonItem, 'eventName'>>> = {
-  search: { label: '搜索', icon: Search, type: 'primary' } as Partial<Omit<ActionConfigButtonItem, 'eventName'>>,
-  reset: { label: '重置', icon: Refresh } as Partial<Omit<ActionConfigButtonItem, 'eventName'>>,
-  submit: { label: '确认', type: 'primary' } as Partial<Omit<ActionConfigButtonItem, 'eventName'>>,
-  cancel: { label: '取消' } as Partial<Omit<ActionConfigButtonItem, 'eventName'>>,
+  search: { label: '搜索', icon: Search, type: 'primary' },
+  reset: { label: '重置', icon: Refresh },
+  submit: { label: '确认', type: 'primary' },
+  cancel: { label: '取消' },
 }
 
 /**

@@ -42,7 +42,7 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "type-check": "vue-tsc --noEmit",
-    "clean": "rm -rf dist"
+    "prepublishOnly": "pnpm build && pnpm type-check"
   },
   "peerDependencies": {
     "vue": "^3.5.23"
@@ -50,6 +50,7 @@
   "devDependencies": {
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
+    "vite-plugin-dts": "^4.5.4",
     "vue": "^3.5.23",
     "vue-tsc": "^3.0.7"
   },
@@ -163,6 +164,7 @@
   "build": "vite build",
   "dev": "vite build --watch",
   "type-check": "vue-tsc --noEmit",
+  "prepublishOnly": "pnpm build && pnpm type-check"
 }
 ```
 
@@ -182,6 +184,18 @@
    ```bash
    npm run type-check
    ```
+
+4. **`prepublishOnly`**：发布前的自动检查脚本
+   ```bash
+   # 此脚本会在 npm publish 前自动执行
+   pnpm build && pnpm type-check
+   ```
+   
+   **作用**：
+   - 在发布到 npm 之前自动执行
+   - 确保构建和类型检查都通过
+   - 如果构建或类型检查失败，发布会被阻止
+   - 保证发布到 npm 的包质量
 
 ---
 
@@ -510,6 +524,7 @@ src/index.ts → dist/index.d.ts
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -519,6 +534,15 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  * 核心工具函数包，不依赖 Vue 组件
  */
 export default defineConfig({
+  plugins: [
+    dts({
+      include: ['src/**/*'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      outDir: 'dist',
+      copyDtsFiles: true,
+      logLevel: 'silent',
+    }),
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
@@ -576,7 +600,63 @@ import { defineConfig } from 'vite'
 
 ---
 
+#### TypeScript 类型定义插件
+
+```typescript
+import dts from 'vite-plugin-dts'
+```
+
+**作用**：自动生成 TypeScript 类型定义文件（`.d.ts`）。
+
+**说明**：
+- `vite-plugin-dts`：Vite 插件，用于生成类型定义文件
+- 构建时自动为每个 TypeScript 文件生成对应的 `.d.ts` 文件
+- 确保发布的包包含完整的类型定义
+
+**插件配置**：
+```typescript
+dts({
+  include: ['src/**/*'],
+  exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+  outDir: 'dist',
+  copyDtsFiles: true,
+  logLevel: 'silent',
+})
+```
+
+**字段说明**：
+- `include`：包含的文件模式
+- `exclude`：排除的文件模式（测试文件）
+- `outDir`：输出目录，与构建输出目录一致
+- `copyDtsFiles`：复制 `.d.ts` 文件到输出目录
+- `logLevel`：日志级别，`silent` 表示不输出日志
+
+---
+
 ### 🏗️ 构建配置
+
+#### `plugins`
+
+```typescript
+plugins: [
+  dts({
+    include: ['src/**/*'],
+    exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+    outDir: 'dist',
+    copyDtsFiles: true,
+    logLevel: 'silent',
+  }),
+],
+```
+
+**作用**：配置 Vite 插件。
+
+**说明**：
+- **`dts()`**：TypeScript 类型定义生成插件
+- 自动生成 `.d.ts` 类型定义文件
+- 确保发布的包包含完整的类型支持
+
+---
 
 #### `build.lib`
 
@@ -665,10 +745,10 @@ rollupOptions: {
 - 与 `peerDependencies` 保持一致
 - 减小库体积
 
-#### 3. 无插件配置
+#### 3. 插件配置
 
-- Core 包不包含 Vue 组件
-- 不需要 `@vitejs/plugin-vue`
+- Core 包不包含 Vue 组件，不需要 `@vitejs/plugin-vue`
+- 使用 `vite-plugin-dts` 插件生成类型定义文件
 - 纯 TypeScript 工具函数包
 
 ---
@@ -796,35 +876,32 @@ npm run build
 
 ---
 
-#### 4. 清理构建产物
-
-```bash
-# 清理 dist 目录
-npm run clean
-```
-
-**流程**：
-1. 删除 `dist/` 目录
-2. 清理所有构建产物
-3. 准备重新构建
-
----
-
 ### 📦 发布流程
 
-#### 1. 构建
+#### 1. 构建和类型检查
+
+发布前会自动执行 `prepublishOnly` 脚本：
 
 ```bash
-npm run build
+npm publish
 ```
 
-#### 2. 类型检查
+**自动执行**：
+1. `pnpm build` - 构建生产版本
+2. `pnpm type-check` - 类型检查
+3. 如果构建或类型检查失败，发布会被阻止
+
+**手动执行**（可选）：
 
 ```bash
+# 手动构建
+npm run build
+
+# 手动类型检查
 npm run type-check
 ```
 
-#### 3. 发布
+#### 2. 发布
 
 ```bash
 npm publish
@@ -848,13 +925,14 @@ npm publish
 
 ---
 
-### Q2: 为什么 `vite.config.ts` 中没有配置 `plugins`？
+### Q2: 为什么 `vite.config.ts` 中只配置了 `dts` 插件，没有配置 `vue` 插件？
 
 **A**: 
 - Core 包是纯 TypeScript 工具函数包
 - 不包含 Vue 组件（`.vue` 文件）
 - 不需要 `@vitejs/plugin-vue` 插件
-- 只有包含 Vue 组件的包才需要配置插件
+- 只需要 `vite-plugin-dts` 插件来生成类型定义文件
+- 只有包含 Vue 组件的包（如 form 包）才需要配置 `vue` 插件
 
 ---
 
