@@ -50,3 +50,7 @@ node_modules/.tmp/
 # TypeScript Project References symlinks (auto-generated)
 packages/kit/form
 packages/kit/core
+
+# VitePress
+docs/site/.vitepress/dist
+docs/site/.vitepress/cache

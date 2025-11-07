@@ -107,7 +107,7 @@ kit (依赖 form 和 core)
 1. **克隆项目**
 
 ```bash
-git clone <repository-url>
+git clone https://gitee.com/iswangh/element-plus-kit.git
 cd element-plus-kit
 ```
 

@@ -360,6 +360,7 @@ const form = ref({
 - [Form 组件文档](../form/README.md)
 - [核心工具包文档](../core/README.md)
 - [Element Plus 文档](https://element-plus.org/zh-CN/)
+- [Gitee 仓库](https://gitee.com/iswangh/element-plus-kit)
 - [GitHub 仓库](https://github.com/iswangh/element-plus-kit)
 
 ## 📄 许可证

@@ -63,7 +63,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iswangh/element-plus-kit.git"
+    "url": "https://gitee.com/iswangh/element-plus-kit.git"
   },
   "keywords": [
     "vue",

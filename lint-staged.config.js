@@ -7,5 +7,5 @@
  */
 
 export default {
-  '*.{js,jsx,ts,tsx,vue,yaml}': ['eslint --fix'],
+  '*.{js,jsx,ts,tsx,vue,yaml,yml}': ['eslint --fix'],
 }

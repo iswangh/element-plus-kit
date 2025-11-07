@@ -92,7 +92,7 @@ export default antfu(
       'tmp/',
       'src/types/generated/',
       '**/*.generated.d.ts',
-      '**/*.md', // 忽略 Markdown 文件
+      '**/*.md',
     ],
   },
 )
