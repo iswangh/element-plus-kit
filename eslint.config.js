@@ -58,8 +58,16 @@ export default antfu(
           selector: 'variable',
           format: ['camelCase', 'PascalCase', 'UPPER_CASE'], // 普通变量用 camelCase，常量用 UPPER_CASE
           leadingUnderscore: 'allow', // 允许 _private 形式的私有变量
+          filter: {
+            // 允许配置文件中的 __dirname 和 __filename
+            regex: '^(__dirname|__filename)$',
+            match: false,
+          },
         },
-        { selector: 'function', format: ['camelCase'] },
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase'],
+        },
         { selector: 'class', format: ['PascalCase'] },
         { selector: 'enum', format: ['PascalCase'] },
         { selector: 'interface', format: ['PascalCase'] },

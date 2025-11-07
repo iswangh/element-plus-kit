@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "../../node_modules/.tmp/packages-form.tsbuildinfo",
+    "lib": ["ES2020", "DOM"],
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "paths": {
+      "@/core": ["../../core/src/index.ts"],
+      "@/form": ["./src/index.ts"]
+    },
+    "allowImportingTsExtensions": false,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "skipLibCheck": true
+  },
+  "references": [
+    {
+      "path": "../core",
+      "prepend": false
+    }
+  ],
+  "vueCompilerOptions": {
+    "target": 3,
+    "globalTypesPath": "../../node_modules/.tmp/vue-global-types.d.ts"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

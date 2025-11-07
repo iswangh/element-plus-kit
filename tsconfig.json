@@ -5,6 +5,18 @@
     },
     {
       "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/form"
+    },
+    {
+      "path": "./packages/kit"
+    },
+    {
+      "path": "./playground"
     }
   ],
   "files": []

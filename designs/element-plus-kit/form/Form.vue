@@ -2,9 +2,7 @@
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
-import { ElCol, ElRow } from 'element-plus'
-import { computed, ref, useAttrs, useSlots } from 'vue'
-import { checkCondition } from '../../core/src/index'
+import { checkCondition } from '../utils'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
@@ -47,7 +45,7 @@ interface Slots {
   [key: string]: (props: FormItemSlotScope) => any
 }
 
-defineOptions({ name: 'WForm' })
+defineOptions({ name: 'ElementPlusKitForm' })
 
 const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
@@ -186,7 +184,7 @@ defineExpose({
     ref="formRef"
     v-bind="mergedAttrs"
     :model="model"
-    @validate="(prop: FormItemProp, isValid: boolean, message: string) => $emit('validate', prop, isValid, message)"
+    @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
     <component :is="layoutComponents.row" v-bind="rowAttrs">
@@ -198,7 +196,7 @@ defineExpose({
           :dynamic-comp-events="dynamicCompEvents"
           :form-slots="slotsCache"
           :index="i"
-          @change="(extendedParams: EventExtendedParams, value: any) => $emit('change', extendedParams, value)"
+          @change="(extendedParams, value) => $emit('change', extendedParams, value)"
         />
       </component>
       <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />

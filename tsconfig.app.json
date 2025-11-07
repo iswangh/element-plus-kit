@@ -1,14 +1,30 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "jsx": "preserve",
-    "jsxImportSource": "vue"
+    "jsxImportSource": "vue",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/core": ["./packages/core/src/index.ts"],
+      "@/form": ["./packages/form/src/index.ts"],
+      "@/kit": ["./packages/kit/src/index.ts"]
+    },
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "types": ["node"],
+    "allowImportingTsExtensions": false,
+    "skipLibCheck": true
+  },
+  "vueCompilerOptions": {
+    "target": 3,
+    "globalTypesPath": "./node_modules/.tmp/vue-global-types.d.ts"
   },
   "include": [
     "packages/**/*",
-    "playground/**/*"
+    "playground/**/*",
+    "types.d.ts"
   ],
   "exclude": [
     "node_modules",

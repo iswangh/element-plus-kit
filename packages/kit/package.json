@@ -1,1 +1,62 @@
-{}
+{
+  "name": "@iswangh/element-plus-kit",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Element Plus Kit - A collection of Vue 3 components based on Element Plus",
+  "author": "iswangh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iswangh/element-plus-kit.git"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "element-plus",
+    "components",
+    "form",
+    "ui"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./resolver": {
+      "types": "./dist/resolver.d.ts",
+      "import": "./dist/resolver.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "type-check": "vue-tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.11.0",
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@iswangh/element-plus-kit/form": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "typescript": "^5.9.2",
+    "unplugin-auto-import": "^20.1.0",
+    "unplugin-vue-components": "^30.0.0",
+    "vite": "^7.1.5",
+    "vue": "^3.5.21",
+    "vue-tsc": "^3.0.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

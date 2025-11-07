@@ -62,7 +62,7 @@ interface CheckConditionOptions<T = unknown> {
  */
 export function checkCondition<T = unknown>(
   options: CheckConditionOptions<T>,
-): boolean {
+) {
   const { condition, data, defaultValue = false } = options
 
   if (condition === undefined)
