@@ -44,3 +44,7 @@ src/types/components.d.ts
 
 # TypeScript build info
 node_modules/.tmp/
+
+# TypeScript Project References symlinks (auto-generated)
+packages/kit/form
+packages/kit/core

@@ -343,6 +343,10 @@ npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
     "lib": ["ES2022", "DOM"],
     "baseUrl": ".",
     "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {},
+    "resolvePackageJsonExports": true,
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
@@ -474,11 +478,62 @@ npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
 
 ---
 
-#### `paths`（已移除）
+#### `module`
 
-**说明**：form 包不配置 `paths`，使用包名导入即可。
+```json
+"module": "ESNext"
+```
 
-**为什么不需要 `paths`**：
+**作用**：指定生成的模块系统。
+
+**说明**：
+- **`ESNext`**：使用最新的 ES Module 语法
+- 支持 `import`/`export` 语法
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么使用 ESNext**：
+- ✅ 现代 JavaScript 标准
+- ✅ 更好的 Tree Shaking 支持
+- ✅ 与 Vite 等现代构建工具兼容
+
+---
+
+#### `moduleResolution`
+
+```json
+"moduleResolution": "bundler"
+```
+
+**作用**：指定模块解析策略。
+
+**说明**：
+- **`bundler`**：适用于使用打包工具（如 Vite、Webpack）的项目
+- 支持 `package.json` 的 `exports` 字段
+- 支持条件导出（conditional exports）
+
+**为什么使用 bundler**：
+- ✅ 支持 `package.json` 的 `exports` 字段
+- ✅ 与 Vite 等现代构建工具兼容
+- ✅ 更好的类型解析
+
+**注意**：`moduleResolution: "bundler"` 需要 `module: "ESNext"` 或更高版本。
+
+---
+
+#### `paths`
+
+```json
+"paths": {}
+```
+
+**作用**：覆盖继承的路径别名配置，使用包名导入。
+
+**说明**：
+- 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
+- 强制使用包名导入（`@iswangh/element-plus-kit/core`）而不是路径别名
+- 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
+
+**为什么设置为空对象**：
 - ✅ **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit/core`）而不是路径别名
 - ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
 - ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
@@ -500,6 +555,26 @@ import { checkCondition } from '../../core/src/index'
 - **Monorepo 包内部**：使用包名导入（如 `@iswangh/element-plus-kit/core`）
 - **应用项目**：使用路径别名（如 `@/components`）指向项目内部文件
 - **原因**：包名导入更符合标准，避免开发和生产环境不一致
+
+---
+
+#### `resolvePackageJsonExports`
+
+```json
+"resolvePackageJsonExports": true
+```
+
+**作用**：启用 `package.json` 的 `exports` 字段解析。
+
+**说明**：
+- 启用后，TypeScript 会优先使用 `package.json` 的 `exports` 字段解析模块
+- 支持条件导出（如 `exports.types`、`exports.import`）
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么启用**：
+- ✅ 支持现代包导出规范
+- ✅ 更好的类型解析
+- ✅ 与发布后的包结构一致
 
 ---
 

@@ -472,6 +472,10 @@ npm install @iswangh/element-plus-kit vue@^3.5.23 element-plus@^2.11.7
     "lib": ["ES2022", "DOM"],
     "baseUrl": ".",
     "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {},
+    "resolvePackageJsonExports": true,
     "types": ["node"],
     "allowImportingTsExtensions": false,
     "declaration": true,
@@ -582,6 +586,89 @@ npm install @iswangh/element-plus-kit vue@^3.5.23 element-plus@^2.11.7
 **说明**：
 - 用于解析非相对模块导入
 - 当前目录（`.`）表示 `tsconfig.json` 所在目录
+
+---
+
+#### `module`
+
+```json
+"module": "ESNext"
+```
+
+**作用**：指定生成的模块系统。
+
+**说明**：
+- **`ESNext`**：使用最新的 ES Module 语法
+- 支持 `import`/`export` 语法
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么使用 ESNext**：
+- ✅ 现代 JavaScript 标准
+- ✅ 更好的 Tree Shaking 支持
+- ✅ 与 Vite 等现代构建工具兼容
+
+---
+
+#### `moduleResolution`
+
+```json
+"moduleResolution": "bundler"
+```
+
+**作用**：指定模块解析策略。
+
+**说明**：
+- **`bundler`**：适用于使用打包工具（如 Vite、Webpack）的项目
+- 支持 `package.json` 的 `exports` 字段
+- 支持条件导出（conditional exports）
+
+**为什么使用 bundler**：
+- ✅ 支持 `package.json` 的 `exports` 字段
+- ✅ 与 Vite 等现代构建工具兼容
+- ✅ 更好的类型解析
+
+**注意**：`moduleResolution: "bundler"` 需要 `module: "ESNext"` 或更高版本。
+
+---
+
+#### `paths`
+
+```json
+"paths": {}
+```
+
+**作用**：覆盖继承的路径别名配置，使用包名导入。
+
+**说明**：
+- 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
+- 强制使用包名导入（`@iswangh/element-plus-kit/form`）而不是路径别名
+- 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
+
+**为什么设置为空对象**：
+- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名而不是路径别名
+- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
+- ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
+- ✅ **更好的类型推断**：TypeScript 可以通过 `package.json` 的 `exports` 字段正确解析类型
+
+---
+
+#### `resolvePackageJsonExports`
+
+```json
+"resolvePackageJsonExports": true
+```
+
+**作用**：启用 `package.json` 的 `exports` 字段解析。
+
+**说明**：
+- 启用后，TypeScript 会优先使用 `package.json` 的 `exports` 字段解析模块
+- 支持条件导出（如 `exports.types`、`exports.import`）
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么启用**：
+- ✅ 支持现代包导出规范
+- ✅ 更好的类型解析
+- ✅ 与发布后的包结构一致
 
 ---
 
@@ -1259,7 +1346,39 @@ npm publish
 
 ---
 
-### Q6: 如何添加新的子包导出？
+### Q6: 为什么执行 `pnpm install` 后，kit 包中会出现 `form` 或 `core` 目录？
+
+**A**: 
+
+这是**符号链接（Symbolic Link）**，可能是由以下原因自动创建的：
+
+1. **TypeScript Project References**：某些工具或 IDE 在处理 `tsconfig.json` 的 `references` 配置时可能创建符号链接
+2. **IDE 行为**：部分 IDE（如 VS Code）在处理 TypeScript Project References 时可能创建符号链接
+3. **开发工具**：某些开发工具为了支持类型解析而创建符号链接
+
+**重要说明**：
+- ✅ **不会影响发布**：`package.json` 的 `files` 字段只包含 `["README.md", "dist"]`，符号链接不会被包含在发布包中
+- ✅ **已在 `.gitignore` 中**：已添加规则忽略这些符号链接，不会提交到 Git
+- ✅ **可以安全删除**：如果符号链接出现，可以安全删除，不会影响功能
+
+**如何处理**：
+1. **忽略它**：由于已在 `.gitignore` 中，Git 会忽略它，不会影响发布
+2. **手动删除**（如果需要）：
+   ```bash
+   # Windows
+   rmdir /s /q packages\kit\form
+   
+   # macOS/Linux
+   rm -rf packages/kit/form
+   ```
+
+**正确的依赖位置**：
+- ✅ `packages/kit/node_modules/@iswangh/element-plus-kit/form` - 这是 pnpm workspace 的正确符号链接位置
+- ❌ `packages/kit/form` - 这是开发环境的符号链接，可以忽略
+
+---
+
+### Q7: 如何添加新的子包导出？
 
 **A**: 
 

@@ -251,6 +251,10 @@
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-core.tsbuildinfo",
     "lib": ["ES2022", "DOM"],
     "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {},
+    "resolvePackageJsonExports": true,
     "types": ["node"],
     "allowImportingTsExtensions": false,
     "declaration": true,
@@ -381,6 +385,89 @@ src/
   utils/
     checkCondition.ts → dist/utils/checkCondition.js
 ```
+
+---
+
+#### `module`
+
+```json
+"module": "ESNext"
+```
+
+**作用**：指定生成的模块系统。
+
+**说明**：
+- **`ESNext`**：使用最新的 ES Module 语法
+- 支持 `import`/`export` 语法
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么使用 ESNext**：
+- ✅ 现代 JavaScript 标准
+- ✅ 更好的 Tree Shaking 支持
+- ✅ 与 Vite 等现代构建工具兼容
+
+---
+
+#### `moduleResolution`
+
+```json
+"moduleResolution": "bundler"
+```
+
+**作用**：指定模块解析策略。
+
+**说明**：
+- **`bundler`**：适用于使用打包工具（如 Vite、Webpack）的项目
+- 支持 `package.json` 的 `exports` 字段
+- 支持条件导出（conditional exports）
+
+**为什么使用 bundler**：
+- ✅ 支持 `package.json` 的 `exports` 字段
+- ✅ 与 Vite 等现代构建工具兼容
+- ✅ 更好的类型解析
+
+**注意**：`moduleResolution: "bundler"` 需要 `module: "ESNext"` 或更高版本。
+
+---
+
+#### `paths`
+
+```json
+"paths": {}
+```
+
+**作用**：覆盖继承的路径别名配置，使用包名导入。
+
+**说明**：
+- 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
+- 强制使用包名导入而不是路径别名
+- 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
+
+**为什么设置为空对象**：
+- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名而不是路径别名
+- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
+- ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
+- ✅ **更好的类型推断**：TypeScript 可以通过 `package.json` 的 `exports` 字段正确解析类型
+
+---
+
+#### `resolvePackageJsonExports`
+
+```json
+"resolvePackageJsonExports": true
+```
+
+**作用**：启用 `package.json` 的 `exports` 字段解析。
+
+**说明**：
+- 启用后，TypeScript 会优先使用 `package.json` 的 `exports` 字段解析模块
+- 支持条件导出（如 `exports.types`、`exports.import`）
+- 与 `moduleResolution: "bundler"` 配合使用
+
+**为什么启用**：
+- ✅ 支持现代包导出规范
+- ✅ 更好的类型解析
+- ✅ 与发布后的包结构一致
 
 ---
 
