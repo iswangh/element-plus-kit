@@ -30,7 +30,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', 'element-plus', '@iswangh/element-plus-kit/core'],
+      external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
       output: {
         globals: {
           'vue': 'Vue',

@@ -3,7 +3,7 @@
  *
  * Form 组件导出
  */
-import './style.css'
+import './style'
 
 export { default } from './Form.vue'
 export { default as WForm } from './Form.vue'

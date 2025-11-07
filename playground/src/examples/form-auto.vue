@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 自动导入
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 import { ref } from 'vue'
 
 const formItems = [

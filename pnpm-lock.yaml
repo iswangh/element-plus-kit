@@ -92,7 +92,7 @@ importers:
 
   packages/form:
     dependencies:
-      '@iswangh/element-plus-kit/core':
+      '@iswangh/element-plus-kit-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -123,7 +123,7 @@ importers:
 
   packages/kit:
     dependencies:
-      '@iswangh/element-plus-kit/form':
+      '@iswangh/element-plus-kit-form':
         specifier: workspace:*
         version: link:../form
       element-plus:
@@ -160,7 +160,7 @@ importers:
       '@iswangh/element-plus-kit':
         specifier: workspace:*
         version: link:../packages/kit
-      '@iswangh/element-plus-kit/form':
+      '@iswangh/element-plus-kit-form':
         specifier: workspace:*
         version: link:../packages/form
       element-plus:

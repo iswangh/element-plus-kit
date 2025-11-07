@@ -1,6 +1,6 @@
-# @iswangh/element-plus-kit/core 开发文档
+# @iswangh/element-plus-kit-core 开发文档
 
-本文档详细解释了 `@iswangh/element-plus-kit/core` 包的完整开发配置，包括 `package.json`、`tsconfig.json` 和 `vite.config.ts` 的详细说明。
+本文档详细解释了 `@iswangh/element-plus-kit-core` 包的完整开发配置，包括 `package.json`、`tsconfig.json` 和 `vite.config.ts` 的详细说明。
 
 ---
 
@@ -21,7 +21,7 @@
 
 ```json
 {
-  "name": "@iswangh/element-plus-kit/core",
+  "name": "@iswangh/element-plus-kit-core",
   "type": "module",
   "version": "0.1.0",
   "description": "Element Plus Kit core utilities",
@@ -65,7 +65,7 @@
 #### `name`
 
 ```json
-"name": "@iswangh/element-plus-kit/core"
+"name": "@iswangh/element-plus-kit-core"
 ```
 
 **作用**：定义包的唯一标识符，用于 npm 安装和导入。
@@ -73,7 +73,7 @@
 **说明**：
 - 使用 **scoped package** 命名（`@iswangh/` 前缀），避免命名冲突
 - 遵循 Monorepo 命名规范：`@组织名/项目名/包名`
-- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit/core` 引用此包
+- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit-core` 引用此包
 
 ---
 
@@ -123,7 +123,7 @@
 **作用**：定义包的导出入口，这是**现代 npm 包的标准配置方式**（Node.js 12+ 支持）。
 
 **字段说明**：
-- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit/core'`
+- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit-core'`
 - **`types`**：TypeScript 类型定义文件路径
 - **`import`**：ES Module 导入时的入口文件
 

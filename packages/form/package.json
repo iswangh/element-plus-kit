@@ -1,5 +1,5 @@
 {
-  "name": "@iswangh/element-plus-kit/form",
+  "name": "@iswangh/element-plus-kit-form",
   "type": "module",
   "version": "0.1.0",
   "description": "Element Plus Kit Form component",
@@ -29,7 +29,7 @@
     "vue": "^3.5.23"
   },
   "dependencies": {
-    "@iswangh/element-plus-kit/core": "workspace:*"
+    "@iswangh/element-plus-kit-core": "workspace:*"
   },
   "devDependencies": {
     "@element-plus/icons-vue": "^2.3.2",

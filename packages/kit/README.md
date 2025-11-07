@@ -23,7 +23,7 @@ npm install @iswangh/element-plus-kit
 
 ```bash
 # 安装 Form 组件
-npm install @iswangh/element-plus-kit/form
+npm install @iswangh/element-plus-kit-form
 ```
 
 ## ⚙️ 配置 Element Plus
@@ -115,7 +115,7 @@ app.use(ElementPlusKit)
 ```vue
 <script setup lang="ts">
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 
 const formItems: FormItems = [
   {
@@ -181,7 +181,7 @@ export default defineConfig({
 ```vue
 <script setup lang="ts">
 // 无需手动导入，组件会自动导入
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 
 const formItems: FormItems = [
   {
@@ -208,7 +208,7 @@ const form = ref({
 
 动态表单组件，支持通过配置快速生成表单。
 
-- **包名**: `@iswangh/element-plus-kit/form`
+- **包名**: `@iswangh/element-plus-kit-form`
 - **组件名**: `WForm`
 - **文档**: [Form 组件文档](../form/README.md)
 
@@ -284,7 +284,7 @@ import type {
 ```vue
 <script setup lang="ts">
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 
 const formItems: FormItems = [
   {
@@ -325,7 +325,7 @@ const form = ref({
 ```vue
 <script setup lang="ts">
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit/form'
+import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit-form'
 
 const formItems: FormItems = [
   {

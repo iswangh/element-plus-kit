@@ -5,9 +5,9 @@ import type { ComponentResolver } from 'unplugin-vue-components/types'
  * 组件包映射配置
  */
 const COMPONENT_MAP: Record<string, string> = {
-  form: 'form',
+  form: 'element-plus-kit-form',
   // 未来扩展
-  // table: 'table',
+  // table: 'element-plus-kit-table',
 }
 
 /**
@@ -61,8 +61,8 @@ export function ElementPlusKitResolver(): ComponentResolver & ResolverFunction {
 
       return {
         name,
-        from: `@iswangh/element-plus-kit/${packageName}`,
-        sideEffects: `@iswangh/element-plus-kit/${packageName}/style.css`,
+        from: `@iswangh/${packageName}`,
+        sideEffects: `@iswangh/${packageName}/style.css`,
       }
     },
   }
@@ -73,7 +73,7 @@ export function ElementPlusKitResolver(): ComponentResolver & ResolverFunction {
     if (!packageName)
       return undefined
 
-    return `@iswangh/element-plus-kit/${packageName}`
+    return `@iswangh/${packageName}`
   }
 
   // 合并两个解析器，使其同时支持两种插件

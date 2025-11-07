@@ -1,17 +1,17 @@
-# @iswangh/element-plus-kit/core
+# @iswangh/element-plus-kit-core
 
 Element Plus Kit 核心工具函数包，提供组件库内部使用的通用工具函数。
 
 ## 📦 安装
 
 ```bash
-npm install @iswangh/element-plus-kit/core
+npm install @iswangh/element-plus-kit-core
 ```
 
 ## 🚀 快速开始
 
 ```typescript
-import { checkCondition } from '@iswangh/element-plus-kit/core'
+import { checkCondition } from '@iswangh/element-plus-kit-core'
 ```
 
 ## 📖 API 文档

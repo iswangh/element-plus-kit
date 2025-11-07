@@ -1,6 +1,6 @@
-# @iswangh/element-plus-kit/form 开发文档
+# @iswangh/element-plus-kit-form 开发文档
 
-本文档详细解释了 `@iswangh/element-plus-kit/form` 包的完整开发配置，包括 `package.json`、`tsconfig.json` 和 `vite.config.ts` 的详细说明。
+本文档详细解释了 `@iswangh/element-plus-kit-form` 包的完整开发配置，包括 `package.json`、`tsconfig.json` 和 `vite.config.ts` 的详细说明。
 
 ---
 
@@ -21,7 +21,7 @@
 
 ```json
 {
-  "name": "@iswangh/element-plus-kit/form",
+  "name": "@iswangh/element-plus-kit-form",
   "type": "module",
   "version": "0.1.0",
   "description": "Element Plus Kit Form component",
@@ -49,7 +49,7 @@
     "vue": "^3.5.23"
   },
   "dependencies": {
-    "@iswangh/element-plus-kit/core": "workspace:*"
+    "@iswangh/element-plus-kit-core": "workspace:*"
   },
   "devDependencies": {
     "@element-plus/icons-vue": "^2.3.2",
@@ -71,7 +71,7 @@
 #### `name`
 
 ```json
-"name": "@iswangh/element-plus-kit/form"
+"name": "@iswangh/element-plus-kit-form"
 ```
 
 **作用**：定义包的唯一标识符，用于 npm 安装和导入。
@@ -79,16 +79,16 @@
 **说明**：
 - 使用 **scoped package** 命名（`@iswangh/` 前缀），避免命名冲突
 - 遵循 Monorepo 命名规范：`@组织名/项目名/包名`
-- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit/form` 引用此包
+- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit-form` 引用此包
 
 **使用示例**：
 ```bash
 # 安装包
-npm install @iswangh/element-plus-kit/form
+npm install @iswangh/element-plus-kit-form
 
 # 在代码中导入
-import { WForm } from '@iswangh/element-plus-kit/form'
-import '@iswangh/element-plus-kit/form/style.css'
+import { WForm } from '@iswangh/element-plus-kit-form'
+import '@iswangh/element-plus-kit-form/style.css'
 ```
 
 ---
@@ -141,11 +141,11 @@ import '@iswangh/element-plus-kit/form/style.css'
 
 **字段说明**：
 
-- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit/form'`
+- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit-form'`
   - `types`：TypeScript 类型定义文件路径
   - `import`：ES Module 导入时的入口文件
 
-- **`"./style.css"`**：样式文件入口点，对应 `import '@iswangh/element-plus-kit/form/style.css'`
+- **`"./style.css"`**：样式文件入口点，对应 `import '@iswangh/element-plus-kit-form/style.css'`
 
 **为什么使用 `exports`**：
 - ✅ **更精确的控制**：可以分别指定不同模块系统的入口
@@ -157,10 +157,10 @@ import '@iswangh/element-plus-kit/form/style.css'
 **使用示例**：
 ```typescript
 // 导入组件
-import { WForm } from '@iswangh/element-plus-kit/form'
+import { WForm } from '@iswangh/element-plus-kit-form'
 
 // 导入样式
-import '@iswangh/element-plus-kit/form/style.css'
+import '@iswangh/element-plus-kit-form/style.css'
 ```
 
 ---
@@ -254,7 +254,7 @@ import '@iswangh/element-plus-kit/form/style.css'
 **正确安装方式**：
 ```bash
 # 同时安装包和 peer dependencies
-npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
+npm install @iswangh/element-plus-kit-form vue@^3.5.23 element-plus@^2.11.7
 ```
 
 ---
@@ -263,7 +263,7 @@ npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
 
 ```json
 "dependencies": {
-  "@iswangh/element-plus-kit/core": "workspace:*"
+  "@iswangh/element-plus-kit-core": "workspace:*"
 }
 ```
 
@@ -530,11 +530,11 @@ npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
 
 **说明**：
 - 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
-- 强制使用包名导入（`@iswangh/element-plus-kit/core`）而不是路径别名
+- 强制使用包名导入（`@iswangh/element-plus-kit-core`）而不是路径别名
 - 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
 
 **为什么设置为空对象**：
-- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit/core`）而不是路径别名
+- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit-core`）而不是路径别名
 - ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
 - ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
 - ✅ **更好的类型推断**：TypeScript 可以通过 `package.json` 的 `exports` 字段正确解析类型
@@ -542,7 +542,7 @@ npm install @iswangh/element-plus-kit/form vue@^3.5.23 element-plus@^2.11.7
 **使用示例**：
 ```typescript
 // ✅ 推荐：使用包名导入
-import { checkCondition } from '@iswangh/element-plus-kit/core'
+import { checkCondition } from '@iswangh/element-plus-kit-core'
 
 // ❌ 不推荐：使用路径别名
 import { checkCondition } from '@/core'
@@ -552,7 +552,7 @@ import { checkCondition } from '../../core/src/index'
 ```
 
 **大厂最佳实践**：
-- **Monorepo 包内部**：使用包名导入（如 `@iswangh/element-plus-kit/core`）
+- **Monorepo 包内部**：使用包名导入（如 `@iswangh/element-plus-kit-core`）
 - **应用项目**：使用路径别名（如 `@/components`）指向项目内部文件
 - **原因**：包名导入更符合标准，避免开发和生产环境不一致
 
@@ -774,7 +774,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     // 不需要配置别名，使用包名导入即可
-    // pnpm workspace 会自动解析 @iswangh/element-plus-kit/core 等包名
+    // pnpm workspace 会自动解析 @iswangh/element-plus-kit-core 等包名
   },
   build: {
     lib: {
@@ -784,7 +784,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', 'element-plus', '@iswangh/element-plus-kit/core'],
+      external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
       output: {
         globals: {
           'vue': 'Vue',
@@ -873,7 +873,7 @@ plugins: [vue()],
 **说明**：form 包不配置 `alias`，使用包名导入即可。
 
 **为什么不需要 `alias`**：
-- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名（`@iswangh/element-plus-kit/core`）解析到工作区内的源码
+- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名（`@iswangh/element-plus-kit-core`）解析到工作区内的源码
 - ✅ **Vite 原生支持**：Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名
 - ✅ **简化配置**：不需要维护路径别名配置，减少配置复杂度
 - ✅ **与发布后一致**：开发环境和发布后的导入方式完全一致
@@ -881,7 +881,7 @@ plugins: [vue()],
 **使用示例**：
 ```typescript
 // ✅ 推荐：使用包名导入
-import { checkCondition } from '@iswangh/element-plus-kit/core'
+import { checkCondition } from '@iswangh/element-plus-kit-core'
 
 // ❌ 不推荐：使用路径别名
 import { checkCondition } from '@/core'
@@ -937,7 +937,7 @@ build: {
 
 ```typescript
 rollupOptions: {
-  external: ['vue', 'element-plus', '@iswangh/element-plus-kit/core'],
+  external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
   output: {
     globals: {
       'vue': 'Vue',
@@ -953,7 +953,7 @@ rollupOptions: {
 **字段说明**：
 
 1. **`external`**：外部依赖列表
-   - `['vue', 'element-plus', '@iswangh/element-plus-kit/core']` 表示这些依赖不会被打包进库中
+   - `['vue', 'element-plus', '@iswangh/element-plus-kit-core']` 表示这些依赖不会被打包进库中
    - 使用库的项目需要自己安装这些依赖
    - 与 `peerDependencies` 和 `dependencies` 对应
 
@@ -1055,8 +1055,8 @@ package.json ──────────────────────�
 
 - **`package.json`**：
   - `peerDependencies: { vue: "^3.5.23", element-plus: "^2.11.7" }`
-  - `dependencies: { "@iswangh/element-plus-kit/core": "workspace:*" }`
-- **`vite.config.ts`**：`external: ['vue', 'element-plus', '@iswangh/element-plus-kit/core']`
+  - `dependencies: { "@iswangh/element-plus-kit-core": "workspace:*" }`
+- **`vite.config.ts`**：`external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core']`
 
 **一致性**：Vue 和 Element Plus 作为外部依赖，core 包作为运行时依赖。
 
@@ -1064,7 +1064,7 @@ package.json ──────────────────────�
 
 #### 4. 模块导入方式
 
-- **代码中**：使用包名导入（`@iswangh/element-plus-kit/core`）
+- **代码中**：使用包名导入（`@iswangh/element-plus-kit-core`）
 - **`tsconfig.json`**：不配置 `paths`，TypeScript 通过 `package.json` 的 `exports` 解析
 - **`vite.config.ts`**：不配置 `alias`，Vite 通过 `package.json` 的 `exports` 解析
 
@@ -1209,7 +1209,7 @@ npm publish
 ### Q4: 为什么不需要配置 `paths` 和 `alias`？
 
 **A**: 
-- **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit/core`）而不是路径别名
+- **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit-core`）而不是路径别名
 - **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
 - **Vite 原生支持**：Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名
 - **简化配置**：不需要维护路径别名配置，减少配置复杂度

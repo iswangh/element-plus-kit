@@ -4,28 +4,10 @@
  * 主包入口，聚合所有组件
  */
 
-// 导出全局安装函数
-export { default } from './install'
-
-export { install } from './install'
-// 导出 Resolver（统一解析器，同时支持 unplugin-vue-components 和 unplugin-auto-import）
-export { ElementPlusKitResolver } from './resolver'
-
+// 导出类型（统一从 types 导出，避免代码重复）
+export type * from './types'
+// 导出工具函数（安装函数和 Resolver）
+export { default, ElementPlusKitResolver, install } from './utils'
 // 导出 Form 组件
 // 使用包名导入，这是 Monorepo 的标准做法，pnpm workspace 会自动解析
-export { WForm } from '@iswangh/element-plus-kit/form'
-// 导出类型
-export type {
-  ActionConfig,
-  ActionConfigButtonItem,
-  Arrayable,
-  ColAttrs,
-  ElFormAttrs,
-  EventExtendedParams,
-  FormItem,
-  FormItemComp,
-  FormItemCompAttrs,
-  FormItems,
-  FormItemSlotScope,
-  RowAttrs,
-} from '@iswangh/element-plus-kit/form'
+export { WForm } from '@iswangh/element-plus-kit-form'

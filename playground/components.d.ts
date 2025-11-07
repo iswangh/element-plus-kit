@@ -15,7 +15,7 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    WForm: typeof import('@iswangh/element-plus-kit/form')['WForm']
+    WForm: typeof import('@iswangh/element-plus-kit-form')['WForm']
   }
 }
 
@@ -24,5 +24,5 @@ declare global {
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElForm: typeof import('element-plus/es')['ElForm']
   const ElFormItem: typeof import('element-plus/es')['ElFormItem']
-  const WForm: typeof import('@iswangh/element-plus-kit/form')['WForm']
+  const WForm: typeof import('@iswangh/element-plus-kit-form')['WForm']
 }

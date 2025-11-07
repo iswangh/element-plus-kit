@@ -5,16 +5,17 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"],
-      "@iswangh/element-plus-kit/form": ["../packages/form"],
+      "@iswangh/element-plus-kit-form": ["../packages/form"],
       "@iswangh/element-plus-kit": ["../packages/kit"],
-      "@iswangh/element-plus-kit/core": ["../packages/core"]
+      "@iswangh/element-plus-kit-core": ["../packages/core"]
     },
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
     "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "types/**/*"
   ],
   "exclude": [
     "node_modules",

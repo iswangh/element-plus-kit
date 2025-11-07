@@ -1,6 +1,6 @@
 /* eslint-disable ts/no-explicit-any */
 import type { FormProps } from 'element-plus'
-import type { ActionConfig, ActionConfigButtonItem, FormItem } from './types'
+import type { ActionConfig, ActionConfigButtonItem, FormItem } from '../types'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 

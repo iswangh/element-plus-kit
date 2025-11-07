@@ -8,8 +8,8 @@
 
 ### 包开发文档
 
-- **[Core 包开发文档](./core.md)** - `@iswangh/element-plus-kit/core` 包的完整开发配置说明
-- **[Form 包开发文档](./form.md)** - `@iswangh/element-plus-kit/form` 包的完整开发配置说明
+- **[Core 包开发文档](./core.md)** - `@iswangh/element-plus-kit-core` 包的完整开发配置说明
+- **[Form 包开发文档](./form.md)** - `@iswangh/element-plus-kit-form` 包的完整开发配置说明
 - **[Kit 包开发文档](./kit.md)** - `@iswangh/element-plus-kit` 包的完整开发配置说明
 
 ---
@@ -18,7 +18,7 @@
 
 ### Core 包
 
-**包名**：`@iswangh/element-plus-kit/core`
+**包名**：`@iswangh/element-plus-kit-core`
 
 **定位**：核心工具函数包，提供组件库内部使用的通用工具函数。
 
@@ -33,7 +33,7 @@
 
 ### Form 包
 
-**包名**：`@iswangh/element-plus-kit/form`
+**包名**：`@iswangh/element-plus-kit-form`
 
 **定位**：表单组件包，提供动态表单组件。
 

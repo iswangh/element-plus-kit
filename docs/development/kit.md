@@ -101,7 +101,7 @@
     "vue": "^3.5.23"
   },
   "dependencies": {
-    "@iswangh/element-plus-kit/form": "workspace:*"
+    "@iswangh/element-plus-kit-form": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
@@ -392,7 +392,7 @@ npm install @iswangh/element-plus-kit vue@^3.5.23 element-plus@^2.11.7
 
 ```json
 "dependencies": {
-  "@iswangh/element-plus-kit/form": "workspace:*"
+  "@iswangh/element-plus-kit-form": "workspace:*"
 }
 ```
 
@@ -641,7 +641,7 @@ npm install @iswangh/element-plus-kit vue@^3.5.23 element-plus@^2.11.7
 
 **说明**：
 - 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
-- 强制使用包名导入（`@iswangh/element-plus-kit/form`）而不是路径别名
+- 强制使用包名导入（`@iswangh/element-plus-kit-form`）而不是路径别名
 - 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
 
 **为什么设置为空对象**：
@@ -883,7 +883,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     // 不需要配置别名，使用包名导入即可
-    // pnpm workspace 会自动解析 @iswangh/element-plus-kit/core 等包名
+    // pnpm workspace 会自动解析 @iswangh/element-plus-kit-core 等包名
   },
   build: {
     lib: {
@@ -899,8 +899,8 @@ export default defineConfig({
       external: [
         'vue',
         'element-plus',
-        '@iswangh/element-plus-kit/form',
-        '@iswangh/element-plus-kit/core',
+        '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-core',
       ],
       output: {
         globals: {
@@ -982,7 +982,7 @@ plugins: [vue()],
 **说明**：kit 包不配置 `alias`，使用包名导入即可。
 
 **为什么不需要 `alias`**：
-- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名（`@iswangh/element-plus-kit/form`）解析到工作区内的源码
+- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名（`@iswangh/element-plus-kit-form`）解析到工作区内的源码
 - ✅ **Vite 原生支持**：Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名
 - ✅ **简化配置**：不需要维护路径别名配置，减少配置复杂度
 - ✅ **与发布后一致**：开发环境和发布后的导入方式完全一致
@@ -990,7 +990,7 @@ plugins: [vue()],
 **使用示例**：
 ```typescript
 // ✅ 推荐：使用包名导入
-import { WForm } from '@iswangh/element-plus-kit/form'
+import { WForm } from '@iswangh/element-plus-kit-form'
 
 // ❌ 不推荐：使用路径别名
 import { WForm } from '@/form'
@@ -1049,8 +1049,8 @@ rollupOptions: {
   external: [
     'vue',
     'element-plus',
-    '@iswangh/element-plus-kit/form',
-    '@iswangh/element-plus-kit/core',
+    '@iswangh/element-plus-kit-form',
+    '@iswangh/element-plus-kit-core',
   ],
   output: {
     globals: {
@@ -1066,7 +1066,7 @@ rollupOptions: {
 **字段说明**：
 
 1. **`external`**：外部依赖列表
-   - `['vue', 'element-plus', '@iswangh/element-plus-kit/form', '@iswangh/element-plus-kit/core']` 表示这些依赖不会被打包进库中
+   - `['vue', 'element-plus', '@iswangh/element-plus-kit-form', '@iswangh/element-plus-kit-core']` 表示这些依赖不会被打包进库中
    - 使用库的项目需要自己安装这些依赖
    - 与 `peerDependencies` 和 `dependencies` 对应
 
@@ -1079,7 +1079,7 @@ rollupOptions: {
 - ✅ 确保使用项目中的 Vue 和 Element Plus 版本
 - ✅ 避免版本冲突
 
-**注意**：`@iswangh/element-plus-kit/form` 和 `@iswangh/element-plus-kit/core` 也被设为外部依赖，因为它们会在运行时通过包管理器解析。
+**注意**：`@iswangh/element-plus-kit-form` 和 `@iswangh/element-plus-kit-core` 也被设为外部依赖，因为它们会在运行时通过包管理器解析。
 
 ---
 
@@ -1146,8 +1146,8 @@ package.json ──────────────────────�
 
 - **`package.json`**：
   - `peerDependencies: { vue: "^3.5.23", element-plus: "^2.11.7" }`
-  - `dependencies: { "@iswangh/element-plus-kit/form": "workspace:*" }`
-- **`vite.config.ts`**：`external: ['vue', 'element-plus', '@iswangh/element-plus-kit/form', '@iswangh/element-plus-kit/core']`
+  - `dependencies: { "@iswangh/element-plus-kit-form": "workspace:*" }`
+- **`vite.config.ts`**：`external: ['vue', 'element-plus', '@iswangh/element-plus-kit-form', '@iswangh/element-plus-kit-core']`
 
 **一致性**：Vue 和 Element Plus 作为外部依赖，form 包作为运行时依赖。
 
@@ -1155,7 +1155,7 @@ package.json ──────────────────────�
 
 #### 4. 模块导入方式
 
-- **代码中**：使用包名导入（`@iswangh/element-plus-kit/form`）
+- **代码中**：使用包名导入（`@iswangh/element-plus-kit-form`）
 - **`tsconfig.json`**：不配置 `paths`，TypeScript 通过 `package.json` 的 `exports` 解析
 - **`vite.config.ts`**：不配置 `alias`，Vite 通过 `package.json` 的 `exports` 解析
 
@@ -1295,7 +1295,7 @@ npm publish
 
 ---
 
-### Q2: 为什么 `external` 中包含 `@iswangh/element-plus-kit/form` 和 `@iswangh/element-plus-kit/core`？
+### Q2: 为什么 `external` 中包含 `@iswangh/element-plus-kit-form` 和 `@iswangh/element-plus-kit-core`？
 
 **A**: 
 - 这些包会在运行时通过包管理器（pnpm）解析
@@ -1316,7 +1316,7 @@ npm publish
 ### Q4: 为什么不需要配置 `paths` 和 `alias`？
 
 **A**: 
-- **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit/form`）而不是路径别名
+- **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit-form`）而不是路径别名
 - **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
 - **Vite 原生支持**：Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名
 - **简化配置**：不需要维护路径别名配置，减少配置复杂度
@@ -1373,7 +1373,7 @@ npm publish
    ```
 
 **正确的依赖位置**：
-- ✅ `packages/kit/node_modules/@iswangh/element-plus-kit/form` - 这是 pnpm workspace 的正确符号链接位置
+- ✅ `packages/kit/node_modules/@iswangh/element-plus-kit-form` - 这是 pnpm workspace 的正确符号链接位置
 - ❌ `packages/kit/form` - 这是开发环境的符号链接，可以忽略
 
 ---
@@ -1393,7 +1393,7 @@ export type { NewType } from '@iswangh/element-plus-kit/new-package'
 ```json
 {
   "dependencies": {
-    "@iswangh/element-plus-kit/form": "workspace:*",
+    "@iswangh/element-plus-kit-form": "workspace:*",
     "@iswangh/element-plus-kit/new-package": "workspace:*"
   }
 }

@@ -27,7 +27,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
-        resolver: resolve(__dirname, 'src/resolver.ts'),
+        resolver: resolve(__dirname, 'src/utils/resolver/index.ts'),
       },
       name: 'ElementPlusKit',
       fileName: (format, entryName) => `${entryName}.js`,
@@ -37,8 +37,8 @@ export default defineConfig({
       external: [
         'vue',
         'element-plus',
-        '@iswangh/element-plus-kit/form',
-        '@iswangh/element-plus-kit/core',
+        '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-core',
       ],
       output: {
         globals: {

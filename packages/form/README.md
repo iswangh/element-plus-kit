@@ -1,14 +1,14 @@
-# @iswangh/element-plus-kit/form
+# @iswangh/element-plus-kit-form
 
 Element Plus Kit Form 组件，基于 Element Plus 的动态表单组件，支持通过配置快速生成表单。
 
 ## 📦 安装
 
 ```bash
-npm install @iswangh/element-plus-kit/form
+npm install @iswangh/element-plus-kit-form
 ```
 
-**注意**：此包依赖 `@iswangh/element-plus-kit/core`，安装时会自动安装。
+**注意**：此包依赖 `@iswangh/element-plus-kit-core`，安装时会自动安装。
 
 ## 🚀 快速开始
 
@@ -16,8 +16,8 @@ npm install @iswangh/element-plus-kit/form
 
 ```vue
 <script setup lang="ts">
-import { WForm } from '@iswangh/element-plus-kit/form'
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import { WForm } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 
 const formItems: FormItems = [
   {
@@ -51,7 +51,7 @@ const form = ref({
 如果使用按需引入，需要手动引入样式：
 
 ```typescript
-import '@iswangh/element-plus-kit/form/style.css'
+import '@iswangh/element-plus-kit-form/style.css'
 ```
 
 ## 📖 API 文档

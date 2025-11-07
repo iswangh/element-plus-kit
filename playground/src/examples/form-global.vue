@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems } from '@iswangh/element-plus-kit/form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 import { ref } from 'vue'
 
 // 全局注册（在 main.ts 中调用）

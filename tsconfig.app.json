@@ -8,8 +8,8 @@
     "baseUrl": ".",
     "moduleResolution": "bundler",
     "paths": {
-      "@iswangh/element-plus-kit/core": ["./packages/core/src/index.ts"],
-      "@iswangh/element-plus-kit/form": ["./packages/form/src/index.ts"],
+      "@iswangh/element-plus-kit-core": ["./packages/core/src/index.ts"],
+      "@iswangh/element-plus-kit-form": ["./packages/form/src/index.ts"],
       "@iswangh/element-plus-kit": ["./packages/kit/src/index.ts"]
     },
     "resolvePackageJsonExports": true,

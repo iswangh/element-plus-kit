@@ -1,6 +1,6 @@
 /* eslint-disable ts/no-explicit-any */
 import type { ButtonProps, ElCol, ElRow, FormItemInstance, FormRules } from 'element-plus'
-import type { FORM_ITEM_COMP_MAP } from './config'
+import type { FORM_ITEM_COMP_MAP } from '../config'
 
 /**
  * Element Plus Form Attributes

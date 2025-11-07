@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@iswangh/element-plus-kit": "workspace:*",
-    "@iswangh/element-plus-kit/form": "workspace:*",
+    "@iswangh/element-plus-kit-form": "workspace:*",
     "element-plus": "^2.11.7",
     "vue": "^3.5.23"
   },

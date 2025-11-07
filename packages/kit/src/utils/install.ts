@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 // 使用包名导入，这是 Monorepo 的标准做法，pnpm workspace 会自动解析
-import { WForm } from '@iswangh/element-plus-kit/form'
+import { WForm } from '@iswangh/element-plus-kit-form'
 
 /**
  * Element Plus Kit 全局安装函数
