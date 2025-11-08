@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Element Plus Kit
-  text: Vue 3 组件库
-  tagline: 基于 Element Plus 构建的高质量组件库
+  text: 
+  tagline: 基于 Element Plus 构建，简单 灵活 高效
   image:
     src: /logo.svg
     alt: Element Plus Kit
@@ -14,7 +14,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: 查看组件
-      link: /components/form
+      link: /components/form/
 
 features:
   - icon: 🎨

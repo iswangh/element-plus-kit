@@ -59,14 +59,6 @@ export default defineConfig({
           ],
         },
       ],
-      '/components/form/': [
-        {
-          text: '组件',
-          items: [
-            { text: 'Form 表单', link: '/components/form/' },
-          ],
-        },
-      ],
     },
     socialLinks: [
       { icon: 'gitee', link: 'https://gitee.com/iswangh/element-plus-kit' },
@@ -118,6 +110,15 @@ export default defineConfig({
     },
   },
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          // 使用新的 Sass API，避免 legacy-js-api 警告
+          // 注意：Sass 1.93+ 支持 modern-compiler API
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
     plugins: [
       // Vite 版本不兼容：VitePress 使用 Vite 5.4.21，UnoCSS 使用 Vite 7.2.0
       // eslint-disable-next-line ts/no-explicit-any

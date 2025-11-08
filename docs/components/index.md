@@ -1,12 +1,17 @@
-# 组件
+---
+layout: page
+---
 
-Element Plus Kit 提供的组件列表。
+<script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vitepress'
 
-## 表单组件
+const router = useRouter()
 
-### Form 表单
+onMounted(() => {
+  // 自动重定向到 Form 组件文档
+  router.go('/components/form/')
+})
+</script>
 
-动态表单组件，支持通过配置快速生成表单。
-
-[查看 Form 组件文档 →](./form/)
-
+正在跳转到 Form 组件文档...

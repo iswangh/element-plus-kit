@@ -10,7 +10,7 @@
     "dev": "pnpm register:components && vitepress dev",
     "build": "pnpm register:components && vitepress build",
     "preview": "vitepress preview",
-    "register:components": "vitepress-rc --docsDir . --componentsDir ./.vitepress/theme"
+    "register:components": "vitepress-rc --docsDir . --componentsDir theme/components"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

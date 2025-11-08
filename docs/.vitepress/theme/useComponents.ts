@@ -1,7 +1,5 @@
 import type { App } from 'vue'
-// @ts-expect-error - vitepress-theme-demoblock 可能没有类型声明
 import Demo from 'vitepress-theme-demoblock/dist/client/components/Demo.vue'
-// @ts-expect-error - vitepress-theme-demoblock 可能没有类型声明
 import DemoBlock from 'vitepress-theme-demoblock/dist/client/components/DemoBlock.vue'
 
 /**
