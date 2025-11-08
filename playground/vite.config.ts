@@ -11,24 +11,33 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   plugins: [
+    // Vue 单文件组件支持
     vue(),
+    // 自动导入插件：自动导入 Vue API 和组件
     AutoImport({
+      // 解析器：Element Plus 和 Element Plus Kit 的自动导入解析器
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
+      // 自动导入的模块：Vue API（ref、computed 等）
       imports: ['vue'],
+      // 类型声明文件输出路径
       dts: resolve(__dirname, './types/auto-imports.d.ts'),
     }),
+    // 组件自动导入插件：自动导入组件，无需手动 import
     Components({
+      // 解析器：Element Plus 和 Element Plus Kit 的组件解析器
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
+      // 类型声明文件输出路径
       dts: resolve(__dirname, './types/components.d.ts'),
     }),
   ],
   resolve: {
+    // 路径别名配置：用于开发时直接引用包源码，支持 HMR
     alias: [
       // 样式文件别名：开发环境中将样式文件指向源码，因为 dist 目录还未构建
       // 支持单独导入样式：import '@iswangh/element-plus-kit-form/style.css'
@@ -55,6 +64,7 @@ export default defineConfig({
         replacement: resolve(__dirname, './src'),
       },
     ],
+    // 依赖去重：确保 vue 和 element-plus 只使用一个版本
     dedupe: ['vue', 'element-plus'],
   },
   optimizeDeps: {

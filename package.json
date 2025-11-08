@@ -1,5 +1,5 @@
 {
-  "name": "element-plus-kit-monorepo",
+  "name": "element-plus-kit",
   "type": "module",
   "version": "0.0.0",
   "private": true,
@@ -21,6 +21,7 @@
     "publish:core": "pnpm --filter \"./packages/core\" publish",
     "publish:form": "pnpm --filter \"./packages/form\" publish",
     "publish:kit": "pnpm --filter \"./packages/kit\" publish",
+    "publish:all": "run-s publish:core publish:form publish:kit",
     "docs:dev": "pnpm --filter \"./docs\" dev",
     "docs:build": "pnpm --filter \"./docs\" build",
     "docs:preview": "pnpm --filter \"./docs\" preview"

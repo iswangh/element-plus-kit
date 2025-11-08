@@ -1,18 +1,32 @@
 {
+  // 继承根目录的基础 TypeScript 配置
   "extends": "../../tsconfig.app.json",
   "compilerOptions": {
+    // 启用复合项目模式，支持 TypeScript Project References
     "composite": true,
+    // 增量编译信息文件路径
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-core.tsbuildinfo",
+    // 类型库：ES2022 和 DOM API
     "lib": ["ES2022", "DOM"],
+    // 根目录：src 目录
     "rootDir": "./src",
+    // 模块解析策略：使用 bundler 模式
     "moduleResolution": "bundler",
+    // 路径别名：清空继承的 paths，core 包不依赖其他内部包
     "paths": {},
+    // 启用 package.json exports 字段解析
     "resolvePackageJsonExports": true,
+    // 包含的全局类型定义
     "types": ["node"],
+    // 生成类型声明文件（.d.ts）
     "declaration": true,
+    // 生成类型声明文件的 source map
     "declarationMap": true,
+    // 允许输出文件（构建时需要）
     "noEmit": false,
+    // 输出目录：dist
     "outDir": "./dist",
+    // 跳过类型库的类型检查
     "skipLibCheck": true
   },
   "include": ["src/**/*"],

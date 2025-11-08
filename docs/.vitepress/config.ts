@@ -1,6 +1,9 @@
 import { resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { demoblockPlugin, demoblockVitePlugin } from 'vitepress-theme-demoblock'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -11,26 +14,30 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  */
 export default defineConfig({
   title: 'Element Plus Kit',
-  description: '基于 Element Plus 的 Vue 3 组件库',
-  base: '/element-plus-kit/',
+  description: '基于 Element Plus 二次封装的组件库',
+  // 本地开发时使用根路径，部署到子目录时使用 /element-plus-kit/
+  // 可以通过环境变量 VITE_BASE 来覆盖，例如：VITE_BASE=/element-plus-kit/ pnpm docs:build
+  base: process.env.VITE_BASE || '/',
   lang: 'zh-CN',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
   ],
+  markdown: {
+    config: (md) => {
+      // 使用 vitepress-theme-demoblock 插件
+      md.use(demoblockPlugin)
+    },
+  },
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/logo.svg',
     siteTitle: 'Element Plus Kit',
     nav: [
       { text: '指南', link: '/guide/' },
-      { text: '组件', link: '/components/' },
-      { text: '开发', link: '/development/' },
+      { text: '组件', link: '/components/form/' },
       {
-        text: '链接',
-        items: [
-          { text: 'Gitee 仓库', link: 'https://gitee.com/iswangh/element-plus-kit' },
-          { text: 'GitHub 仓库', link: 'https://github.com/iswangh/element-plus-kit' },
-          { text: 'Element Plus', link: 'https://element-plus.org/zh-CN/' },
-        ],
+        text: 'Element Plus',
+        link: 'https://element-plus.org/zh-CN/',
       },
     ],
     sidebar: {
@@ -52,21 +59,19 @@ export default defineConfig({
           ],
         },
       ],
-      '/development/': [
+      '/components/form/': [
         {
-          text: '开发文档',
+          text: '组件',
           items: [
-            { text: '开发指南', link: '/development/' },
-            { text: 'Core 包', link: '/development/core' },
-            { text: 'Form 包', link: '/development/form' },
-            { text: 'Kit 包', link: '/development/kit' },
+            { text: 'Form 表单', link: '/components/form/' },
           ],
         },
       ],
     },
     socialLinks: [
+      { icon: 'gitee', link: 'https://gitee.com/iswangh/element-plus-kit' },
       { icon: 'github', link: 'https://github.com/iswangh/element-plus-kit' },
-      { icon: { svg: '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512zm-22.222-768H256v170.667h233.778v-170.667zm0 256H256v170.667h233.778V512zm0 256H256v170.667h233.778V768zm256-512H512v170.667h233.778V256zm0 256H512v170.667h233.778V512zm0 256H512v170.667h233.778V768z"/></svg>' }, link: 'https://gitee.com/iswangh/element-plus-kit' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/@iswangh/element-plus-kit' },
     ],
     footer: {
       message: '基于 Element Plus 构建',
@@ -75,6 +80,14 @@ export default defineConfig({
     search: {
       provider: 'local',
       options: {
+        // 排除开发文档目录
+        _render(src, env, md) {
+          // 排除 development 目录下的所有文件
+          if (env.relativePath?.includes('development/') || env.relativePath?.startsWith('development/')) {
+            return ''
+          }
+          return md.render(src, env)
+        },
         translations: {
           button: {
             buttonText: '搜索文档',
@@ -86,6 +99,7 @@ export default defineConfig({
             footer: {
               selectText: '选择',
               navigateText: '切换',
+              closeText: '关闭',
             },
           },
         },
@@ -98,8 +112,19 @@ export default defineConfig({
     lastUpdated: {
       text: '最后更新于',
     },
+    outline: {
+      level: [2, 3], // 显示 h2 和 h3 标题
+      label: 'On this page',
+    },
   },
   vite: {
+    plugins: [
+      // Vite 版本不兼容：VitePress 使用 Vite 5.4.21，UnoCSS 使用 Vite 7.2.0
+      // eslint-disable-next-line ts/no-explicit-any
+      UnoCSS() as any,
+      // vitepress-theme-demoblock 的 Vite 插件
+      demoblockVitePlugin(),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, '../'),
@@ -109,8 +134,29 @@ export default defineConfig({
     },
     server: {
       fs: {
-        allow: ['..'],
+        // 允许访问父目录，以便访问 packages 和 playground
+        allow: ['..', '../..', '../../..'],
       },
     },
+    optimizeDeps: {
+      // 预构建依赖，提升开发体验
+      include: ['element-plus', 'vue', '@iswangh/element-plus-kit'],
+    },
+  },
+  // 构建结束钩子 - 生成站点地图
+  buildEnd: async (siteConfig) => {
+    // 简单的站点地图生成逻辑
+    // 如果需要更完整的 sitemap，可以使用专门的插件
+    const { writeFileSync } = await import('node:fs')
+    const { resolve: resolvePath } = await import('node:path')
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${siteConfig.site.base}</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`
+    writeFileSync(resolvePath(siteConfig.outDir, 'sitemap.xml'), sitemap)
   },
 })

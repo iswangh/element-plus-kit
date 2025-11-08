@@ -14,5 +14,5 @@ import FormManual from './examples/form-manual.vue'
 </template>
 
 <style lang="scss" scoped>
-@import './styles/index.scss';
+@use './styles/index.scss';
 </style>

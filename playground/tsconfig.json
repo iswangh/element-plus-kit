@@ -1,16 +1,25 @@
 {
+  // 继承根目录的基础 TypeScript 配置
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
+    // 基础路径：playground 目录
     "baseUrl": ".",
+    // 模块解析策略：使用 bundler 模式
     "moduleResolution": "bundler",
+    // 路径别名：用于开发时直接引用包源码，支持 HMR
     "paths": {
+      // playground 内部别名
       "@/*": ["./src/*"],
+      // 包名别名：指向包源码，而非构建产物
       "@iswangh/element-plus-kit-form": ["../packages/form"],
       "@iswangh/element-plus-kit": ["../packages/kit"],
       "@iswangh/element-plus-kit-core": ["../packages/core"]
     },
+    // 启用 package.json exports 字段解析
     "resolvePackageJsonExports": true,
+    // 启用 package.json imports 字段解析
     "resolvePackageJsonImports": true,
+    // 类型定义根目录：支持 playground 和根目录的 node_modules
     "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
   },
   "include": [

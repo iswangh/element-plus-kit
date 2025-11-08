@@ -1,4 +1,6 @@
 {
+  // TypeScript Project References 配置
+  // 用于管理 Monorepo 中包之间的类型依赖关系
   "references": [
     {
       "path": "./packages/core"
@@ -10,5 +12,6 @@
       "path": "./packages/kit"
     }
   ],
+  // 空文件数组：此配置文件仅用于引用管理，不直接编译文件
   "files": []
 }

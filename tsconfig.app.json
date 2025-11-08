@@ -1,25 +1,41 @@
 {
+  // 继承 Vue 官方 TypeScript 配置（DOM 环境）
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    // TypeScript 增量编译信息文件路径
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // JSX 语法处理方式：保留 JSX，由构建工具处理
     "jsx": "preserve",
+    // JSX 导入源：使用 Vue 的 JSX 支持
     "jsxImportSource": "vue",
+    // 类型库：ES2022、DOM 和 DOM 迭代器 API
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 基础路径：项目根目录
     "baseUrl": ".",
+    // 模块解析策略：使用 bundler 模式（适用于 Vite 等现代构建工具）
     "moduleResolution": "bundler",
+    // 路径别名：用于在开发时直接引用包源码，支持 HMR
     "paths": {
       "@iswangh/element-plus-kit-core": ["./packages/core/src/index.ts"],
       "@iswangh/element-plus-kit-form": ["./packages/form/src/index.ts"],
       "@iswangh/element-plus-kit": ["./packages/kit/src/index.ts"]
     },
+    // 启用 package.json exports 字段解析
     "resolvePackageJsonExports": true,
+    // 启用 package.json imports 字段解析
     "resolvePackageJsonImports": true,
+    // 包含的全局类型定义
     "types": ["node"],
+    // 禁止导入 .ts 扩展名（由构建工具处理）
     "allowImportingTsExtensions": false,
+    // 跳过类型库的类型检查（提升编译速度）
     "skipLibCheck": true
   },
+  // Vue 编译器选项
   "vueCompilerOptions": {
+    // Vue 版本：3（Vue 3）
     "target": 3,
+    // 全局类型定义文件路径
     "globalTypesPath": "./node_modules/.tmp/vue-global-types.d.ts"
   },
   "include": [

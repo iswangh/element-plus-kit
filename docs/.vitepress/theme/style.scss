@@ -1,0 +1,90 @@
+/**
+ * VitePress 自定义样式
+ *
+ * 使用 Sass + UnoCSS 编写样式
+ */
+
+/* ========== 社交链接图标颜色优化 ========== */
+
+// 品牌色变量（Sass 变量）
+$github-color: #181717;
+$github-hover: #24292e;
+$github-dark: #f0f6fc;
+$github-dark-hover: #ffffff;
+
+$gitee-color: #c71d23;
+$gitee-hover: #e84d3d;
+
+$npm-color: #cb3837;
+$npm-hover: #d73527;
+
+// 图标基础样式混入（结合 UnoCSS）
+@mixin icon-base {
+  @apply transition-colors duration-200;
+  transition: fill 0.2s ease;
+}
+
+// GitHub 图标样式
+.VPNavBarSocialLinks a[href*='github.com'] {
+  svg,
+  path {
+    @include icon-base;
+    fill: $github-color;
+  }
+
+  &:hover {
+    svg,
+    path {
+      fill: $github-hover;
+    }
+  }
+}
+
+// Gitee 图标样式
+.VPNavBarSocialLinks a[href*='gitee.com'] {
+  svg,
+  path {
+    @include icon-base;
+    fill: $gitee-color;
+  }
+
+  &:hover {
+    svg,
+    path {
+      fill: $gitee-hover;
+    }
+  }
+}
+
+// NPM 图标样式
+.VPNavBarSocialLinks a[href*='npmjs.com'] {
+  svg,
+  path {
+    @include icon-base;
+    fill: $npm-color;
+  }
+
+  &:hover {
+    svg,
+    path {
+      fill: $npm-hover;
+    }
+  }
+}
+
+// 深色模式下的图标颜色调整
+.dark {
+  .VPNavBarSocialLinks a[href*='github.com'] {
+    svg,
+    path {
+      fill: $github-dark;
+    }
+
+    &:hover {
+      svg,
+      path {
+        fill: $github-dark-hover;
+      }
+    }
+  }
+}

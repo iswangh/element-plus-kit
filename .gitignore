@@ -50,5 +50,5 @@ packages/kit/form
 packages/kit/core
 
 # VitePress
-docs/site/.vitepress/dist
-docs/site/.vitepress/cache
+docs/.vitepress/dist
+docs/.vitepress/cache
