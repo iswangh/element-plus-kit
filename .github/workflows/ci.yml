@@ -64,9 +64,4 @@ jobs:
         env:
           VITE_BASE: /element-plus-kit/
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/.vitepress/dist
+      # 部署由 deploy-docs.yml 工作流专门处理，这里只负责构建验证
