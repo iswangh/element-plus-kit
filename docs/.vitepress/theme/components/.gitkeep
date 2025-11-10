@@ -1,0 +1,7 @@
+# Components Directory
+
+此目录用于存放自定义的 VitePress 演示组件。
+
+`vitepress-rc` 工具会自动扫描此目录下的 Vue 组件并注册到 VitePress 中。
+
+如果不需要自定义组件，可以保持此目录为空。
