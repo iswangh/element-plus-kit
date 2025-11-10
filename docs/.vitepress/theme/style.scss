@@ -4,6 +4,115 @@
  * 使用 Sass + UnoCSS 编写样式
  */
 
+/* ========== VitePress 主题色配置 ========== */
+
+:root {
+  // 主品牌色 - 使用 Element Plus 的默认主题色（蓝色）
+  --vp-c-brand: #409eff;
+  --vp-c-brand-1: #66b1ff;
+  --vp-c-brand-2: #85c1ff;
+  --vp-c-brand-3: #a6d5ff;
+  --vp-c-brand-soft: rgba(64, 158, 255, 0.14);
+  --vp-c-brand-lighter: rgba(64, 158, 255, 0.5);
+  --vp-c-brand-darker: #337ecc;
+  --vp-c-brand-dark: #2b6cb0;
+  --vp-c-brand-light: #66b1ff;
+
+  // 特殊元素颜色
+  --vp-c-sponsor: #409eff;
+}
+
+// 深色模式主题色 - 使用 Element Plus 的亮蓝色
+.dark {
+  --vp-c-brand: #66b1ff;
+  --vp-c-brand-1: #85c1ff;
+  --vp-c-brand-2: #a6d5ff;
+  --vp-c-brand-3: #c6e2ff;
+  --vp-c-brand-soft: rgba(102, 177, 255, 0.16);
+  --vp-c-brand-lighter: rgba(102, 177, 255, 0.5);
+  --vp-c-brand-darker: #409eff;
+  --vp-c-brand-dark: #66b1ff;
+  --vp-c-brand-light: #85c1ff;
+
+  // 特殊元素颜色
+  --vp-c-sponsor: #66b1ff;
+}
+
+/* ========== VitePress 按钮样式修复 ========== */
+
+// 确保按钮使用 Element Plus 主题色
+:root {
+  // 按钮背景色
+  --vp-button-brand-bg: #409eff;
+  --vp-button-brand-hover-bg: #66b1ff;
+  --vp-button-brand-active-bg: #337ecc;
+  --vp-button-brand-text: #ffffff;
+}
+
+.dark {
+  // 暗色模式下的按钮颜色
+  --vp-button-brand-bg: #409eff;
+  --vp-button-brand-hover-bg: #66b1ff;
+  --vp-button-brand-active-bg: #337ecc;
+  --vp-button-brand-text: #ffffff;
+}
+
+// 强制按钮使用主题色
+.VPButton.brand {
+  background-color: var(--vp-button-brand-bg) !important;
+  color: var(--vp-button-brand-text) !important;
+  border-color: var(--vp-button-brand-bg) !important;
+
+  &:hover {
+    background-color: var(--vp-button-brand-hover-bg) !important;
+    border-color: var(--vp-button-brand-hover-bg) !important;
+  }
+
+  &:active {
+    background-color: var(--vp-button-brand-active-bg) !important;
+    border-color: var(--vp-button-brand-active-bg) !important;
+  }
+}
+
+/* ========== Element Plus 暗色模式支持 ========== */
+
+// 注意：Element Plus 组件保持默认主题色（蓝色），不修改
+// 只确保 Element Plus 组件能够响应暗色模式
+.dark {
+  // 文本颜色
+  --el-text-color-primary: rgba(255, 255, 255, 0.87);
+  --el-text-color-regular: rgba(255, 255, 255, 0.6);
+  --el-text-color-secondary: rgba(255, 255, 255, 0.4);
+  --el-text-color-placeholder: rgba(255, 255, 255, 0.3);
+  --el-text-color-disabled: rgba(255, 255, 255, 0.2);
+
+  // 边框颜色
+  --el-border-color: rgba(255, 255, 255, 0.12);
+  --el-border-color-light: rgba(255, 255, 255, 0.08);
+  --el-border-color-lighter: rgba(255, 255, 255, 0.05);
+  --el-border-color-extra-light: rgba(255, 255, 255, 0.02);
+  --el-border-color-dark: rgba(255, 255, 255, 0.2);
+  --el-border-color-darker: rgba(255, 255, 255, 0.3);
+
+  // 填充颜色
+  --el-fill-color: rgba(255, 255, 255, 0.08);
+  --el-fill-color-light: rgba(255, 255, 255, 0.05);
+  --el-fill-color-lighter: rgba(255, 255, 255, 0.03);
+  --el-fill-color-extra-light: rgba(255, 255, 255, 0.02);
+  --el-fill-color-dark: rgba(255, 255, 255, 0.12);
+  --el-fill-color-darker: rgba(255, 255, 255, 0.18);
+  --el-fill-color-blank: transparent;
+
+  // 背景颜色
+  --el-bg-color: #1a1a1a;
+  --el-bg-color-page: #0a0a0a;
+  --el-bg-color-overlay: #1d1e1f;
+
+  // 遮罩层颜色
+  --el-mask-color: rgba(0, 0, 0, 0.8);
+  --el-mask-color-extra-light: rgba(0, 0, 0, 0.3);
+}
+
 /* ========== 社交链接图标颜色优化 ========== */
 
 // 品牌色变量（Sass 变量）

@@ -7,6 +7,7 @@
 - [Core 包开发文档](./core.md)
 - [Form 包开发文档](./form.md)
 - [Kit 包开发文档](./kit.md)
+- [VitePress 自动部署文档](./vitepress-deployment.md)
 
 ## 快速链接
 
