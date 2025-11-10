@@ -93,6 +93,7 @@ export default antfu(
       'src/types/generated/',
       '**/*.generated.d.ts',
       '**/*.md',
+      '.workflow/', // Gitee CI/CD 配置文件，不需要 ESLint 检查
     ],
   },
 )
