@@ -59,14 +59,14 @@ jobs:
         run: pnpm build:packages
 
       - name: Build docs
-        run: |
-          cd docs/site
-          pnpm install
-          pnpm build
+        working-directory: ./docs
+        run: pnpm build
+        env:
+          VITE_BASE: /element-plus-kit/
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/site/.vitepress/dist
+          publish_dir: ./docs/.vitepress/dist

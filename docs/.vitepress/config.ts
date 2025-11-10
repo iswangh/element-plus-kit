@@ -20,7 +20,7 @@ export default defineConfig({
   base: process.env.VITE_BASE || '/',
   lang: 'zh-CN',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', href: `${process.env.VITE_BASE || '/'}favicon.ico` }],
     ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
   ],
   markdown: {
