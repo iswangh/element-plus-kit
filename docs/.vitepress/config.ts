@@ -19,6 +19,8 @@ export default defineConfig({
   // 可以通过环境变量 VITE_BASE 来覆盖，例如：VITE_BASE=/element-plus-kit/ pnpm docs:build
   base: process.env.VITE_BASE || '/',
   lang: 'zh-CN',
+  // 排除 development 目录，不参与构建
+  srcExclude: ['**/development/**'],
   head: [
     ['link', { rel: 'icon', href: `${process.env.VITE_BASE || '/'}favicon.ico` }],
     ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],

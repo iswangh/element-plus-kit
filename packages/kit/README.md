@@ -154,7 +154,7 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { ElementPlusKitResolver, ElementPlusKitAutoImportResolver } from '@iswangh/element-plus-kit/resolver'
+import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 
 export default defineConfig({
   plugins: [
@@ -162,14 +162,14 @@ export default defineConfig({
     AutoImport({
       resolvers: [
         ElementPlusResolver(),
-        ElementPlusKitAutoImportResolver(),
+        ElementPlusKitResolver(), // ElementPlusKitResolver 同时支持 AutoImport 和 Components
       ],
       imports: ['vue'],
     }),
     Components({
       resolvers: [
         ElementPlusResolver(),
-        ElementPlusKitResolver(),
+        ElementPlusKitResolver(), // ElementPlusKitResolver 同时支持 AutoImport 和 Components
       ],
     }),
   ],
@@ -216,7 +216,9 @@ const form = ref({
 
 ### ElementPlusKitResolver
 
-用于 `unplugin-vue-components` 的组件自动导入。
+统一解析器，同时支持 `unplugin-vue-components` 和 `unplugin-auto-import`。
+
+**用于组件自动导入**（`unplugin-vue-components`）：
 
 ```typescript
 import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
@@ -229,18 +231,32 @@ Components({
 })
 ```
 
-### ElementPlusKitAutoImportResolver
-
-用于 `unplugin-auto-import` 的 API 自动导入。
+**用于 API 自动导入**（`unplugin-auto-import`）：
 
 ```typescript
-import { ElementPlusKitAutoImportResolver } from '@iswangh/element-plus-kit/resolver'
+import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 import AutoImport from 'unplugin-auto-import/vite'
 
 AutoImport({
   resolvers: [
-    ElementPlusKitAutoImportResolver(),
+    ElementPlusKitResolver(), // 同一个解析器可以同时用于两种插件
   ],
+})
+```
+
+**同时使用**（推荐）：
+
+```typescript
+import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+
+AutoImport({
+  resolvers: [ElementPlusKitResolver()],
+})
+
+Components({
+  resolvers: [ElementPlusKitResolver()],
 })
 ```
 

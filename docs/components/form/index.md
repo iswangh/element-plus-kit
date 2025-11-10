@@ -14,24 +14,9 @@ import { ref } from 'vue'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({
-  input: '',
-  inputNumber: null as number | null,
-  textarea: '',
-  select: '',
-  autocomplete: '',
-  cascader: [],
-  datePicker: '',
-  timePicker: '',
-  timeSelect: '',
-  switch: false,
-  radio: '',
   checkbox: [],
-  rate: 0,
-  slider: 0,
-  colorPicker: '',
   inputTag: [],
   transfer: [],
-  treeSelect: '',
 })
 
 const formItems: FormItems = [
@@ -237,11 +222,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
 
-const form = ref({
-  username: '',
-  password: '',
-  confirmPassword: '',
-})
+const form = ref({})
 
 // 自定义验证函数：确认密码
 const validateConfirmPassword = (rule: any, value: any, callback: any) => {
@@ -342,13 +323,10 @@ const externalStatus = ref(false)
 const form = ref({
   // 内部值：用于 vIf
   hasEmail: false,
-  email: '',
   // 内部值：用于 vIf
   hasPhone: false,
-  phone: '',
   // 内部值：用于 vShow
   hasAddress: false,
-  address: '',
 })
 
 const formItems: FormItems = [
@@ -507,10 +485,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
 
-const form = ref({
-  username: '',
-  email: '',
-})
+const form = ref({})
 
 const formItems: FormItems = [
   {
@@ -580,12 +555,7 @@ const handleAction = (eventName: string) => {
 import { ref } from 'vue'
 import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit'
 
-const form = ref({
-  name: '',
-  age: null as number | null,
-  email: '',
-  phone: '',
-})
+const form = ref({})
 
 const formItems: FormItems = [
   {

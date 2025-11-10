@@ -105,18 +105,30 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
 
 #### 支持的组件类型
 
-组件支持所有 Element Plus 表单组件，包括：
+组件支持以下 Element Plus 表单组件：
 
+- `autocomplete` - 自动完成输入框
+- `cascader` - 级联选择器
+- `checkbox` - 复选框组
+- `color-picker` - 颜色选择器
+- `color-picker-panel` - 颜色选择器面板
+- `date-picker` - 日期选择器
+- `date-picker-panel` - 日期选择器面板
 - `input` - 输入框
 - `input-number` - 数字输入框
+- `input-tag` - 标签输入框
+- `mention` - 提及输入框
+- `radio` - 单选框组
+- `rate` - 评分
 - `select` - 选择器
-- `date-picker` - 日期选择器
-- `time-picker` - 时间选择器
+- `select-v2` - 虚拟列表选择器
+- `slider` - 滑块
 - `switch` - 开关
-- `radio` - 单选框
-- `checkbox` - 复选框
-- `textarea` - 文本域
-- 等等...
+- `time-picker` - 时间选择器
+- `time-select` - 时间选择
+- `transfer` - 穿梭框
+- `tree-select` - 树形选择器
+- `custom` - 自定义组件（使用插槽）
 
 #### 使用示例
 
