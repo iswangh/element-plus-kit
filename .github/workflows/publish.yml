@@ -1,0 +1,54 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*' # 当推送以 v 开头的标签时触发（如 v0.1.0）
+  workflow_dispatch: # 允许手动触发
+
+permissions:
+  contents: read
+  id-token: write # 用于 npm 发布认证
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # 可选：使用环境保护，确保只在特定条件下发布
+    # environment:
+    #   name: npm-publish
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          # 如果使用 npm 的 granular access token，需要配置 scope
+          scope: '@iswangh'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Publish to npm
+        run: pnpm publish --no-git-checks --access public
+        env:
+          # 使用 GitHub Secrets 中配置的 NPM_TOKEN
+          # 配置方法：在仓库 Settings > Secrets and variables > Actions 中添加 NPM_TOKEN
+          # actions/setup-node@v4 会自动使用 NODE_AUTH_TOKEN 配置 npm 认证
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
