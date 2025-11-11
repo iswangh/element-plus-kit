@@ -1,1 +1,3 @@
-npx --no -- lint-staged
+# 执行 lint-staged，对暂存区文件进行代码规范检查
+# 直接使用 pnpm exec 执行 lint-staged 命令，无需通过 package.json 脚本
+pnpm exec lint-staged
