@@ -34,7 +34,7 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
           # 如果使用 npm 的 granular access token，需要配置 scope
-          scope: '@iswangh'
+          # scope: '@iswangh'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
