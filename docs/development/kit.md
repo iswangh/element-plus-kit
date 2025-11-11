@@ -1259,21 +1259,44 @@ npm run clean
 
 ### 📦 发布流程
 
-#### 1. 构建
+**重要**：在 Monorepo 项目中，应使用根目录的发布命令，而不是直接在包目录中执行 `npm publish`。
+
+#### 1. 分支检查
+
+发布前会自动检查当前 Git 分支，只能在 `main` 或 `master` 分支上发布：
 
 ```bash
-npm run build
+# 单独检查分支（可选）
+pnpm check:branch
 ```
 
-#### 2. 类型检查
+#### 2. 发布
+
+使用根目录的发布命令（**推荐**）：
 
 ```bash
-npm run type-check
+# 从项目根目录执行
+pnpm publish:kit
 ```
 
-#### 3. 发布
+**自动执行流程**：
+1. **分支检查**：检查当前分支是否为 `main` 或 `master`
+2. **构建和类型检查**：自动执行 `prepublishOnly` 脚本（`pnpm build && pnpm type-check`）
+3. **发布**：如果所有检查通过，执行发布操作
+
+**手动执行**（不推荐，仅用于测试）：
 
 ```bash
+# 进入包目录
+cd packages/kit
+
+# 手动构建
+pnpm build
+
+# 手动类型检查
+pnpm type-check
+
+# 直接发布（不推荐，会跳过分支检查）
 npm publish
 ```
 

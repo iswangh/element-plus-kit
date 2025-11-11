@@ -1,5 +1,16 @@
 /**
  * 条件判断选项类型定义
+ *
+ * @template T - 数据上下文的类型，默认为 unknown
+ *
+ * @property {boolean | ((data: T) => boolean)} [condition] - 判断条件
+ *   - 当为 boolean 时：直接返回该布尔值
+ *   - 当为 function 时：执行函数并返回结果，函数接收 data 作为参数
+ *   - 当为 undefined 时：返回 defaultValue
+ * @property {T} [data] - 数据上下文，传递给条件函数的数据对象
+ * @property {boolean} [defaultValue] - 默认返回值
+ *   - 当 condition 为 undefined 时返回此值
+ *   - 当条件函数执行出错时返回此值
  */
 interface CheckConditionOptions<T = unknown> {
   condition?: boolean | ((data: T) => boolean)
