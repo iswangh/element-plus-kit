@@ -31,6 +31,7 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/config-inspector": "^1.2.0",
+    "@iswangh/commitlint-config": "^0.1.2",
     "@iswangh/eslint-config": "^0.1.5",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^24.5.1",
