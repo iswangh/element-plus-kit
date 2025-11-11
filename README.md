@@ -2,6 +2,8 @@
 
 Element Plus Kit 是一个基于 Element Plus 的 Vue 3 组件库 Monorepo 项目，提供高质量的组件和工具函数。
 
+🌐 **在线文档**: [https://iswangh.github.io/element-plus-kit/](https://iswangh.github.io/element-plus-kit/)
+
 ## 📋 项目介绍
 
 Element Plus Kit 是一个 Monorepo 项目，包含以下包：
@@ -344,6 +346,7 @@ pnpm publish:all
 
 ## 📚 文档
 
+- **在线文档**: [https://iswangh.github.io/element-plus-kit/](https://iswangh.github.io/element-plus-kit/)
 - **使用指南**: 查看各包的 README.md
   - [主包文档](./packages/kit/README.md)
   - [Form 组件文档](./packages/form/README.md)
@@ -395,6 +398,7 @@ pnpm publish:all
 
 ## 🔗 相关链接
 
+- [Element Plus Kit 在线文档](https://iswangh.github.io/element-plus-kit/)
 - [Element Plus 文档](https://element-plus.org/zh-CN/)
 - [Vue 3 文档](https://cn.vuejs.org/)
 - [TypeScript 文档](https://www.typescriptlang.org/zh/)
