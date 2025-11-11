@@ -185,10 +185,16 @@ kit (依赖 form 和 core)
 - **发布命令**：
   - 单个包：`pnpm publish:core`、`pnpm publish:form`、`pnpm publish:kit`
   - 所有包：`pnpm publish:all`（使用 `run-s` 串行执行）
+  - 分支检查：`pnpm check:branch`（单独检查分支）
 - **发布前检查**：
+  - **分支检查**：自动检查当前 Git 分支，只能在 `main` 或 `master` 分支上发布（通过 `scripts/check-branch.js` 脚本）
   - 自动执行 `prepublishOnly`（构建 + 类型检查）
   - 确保版本号已更新
   - 确保依赖版本已更新（如果被依赖包版本变化）
+- **分支检查机制**：
+  - 每个发布命令（`publish:core`、`publish:form`、`publish:kit`）都会在执行前自动检查分支
+  - 如果当前分支不是 `main` 或 `master`，发布会被阻止并提示错误
+  - 分支检查脚本：`scripts/check-branch.js`
 
 ### 版本管理
 - **版本策略**：独立版本（每个包独立管理版本号）（参考 001 规范）
