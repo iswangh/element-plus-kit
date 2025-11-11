@@ -7,18 +7,20 @@
  * @see {@link https://www.conventionalcommits.org/zh-hans/v1.0.0/ Conventional Commits 规范}
  */
 
+// 规则级别常量
+const RULE_LEVEL = {
+  DISABLED: 0, // 禁用规则
+  WARNING: 1, // 警告级别
+  ERROR: 2, // 错误级别
+}
+
 export default {
-  /**
-   * 继承配置
-   */
   extends: ['@commitlint/config-conventional'],
-  /**
-   * 提交信息规则
-   */
   rules: {
-    // 提交类型枚举
+    // ========== 提交类型规则 ==========
+    /** 提交类型枚举 */
     'type-enum': [
-      2,
+      RULE_LEVEL.ERROR,
       'always',
       [
         'feat', // 新功能
@@ -34,29 +36,54 @@ export default {
         'revert', // 回滚操作
       ],
     ],
+    /** 提交类型大小写 */
+    'type-case': [RULE_LEVEL.ERROR, 'always', 'lowercase'],
+    /** 提交类型不能为空 */
+    'type-empty': [RULE_LEVEL.ERROR, 'never'],
 
-    // 提交类型大小写
-    'type-case': [2, 'always', 'lowercase'],
+    // ========== 作用域规则 ==========
+    /** 作用域可以为空 */
+    'scope-empty': [RULE_LEVEL.DISABLED],
 
-    // 提交类型不能为空
-    'type-empty': [2, 'never'],
+    // ========== 主题规则 ==========
+    /** 提交描述不能为空 */
+    'subject-empty': [RULE_LEVEL.ERROR, 'never'],
+    /** 提交描述不能以点号结尾 */
+    'subject-full-stop': [RULE_LEVEL.ERROR, 'never', '.'],
 
-    // 作用域可以为空
-    'scope-empty': [0],
+    // ========== 头部规则 ==========
+    /** 提交信息最大长度 */
+    'header-max-length': [RULE_LEVEL.ERROR, 'always', 100],
 
-    // body 前应有空行
-    'body-leading-blank': [1, 'always'],
+    // ========== Body 规则 ==========
+    /** body 前应有空行 */
+    'body-leading-blank': [RULE_LEVEL.WARNING, 'always'],
 
-    // footer 前应有空行
-    'footer-leading-blank': [1, 'always'],
+    // ========== Footer 规则 ==========
+    /** footer 前应有空行 */
+    'footer-leading-blank': [RULE_LEVEL.WARNING, 'always'],
 
-    // 提交描述不能为空
-    'subject-empty': [2, 'never'],
-
-    // 提交描述不能以点号结尾
-    'subject-full-stop': [2, 'never', '.'],
-
-    // 提交信息最大长度
-    'header-max-length': [2, 'always', 100],
+    // ========== 自定义规则 ==========
+    /** 禁止使用中文冒号（Conventional Commits 格式要求使用英文冒号） */
+    'no-chinese-colon': [RULE_LEVEL.ERROR, 'always'],
   },
+  plugins: [
+    {
+      rules: {
+        /**
+         * 禁止使用中文冒号
+         * Conventional Commits 格式要求使用英文冒号 (:)
+         */
+        'no-chinese-colon': ({ raw }) => {
+          if (/：/.test(raw)) {
+            return [
+              false,
+              '提交信息中包含中文冒号，请使用英文冒号(:)代替中文冒号(：)',
+            ]
+          }
+          return [true, '']
+        },
+      },
+    },
+  ],
 }
