@@ -31,9 +31,9 @@
     "dev": "vite build --watch",
     "type-check": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm type-check && pnpm build",
-    "version:patch": "pnpm version patch --no-git-tag-version",
-    "version:minor": "pnpm version minor --no-git-tag-version",
-    "version:major": "pnpm version major --no-git-tag-version"
+    "publish:patch": "pnpm version patch --no-git-tag-version && pnpm publish",
+    "publish:minor": "pnpm version minor --no-git-tag-version && pnpm publish",
+    "publish:major": "pnpm version major --no-git-tag-version && pnpm publish"
   },
   "peerDependencies": {
     "element-plus": "^2.11.7",
