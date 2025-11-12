@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import type { Slot } from 'vue'
 import type { ActionConfig, ActionConfigButtonItem } from './types'
+import { ElButton, ElFormItem } from 'element-plus'
 import { computed } from 'vue'
 import { ACTION_DEFAULT_CONFIG, DEFAULT_FORM_ACTION_BUTTONS } from './config'
 
@@ -52,12 +53,12 @@ const btnAttrs = computed(() => {
 </script>
 
 <template>
-  <el-form-item v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow" prop="action">
+  <ElFormItem v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow" prop="action">
     <template v-if="!actionSlot">
-      <el-button v-for="(btn, i) in normalizedButtons" :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
+      <ElButton v-for="(btn, i) in normalizedButtons" :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
         {{ btn.label ?? '' }}
-      </el-button>
+      </ElButton>
     </template>
     <component :is="actionSlot" v-else prop="action" />
-  </el-form-item>
+  </ElFormItem>
 </template>

@@ -1,39 +1,34 @@
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
-import { ElementPlusKitResolver } from '../packages/kit/src/utils/resolver'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   plugins: [
-    // Vue 单文件组件支持
     vue(),
-    // 自动导入插件：自动导入 Vue API 和组件
+    // 自动导入插件
     AutoImport({
-      // 解析器：Element Plus 和 Element Plus Kit 的自动导入解析器
+      dts: './src/types/auto-imports.d.ts',
+      // 解析器（如果使用 UI 组件库）
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
-      // 自动导入的模块：Vue API（ref、computed 等）
-      imports: ['vue'],
-      // 类型声明文件输出路径
-      dts: resolve(__dirname, './types/auto-imports.d.ts'),
     }),
-    // 组件自动导入插件：自动导入组件，无需手动 import
+    // 自动注册组件
     Components({
-      // 解析器：Element Plus 和 Element Plus Kit 的组件解析器
+      dts: './src/types/components.d.ts',
+      // 解析器（如果使用 UI 组件库）
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
-      // 类型声明文件输出路径
-      dts: resolve(__dirname, './types/components.d.ts'),
     }),
   ],
   resolve: {

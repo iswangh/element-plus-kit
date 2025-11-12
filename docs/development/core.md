@@ -17,225 +17,115 @@
 
 ## package.json 配置详解
 
-### 📋 完整配置
+### 📋 完整配置（带注释说明）
 
 ```json
 {
+  // 包的唯一标识符，使用 scoped package 命名（@iswangh/ 前缀），避免命名冲突
+  // 遵循 Monorepo 命名规范：@组织名/项目名/包名
+  // 在项目内部，其他包可以通过 @iswangh/element-plus-kit-core 引用此包
   "name": "@iswangh/element-plus-kit-core",
+  
+  // 指定包使用 ES Module（ESM）格式，而不是 CommonJS（CJS）
+  // 使用 ES Module 语法（import/export），现代 JavaScript 标准，更好的 Tree Shaking 支持
+  // 配置一致性：与 vite.config.ts 的 formats: ['es'] 和 tsconfig.json 的 module: "ESNext" 保持一致
   "type": "module",
+  
+  // 包的版本号，遵循语义化版本（SemVer）规范：主版本号.次版本号.修订号
+  // 0.1.0：主版本号（0）= 不兼容的 API 修改，次版本号（1）= 向下兼容的功能性新增，修订号（0）= 向下兼容的问题修正
   "version": "0.1.0",
-  "description": "Element Plus Kit core utilities",
+  
+  // 包的简短描述，用于 npm 搜索和展示（建议不超过 160 个字符）
+  "description": "Element Plus Kit 核心工具函数包",
+  
+  // 包的许可证类型（Apache-2.0 是常用的开源许可证，提供专利保护）
+  // 允许商业使用、修改、分发，并提供专利授权保护
+  "license": "Apache-2.0",
+  
+  // 定义包的导出入口，这是现代 npm 包的标准配置方式（Node.js 12+ 支持）
+  // 更精确的控制、更好的安全性、支持条件导出、TypeScript 支持
+  // 配置一致性说明：
+  //   - 输出目录：所有导出路径都指向 dist/ 目录，与 tsconfig.json 的 outDir 和 vite.config.ts 的默认输出目录一致
+  //   - 类型定义：每个入口都提供对应的类型定义文件，与 tsconfig.json 的 declaration: true 配置一致
   "exports": {
+    // 主入口点，对应 import pkg from '@iswangh/element-plus-kit-core'
+    // types: TypeScript 类型定义文件路径（与 tsconfig.json 的 outDir 一致）
+    // import: ES Module 导入时的入口文件（与 vite.config.ts 的 build.lib.entry 一致）
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },
+  
+  // 向后兼容旧版本的 Node.js 和构建工具
+  // main: CommonJS 和旧版 Node.js 的入口点
+  // module: 为支持 ESM 的打包器提供 ES Module 入口
+  // types: TypeScript 类型定义文件的路径
+  // 优先级：支持 exports 的环境优先使用 exports，不支持的环境回退到 main、module、types
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  
+  // 发布到 npm 时包含的文件列表
   "files": [
     "README.md",
     "dist"
   ],
+  
+  // 脚本命令配置
   "scripts": {
+    // 构建生产版本：使用 Vite 进行构建，输出到 dist/ 目录，生成优化后的代码和类型定义文件
     "build": "vite build",
+    
+    // 开发模式构建：监听文件变化自动重新构建，适用于开发时测试构建输出
     "dev": "vite build --watch",
+    
+    // 类型检查：使用 vue-tsc 检查所有 TypeScript 文件，不生成输出文件，用于 CI/CD 中验证类型正确性
     "type-check": "vue-tsc --noEmit",
+    
+    // 发布前的自动检查脚本：在发布到 npm 之前自动执行，确保构建和类型检查都通过
+    // 如果构建或类型检查失败，发布会被阻止，保证发布到 npm 的包质量
     "prepublishOnly": "pnpm build && pnpm type-check"
   },
+  
+  // 对等依赖：使用此包的项目必须安装的依赖
+  // 不自动安装：npm/pnpm 不会自动安装 peer dependencies
+  // 版本要求：^3.5.23 表示兼容 3.5.23 及以上、4.0.0 以下的版本
+  // 避免重复安装：确保项目中只有一个 Vue 实例
+  // 为什么使用 peer dependencies：
+  //   - 避免版本冲突：确保使用项目中的 Vue 版本
+  //   - 减小包体积：不将 Vue 打包进库中
+  //   - 灵活性：允许用户选择 Vue 版本（在兼容范围内）
+  // 配置一致性：与 vite.config.ts 的 rollupOptions.external 配置保持一致，这些依赖不会被打包进库中
   "peerDependencies": {
     "vue": "^3.5.23"
   },
+  
+  // 开发时依赖：只在开发、构建、测试时需要，不会被打包发布
   "devDependencies": {
+    // TypeScript 编译器：类型检查、编译 TypeScript 代码
     "typescript": "^5.9.2",
+    
+    // 现代前端构建工具：构建、打包、开发服务器
     "vite": "^7.1.5",
+    
+    // Vite 的类型定义生成插件：自动生成 TypeScript 类型定义文件（.d.ts），确保发布的包包含完整的类型支持
     "vite-plugin-dts": "^4.5.4",
+    
+    // Vue 3 框架（开发版本）：开发时测试和类型定义
+    // 注意：vue 在 devDependencies 中是开发版本，实际运行时使用 peerDependencies 中的版本
     "vue": "^3.5.23",
+    
+    // Vue 3 的 TypeScript 类型检查工具：检查 .vue 文件中的 TypeScript 类型，生成类型定义文件（.d.ts）
     "vue-tsc": "^3.0.7"
   },
+  
+  // 发布配置：指定发布到 npm 时的访问权限
   "publishConfig": {
     "access": "public"
   }
 }
 ```
-
-### 📦 基础信息配置
-
-#### `name`
-
-```json
-"name": "@iswangh/element-plus-kit-core"
-```
-
-**作用**：定义包的唯一标识符，用于 npm 安装和导入。
-
-**说明**：
-- 使用 **scoped package** 命名（`@iswangh/` 前缀），避免命名冲突
-- 遵循 Monorepo 命名规范：`@组织名/项目名/包名`
-- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit-core` 引用此包
-
----
-
-#### `type`
-
-```json
-"type": "module"
-```
-
-**作用**：指定包使用 ES Module（ESM）格式，而不是 CommonJS（CJS）。
-
-**说明**：
-- `"module"`：使用 ES Module 语法（`import`/`export`）
-- 此配置影响 Node.js 如何解析 `.js` 文件
-- 现代 JavaScript 标准，更好的 Tree Shaking 支持
-
----
-
-#### `version`
-
-```json
-"version": "0.1.0"
-```
-
-**作用**：定义包的版本号，遵循 [语义化版本（SemVer）](https://semver.org/) 规范。
-
-**版本格式**：`主版本号.次版本号.修订号`
-- **主版本号（0）**：不兼容的 API 修改
-- **次版本号（1）**：向下兼容的功能性新增
-- **修订号（0）**：向下兼容的问题修正
-
----
-
-### 📤 导出配置
-
-#### `exports`
-
-```json
-"exports": {
-  ".": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.js"
-  }
-}
-```
-
-**作用**：定义包的导出入口，这是**现代 npm 包的标准配置方式**（Node.js 12+ 支持）。
-
-**字段说明**：
-- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit-core'`
-- **`types`**：TypeScript 类型定义文件路径
-- **`import`**：ES Module 导入时的入口文件
-
-**为什么使用 `exports`**：
-- ✅ **更精确的控制**：可以分别指定不同模块系统的入口
-- ✅ **更好的安全性**：只暴露指定的文件，隐藏内部实现
-- ✅ **TypeScript 支持**：通过 `types` 字段提供类型定义
-
----
-
-#### `main`、`module`、`types`（兼容性字段）
-
-```json
-"main": "./dist/index.js",
-"module": "./dist/index.js",
-"types": "./dist/index.d.ts"
-```
-
-**作用**：向后兼容旧版本的 Node.js 和构建工具。
-
-**说明**：
-- `main`：CommonJS 和旧版 Node.js 的入口点
-- `module`：为支持 ESM 的打包器提供 ES Module 入口
-- `types`：TypeScript 类型定义文件的路径
-
-**优先级**：
-- 支持 `exports` 的环境：优先使用 `exports`
-- 不支持 `exports` 的环境：回退到 `main`、`module`、`types`
-
----
-
-### 🛠️ 脚本配置
-
-#### `scripts`
-
-```json
-"scripts": {
-  "build": "vite build",
-  "dev": "vite build --watch",
-  "type-check": "vue-tsc --noEmit",
-  "prepublishOnly": "pnpm build && pnpm type-check"
-}
-```
-
-**脚本说明**：
-
-1. **`build`**：构建生产版本
-   ```bash
-   npm run build
-   ```
-
-2. **`dev`**：开发模式构建，监听文件变化自动重新构建
-   ```bash
-   npm run dev
-   ```
-
-3. **`type-check`**：进行 TypeScript 类型检查，不生成文件
-   ```bash
-   npm run type-check
-   ```
-
-4. **`prepublishOnly`**：发布前的自动检查脚本
-   ```bash
-   # 此脚本会在 npm publish 前自动执行
-   pnpm build && pnpm type-check
-   ```
-   
-   **作用**：
-   - 在发布到 npm 之前自动执行
-   - 确保构建和类型检查都通过
-   - 如果构建或类型检查失败，发布会被阻止
-   - 保证发布到 npm 的包质量
-
----
-
-### 🔗 依赖配置
-
-#### `peerDependencies`
-
-```json
-"peerDependencies": {
-  "vue": "^3.5.23"
-}
-```
-
-**作用**：声明包的**对等依赖**，即使用此包的项目必须安装的依赖。
-
-**说明**：
-- **不自动安装**：npm/pnpm 不会自动安装 peer dependencies
-- **版本要求**：`^3.5.23` 表示兼容 3.5.23 及以上、4.0.0 以下的版本
-- **避免重复安装**：确保项目中只有一个 Vue 实例
-
----
-
-#### `devDependencies`
-
-```json
-"devDependencies": {
-  "typescript": "^5.9.2",
-  "vite": "^7.1.5",
-  "vue": "^3.5.23",
-  "vue-tsc": "^3.0.7"
-}
-```
-
-**作用**：声明**开发时依赖**，只在开发、构建、测试时需要，不会被打包发布。
-
-**依赖说明**：
-- **`typescript`**：TypeScript 编译器，用于类型检查和编译
-- **`vite`**：现代前端构建工具，用于构建和打包
-- **`vue`**：Vue 3 框架（开发版本），用于类型定义和测试
-- **`vue-tsc`**：Vue 3 的 TypeScript 类型检查工具，用于检查 `.vue` 文件
 
 ---
 
@@ -245,361 +135,48 @@
 
 ```json
 {
+  // 继承根目录的基础 TypeScript 配置
   "extends": "../../tsconfig.app.json",
   "compilerOptions": {
+    // 启用复合项目模式，支持 TypeScript Project References
     "composite": true,
+    // 增量编译信息文件路径
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-core.tsbuildinfo",
+    // 类型库：ES2022 和 DOM API
     "lib": ["ES2022", "DOM"],
+    // 根目录：src 目录
     "rootDir": "./src",
+    // 模块系统：ESNext（ES 模块）
     "module": "ESNext",
+    // 模块解析策略：使用 bundler 模式
     "moduleResolution": "bundler",
+    // 路径别名：清空继承的 paths，core 包不依赖其他内部包，强制使用包名导入
+    // 配置一致性：与 vite.config.ts 不配置 resolve.alias 保持一致，统一使用包名导入，pnpm workspace 自动解析到工作区内的源码
     "paths": {},
+    // 启用 package.json exports 字段解析
     "resolvePackageJsonExports": true,
+    // 包含的全局类型定义：Node.js 类型（用于构建工具）
     "types": ["node"],
+    // 禁止导入 .ts 扩展名（由构建工具处理）
     "allowImportingTsExtensions": false,
+    // 生成类型声明文件（.d.ts）
     "declaration": true,
+    // 生成类型声明文件的 source map
     "declarationMap": true,
+    // 允许输出文件（构建时需要）
     "noEmit": false,
+    // 输出目录：dist
+    // 配置一致性：与 package.json 的 exports 路径和 vite.config.ts 的默认输出目录保持一致
     "outDir": "./dist",
+    // 跳过类型库的类型检查（提升编译速度）
     "skipLibCheck": true
   },
+  // 包含的文件：src 目录下的所有文件
   "include": ["src/**/*"],
+  // 排除的文件：node_modules 和 dist 目录
   "exclude": ["node_modules", "dist"]
 }
 ```
-
-### 🔧 配置继承
-
-#### `extends`
-
-```json
-"extends": "../../tsconfig.app.json"
-```
-
-**作用**：继承根目录的基础 TypeScript 配置。
-
-**说明**：
-- 复用公共配置，避免重复
-- 基础配置定义在 `tsconfig.app.json` 中
-- 当前配置会覆盖或扩展基础配置
-
-**基础配置包含**：
-- Vue 3 相关配置
-- 模块解析策略
-- 路径别名配置
-
----
-
-### ⚙️ 编译器选项
-
-#### `composite`
-
-```json
-"composite": true
-```
-
-**作用**：启用 TypeScript 项目引用（Project References）功能。
-
-**说明**：
-- 启用后，TypeScript 会生成 `.tsbuildinfo` 文件用于增量编译
-- 支持 Monorepo 中多个包之间的类型引用
-- 提升大型项目的编译性能
-
-**使用场景**：
-- Monorepo 项目结构
-- 需要包之间类型共享
-- 需要增量编译优化
-
----
-
-#### `tsBuildInfoFile`
-
-```json
-"tsBuildInfoFile": "../../node_modules/.tmp/packages-core.tsbuildinfo"
-```
-
-**作用**：指定 TypeScript 增量编译信息文件的存储路径。
-
-**说明**：
-- 存储上次编译的信息，用于增量编译
-- 路径指向根目录的临时文件夹
-- 不应提交到版本控制（已在 `.gitignore` 中）
-
-**文件作用**：
-- 记录上次编译的文件和依赖关系
-- 只重新编译变更的文件
-- 大幅提升编译速度
-
----
-
-#### `lib`
-
-```json
-"lib": ["ES2022", "DOM"]
-```
-
-**作用**：指定 TypeScript 包含的库定义文件。
-
-**说明**：
-- **`ES2022`**：包含 ES2022 标准的类型定义
-  - ES2022 新特性包括：顶层 await、类字段、私有方法、静态块等
-  - 相比 ES2020，增加了更多现代 JavaScript 特性支持
-  - 具有良好的浏览器和 Node.js 支持
-- **`DOM`**：包含浏览器 DOM API 的类型定义（如 `document`、`window` 等）
-
-**为什么使用 ES2022**：
-- ✅ 支持更多现代 JavaScript 特性
-- ✅ 良好的浏览器兼容性（现代浏览器都支持）
-- ✅ 构建工具（Vite）会处理兼容性，最终输出兼容目标环境
-
-**为什么需要 DOM**：
-- 虽然 core 包不直接操作 DOM，但可能被浏览器环境使用
-- 确保类型定义的完整性
-
-**ES 版本说明**：
-- ES2020：2020 年发布，包含可选链、空值合并等
-- ES2021：2021 年发布，包含逻辑赋值运算符等
-- ES2022：2022 年发布，包含顶层 await、类字段等（当前使用）
-- ES2023：2023 年发布，包含数组查找方法等
-- ES2024/ES2025：更新的版本，但浏览器支持可能不够广泛
-
----
-
-#### `rootDir`
-
-```json
-"rootDir": "./src"
-```
-
-**作用**：指定输入文件的根目录。
-
-**说明**：
-- 所有源文件必须在此目录下
-- TypeScript 会保持目录结构到输出目录
-- 确保输出目录结构与源代码一致
-
-**示例**：
-```
-src/
-  index.ts          → dist/index.js
-  utils/
-    checkCondition.ts → dist/utils/checkCondition.js
-```
-
----
-
-#### `module`
-
-```json
-"module": "ESNext"
-```
-
-**作用**：指定生成的模块系统。
-
-**说明**：
-- **`ESNext`**：使用最新的 ES Module 语法
-- 支持 `import`/`export` 语法
-- 与 `moduleResolution: "bundler"` 配合使用
-
-**为什么使用 ESNext**：
-- ✅ 现代 JavaScript 标准
-- ✅ 更好的 Tree Shaking 支持
-- ✅ 与 Vite 等现代构建工具兼容
-
----
-
-#### `moduleResolution`
-
-```json
-"moduleResolution": "bundler"
-```
-
-**作用**：指定模块解析策略。
-
-**说明**：
-- **`bundler`**：适用于使用打包工具（如 Vite、Webpack）的项目
-- 支持 `package.json` 的 `exports` 字段
-- 支持条件导出（conditional exports）
-
-**为什么使用 bundler**：
-- ✅ 支持 `package.json` 的 `exports` 字段
-- ✅ 与 Vite 等现代构建工具兼容
-- ✅ 更好的类型解析
-
-**注意**：`moduleResolution: "bundler"` 需要 `module: "ESNext"` 或更高版本。
-
----
-
-#### `paths`
-
-```json
-"paths": {}
-```
-
-**作用**：覆盖继承的路径别名配置，使用包名导入。
-
-**说明**：
-- 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
-- 强制使用包名导入而不是路径别名
-- 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
-
-**为什么设置为空对象**：
-- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名而不是路径别名
-- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
-- ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
-- ✅ **更好的类型推断**：TypeScript 可以通过 `package.json` 的 `exports` 字段正确解析类型
-
----
-
-#### `resolvePackageJsonExports`
-
-```json
-"resolvePackageJsonExports": true
-```
-
-**作用**：启用 `package.json` 的 `exports` 字段解析。
-
-**说明**：
-- 启用后，TypeScript 会优先使用 `package.json` 的 `exports` 字段解析模块
-- 支持条件导出（如 `exports.types`、`exports.import`）
-- 与 `moduleResolution: "bundler"` 配合使用
-
-**为什么启用**：
-- ✅ 支持现代包导出规范
-- ✅ 更好的类型解析
-- ✅ 与发布后的包结构一致
-
----
-
-#### `types`
-
-```json
-"types": ["node"]
-```
-
-**作用**：指定要包含的类型定义包。
-
-**说明**：
-- **`node`**：包含 Node.js 的类型定义（如 `process`、`Buffer` 等）
-- 用于构建工具（Vite）中可能使用的 Node.js API
-
-**注意**：只包含明确列出的类型包，不会自动包含 `@types/*` 包。
-
----
-
-#### `declaration`
-
-```json
-"declaration": true
-```
-
-**作用**：生成 `.d.ts` 类型定义文件。
-
-**说明**：
-- 为每个 `.ts` 文件生成对应的 `.d.ts` 文件
-- 其他项目可以使用这些类型定义获得类型提示
-- 发布包时必须启用
-
-**输出示例**：
-```
-src/index.ts → dist/index.d.ts
-```
-
----
-
-#### `declarationMap`
-
-```json
-"declarationMap": true
-```
-
-**作用**：为类型定义文件生成 source map。
-
-**说明**：
-- 生成 `.d.ts.map` 文件
-- 支持从类型定义跳转到源代码
-- 提升开发体验（IDE 中可以直接跳转到源码）
-
----
-
-#### `noEmit`
-
-```json
-"noEmit": false
-```
-
-**作用**：允许 TypeScript 生成输出文件。
-
-**说明**：
-- `false` 表示会生成 JavaScript 文件
-- 在构建库时通常设置为 `false`
-- 在类型检查时（`type-check` 脚本）使用 `--noEmit` 标志覆盖此设置
-
----
-
-#### `outDir`
-
-```json
-"outDir": "./dist"
-```
-
-**作用**：指定编译输出目录。
-
-**说明**：
-- 所有编译后的文件输出到此目录
-- 与 `rootDir` 配合，保持目录结构
-- 此目录会被发布到 npm（在 `files` 字段中指定）
-
----
-
-#### `skipLibCheck`
-
-```json
-"skipLibCheck": true
-```
-
-**作用**：跳过对声明文件（`.d.ts`）的类型检查。
-
-**说明**：
-- 跳过检查 `node_modules` 中的类型定义
-- 大幅提升编译速度
-- 通常可以安全启用，因为第三方库的类型定义已经验证过
-
-**权衡**：
-- ✅ 提升编译速度
-- ⚠️ 可能忽略第三方库的类型错误（但通常不影响使用）
-
----
-
-### 📁 文件包含与排除
-
-#### `include`
-
-```json
-"include": ["src/**/*"]
-```
-
-**作用**：指定要包含在编译中的文件或目录。
-
-**说明**：
-- `src/**/*` 表示 `src` 目录下的所有文件
-- 使用 glob 模式匹配文件
-- 只编译匹配的文件
-
----
-
-#### `exclude`
-
-```json
-"exclude": ["node_modules", "dist"]
-```
-
-**作用**：指定要排除在编译之外的文件或目录。
-
-**说明**：
-- **`node_modules`**：排除依赖包
-- **`dist`**：排除构建输出目录
-- 即使匹配 `include`，也会被排除
 
 ---
 
@@ -608,11 +185,15 @@ src/index.ts → dist/index.d.ts
 ### 📋 完整配置
 
 ```typescript
+// 路径解析工具：在 ES Module 环境中获取当前文件目录
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+// Vite 配置定义函数：提供类型提示和配置验证
 import { defineConfig } from 'vite'
+// TypeScript 类型定义生成插件：自动生成 .d.ts 文件
 import dts from 'vite-plugin-dts'
 
+// 获取当前文件目录（ES Module 环境中的 __dirname 替代方案）
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 /**
@@ -622,24 +203,39 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  */
 export default defineConfig({
   plugins: [
+    // 类型声明文件生成插件
     dts({
+      // 包含的文件：所有 src 目录下的文件
       include: ['src/**/*'],
+      // 排除的文件：测试文件
       exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      // 输出目录：dist
       outDir: 'dist',
+      // 复制类型声明文件到输出目录
       copyDtsFiles: true,
+      // 日志级别：静默（不输出日志）
       logLevel: 'silent',
     }),
   ],
   build: {
+    // 库模式配置
     lib: {
+      // 入口文件（对应 package.json 的 exports["."]）
       entry: resolve(__dirname, 'src/index.ts'),
+      // 库名称（用于 UMD 格式，当前仅使用 ES 格式）
       name: 'ElementPlusKitCore',
+      // 输出文件名：index.js
       fileName: 'index',
+      // 输出格式：仅 ES 模块
+      // 配置一致性：与 package.json 的 type: "module" 和 tsconfig.json 的 module: "ESNext" 保持一致
       formats: ['es'],
     },
     rollupOptions: {
+      // 外部依赖：不打包到库中，由使用者提供（避免重复打包，减小库体积）
+      // 配置一致性：与 package.json 的 peerDependencies 保持一致，vue 不会被打包进库中
       external: ['vue'],
       output: {
+        // 全局变量映射（用于 UMD 格式，当前未使用）
         globals: {
           vue: 'Vue',
         },
@@ -649,194 +245,7 @@ export default defineConfig({
 })
 ```
 
-### 📦 导入说明
-
-#### 路径解析工具
-
-```typescript
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-```
-
-**作用**：在 ES Module 环境中获取当前文件目录。
-
-**说明**：
-- `fileURLToPath`：将 `file://` URL 转换为文件路径
-- `import.meta.url`：当前模块的 URL
-- `new URL('.', import.meta.url)`：获取当前目录的 URL
-- 最终得到 `__dirname` 变量（类似 CommonJS 的 `__dirname`）
-
-**为什么需要**：
-- ES Module 中没有 `__dirname` 和 `__filename`
-- 需要使用 `import.meta.url` 和 `fileURLToPath` 来获取
-
----
-
-#### 配置定义函数
-
-```typescript
-import { defineConfig } from 'vite'
-```
-
-**作用**：提供类型提示和配置验证。
-
-**说明**：
-- 提供完整的 TypeScript 类型提示
-- 在配置错误时给出提示
-- 支持配置的智能补全
-
----
-
-#### TypeScript 类型定义插件
-
-```typescript
-import dts from 'vite-plugin-dts'
-```
-
-**作用**：自动生成 TypeScript 类型定义文件（`.d.ts`）。
-
-**说明**：
-- `vite-plugin-dts`：Vite 插件，用于生成类型定义文件
-- 构建时自动为每个 TypeScript 文件生成对应的 `.d.ts` 文件
-- 确保发布的包包含完整的类型定义
-
-**插件配置**：
-```typescript
-dts({
-  include: ['src/**/*'],
-  exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
-  outDir: 'dist',
-  copyDtsFiles: true,
-  logLevel: 'silent',
-})
-```
-
-**字段说明**：
-- `include`：包含的文件模式
-- `exclude`：排除的文件模式（测试文件）
-- `outDir`：输出目录，与构建输出目录一致
-- `copyDtsFiles`：复制 `.d.ts` 文件到输出目录
-- `logLevel`：日志级别，`silent` 表示不输出日志
-
----
-
-### 🏗️ 构建配置
-
-#### `plugins`
-
-```typescript
-plugins: [
-  dts({
-    include: ['src/**/*'],
-    exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
-    outDir: 'dist',
-    copyDtsFiles: true,
-    logLevel: 'silent',
-  }),
-],
-```
-
-**作用**：配置 Vite 插件。
-
-**说明**：
-- **`dts()`**：TypeScript 类型定义生成插件
-- 自动生成 `.d.ts` 类型定义文件
-- 确保发布的包包含完整的类型支持
-
----
-
-#### `build.lib`
-
-```typescript
-build: {
-  lib: {
-    entry: resolve(__dirname, 'src/index.ts'),
-    name: 'ElementPlusKitCore',
-    fileName: 'index',
-    formats: ['es'],
-  }
-}
-```
-
-**作用**：配置库模式构建。
-
-**字段说明**：
-
-1. **`entry`**：库的入口文件
-   - 指向 `src/index.ts`
-   - 使用 `resolve` 获取绝对路径
-
-2. **`name`**：库的全局变量名（用于 UMD 格式）
-   - 当前配置为 ES Module，此字段主要用于 UMD 格式
-   - 如果只构建 ES Module，可以省略
-
-3. **`fileName`**：输出文件名
-   - `'index'` 表示输出为 `index.js`
-   - 可以是一个函数来自定义文件名
-
-4. **`formats`**：构建格式
-   - `['es']` 表示只构建 ES Module 格式
-   - 可选值：`'es'`、`'cjs'`、`'umd'`、`'iife'`
-
-**为什么只使用 ES Module**：
-- 现代标准，更好的 Tree Shaking
-- 与 `package.json` 中的 `"type": "module"` 一致
-- 减小包体积
-
----
-
-#### `build.rollupOptions`
-
-```typescript
-rollupOptions: {
-  external: ['vue'],
-  output: {
-    globals: {
-      vue: 'Vue',
-    },
-  },
-}
-```
-
-**作用**：配置 Rollup 构建选项（Vite 使用 Rollup 进行生产构建）。
-
-**字段说明**：
-
-1. **`external`**：外部依赖列表
-   - `['vue']` 表示 Vue 不会被打包进库中
-   - 使用库的项目需要自己安装 Vue
-   - 与 `peerDependencies` 中的 `vue` 对应
-
-2. **`output.globals`**：全局变量映射（用于 UMD 格式）
-   - `vue: 'Vue'` 表示在 UMD 格式中，Vue 通过全局变量 `Vue` 访问
-   - 当前配置为 ES Module，此字段主要用于 UMD 格式
-
-**为什么将 Vue 设为外部依赖**：
-- ✅ 避免重复打包，减小库体积
-- ✅ 确保使用项目中的 Vue 版本
-- ✅ 避免版本冲突
-
----
-
-### 🔄 配置特点
-
-#### 1. 库模式构建
-
-- 使用 `build.lib` 配置库模式
-- 输出为 ES Module 格式
-- 适合发布到 npm
-
-#### 2. 外部依赖处理
-
-- Vue 作为外部依赖，不打包进库
-- 与 `peerDependencies` 保持一致
-- 减小库体积
-
-#### 3. 插件配置
-
-- Core 包不包含 Vue 组件，不需要 `@vitejs/plugin-vue`
-- 使用 `vite-plugin-dts` 插件生成类型定义文件
-- 纯 TypeScript 工具函数包
+**注意**：Core 包不包含 Vue 组件，不需要配置 `@vitejs/plugin-vue` 插件。Core 包是纯 TypeScript 工具函数包，只需要 `vite-plugin-dts` 插件来生成类型定义文件。
 
 ---
 
@@ -870,45 +279,6 @@ package.json ──────────────────────�
     └─ exports.types: "./dist/index.d.ts"
 ```
 
-### 📝 配置一致性
-
-#### 1. 输出目录
-
-- **`tsconfig.json`**：`outDir: "./dist"`
-- **`vite.config.ts`**：默认输出到 `dist/`
-- **`package.json`**：`exports.import: "./dist/index.js"`
-
-**一致性**：所有配置都指向 `dist/` 目录。
-
----
-
-#### 2. 模块格式
-
-- **`package.json`**：`type: "module"` + `exports.import`
-- **`vite.config.ts`**：`formats: ['es']`
-- **`tsconfig.json`**：继承基础配置（ES Module）
-
-**一致性**：统一使用 ES Module 格式。
-
----
-
-#### 3. 外部依赖
-
-- **`package.json`**：`peerDependencies: { vue: "^3.5.23" }`
-- **`vite.config.ts`**：`external: ['vue']`
-
-**一致性**：Vue 作为外部依赖，不打包进库。
-
----
-
-#### 4. 类型定义
-
-- **`tsconfig.json`**：`declaration: true` + `outDir: "./dist"`
-- **`package.json`**：`exports.types: "./dist/index.d.ts"`
-
-**一致性**：类型定义文件与 JavaScript 文件一起生成和导出。
-
----
 
 ## 开发工作流
 

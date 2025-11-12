@@ -62,6 +62,9 @@ export function ElementPlusKitResolver(): ComponentResolver & ResolverFunction {
       return {
         name,
         from: `@iswangh/${packageName}`,
+        // sideEffects 配置：确保样式文件在 Tree Shaking 时不被移除
+        // 注意：packages/form/src/index.ts 中已按需导入了所有 Element Plus 组件样式，
+        // 当组件被导入时，样式会自动被导入，无需额外配置
         sideEffects: `@iswangh/${packageName}/style.css`,
       }
     },

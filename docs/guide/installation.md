@@ -36,10 +36,15 @@ yarn add element-plus
 
 ### 3. 引入样式
 
+**重要说明**：WForm 组件已按需导入了所有内部使用的 Element Plus 组件样式，用户导入组件时样式会自动导入，**无需额外配置**。
+
+如果需要在 CSS 文件中单独导入样式，可以使用：
+
 ```typescript
-import 'element-plus/dist/index.css'
 import '@iswangh/element-plus-kit-form/style.css'
 ```
+
+**注意**：此样式文件已包含 WForm 内部使用的所有 Element Plus 组件样式（按需导入），无需再导入 Element Plus 的全局样式。
 
 ## 配置 Element Plus
 
@@ -50,7 +55,8 @@ import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import ElementPlusKit from '@iswangh/element-plus-kit'
-import 'element-plus/dist/index.css'
+import App from './App.vue'
+// 注意：WForm 组件已按需导入了所有内部使用的 Element Plus 组件样式，无需导入全局样式
 
 const app = createApp(App)
 

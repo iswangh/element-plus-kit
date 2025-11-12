@@ -22,18 +22,16 @@ const formItems = [
   },
 ] satisfies FormItems
 
-const form = ref({
-  select: '',
-  date: '',
-})
+const form = ref({})
 </script>
 
 <template>
   <div class="test-container">
     <h2>按需导入测试（自动导入）</h2>
     <p>组件自动导入，无需手动 import</p>
+    <el-tag>el-tag</el-tag>
     <!-- WForm 应该被自动导入 -->
-    <WForm :model="form" :form-items="formItems" />
+    <w-form :model="form" :form-items="formItems" />
   </div>
 </template>
 

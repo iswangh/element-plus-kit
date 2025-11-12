@@ -2,7 +2,7 @@
   "name": "@iswangh/element-plus-kit",
   "type": "module",
   "version": "0.1.0",
-  "description": "Element Plus Kit - A collection of Vue 3 components based on Element Plus",
+  "description": "Element Plus Kit - 基于 Element Plus 的 Vue 3 组件集合",
   "author": "iswangh",
   "license": "Apache-2.0",
   "repository": {

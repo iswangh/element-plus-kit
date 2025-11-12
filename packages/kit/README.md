@@ -41,7 +41,8 @@ import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import ElementPlusKit from '@iswangh/element-plus-kit'
-import 'element-plus/dist/index.css'
+import App from './App.vue'
+// 注意：WForm 组件已按需导入了所有内部使用的 Element Plus 组件样式，无需导入全局样式
 
 const app = createApp(App)
 
@@ -99,9 +100,11 @@ import App from './App.vue'
 ```typescript
 import { createApp } from 'vue'
 import ElementPlusKit from '@iswangh/element-plus-kit'
+import App from './App.vue'
 
 const app = createApp(App)
 app.use(ElementPlusKit)
+app.mount('#app')
 ```
 
 ```vue
@@ -114,8 +117,9 @@ app.use(ElementPlusKit)
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {
@@ -161,6 +165,8 @@ export default defineConfig({
     vue(),
     AutoImport({
       resolvers: [
+        // ElementPlusResolver 默认 importStyle 为 'css'，会自动导入模板中直接使用的 Element Plus 组件样式
+        // 注意：WForm 组件内部使用的 Element Plus 组件样式已在组件包内按需导入，无需额外配置
         ElementPlusResolver(),
         ElementPlusKitResolver(), // ElementPlusKitResolver 同时支持 AutoImport 和 Components
       ],
@@ -168,6 +174,8 @@ export default defineConfig({
     }),
     Components({
       resolvers: [
+        // ElementPlusResolver 默认 importStyle 为 'css'，会自动导入模板中直接使用的 Element Plus 组件样式
+        // 注意：WForm 组件内部使用的 Element Plus 组件样式已在组件包内按需导入，无需额外配置
         ElementPlusResolver(),
         ElementPlusKitResolver(), // ElementPlusKitResolver 同时支持 AutoImport 和 Components
       ],
@@ -181,7 +189,7 @@ export default defineConfig({
 ```vue
 <script setup lang="ts">
 // 无需手动导入，组件会自动导入
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {
@@ -299,8 +307,9 @@ import type {
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {
@@ -340,8 +349,9 @@ const form = ref({
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit-form'
+import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {

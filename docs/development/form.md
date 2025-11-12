@@ -17,316 +17,157 @@
 
 ## package.json 配置详解
 
-### 📋 完整配置
+### 📋 完整配置（带注释说明）
 
 ```json
 {
+  // 包的唯一标识符，使用 scoped package 命名（@iswangh/ 前缀），避免命名冲突
+  // 遵循 Monorepo 命名规范：@组织名/项目名/包名
+  // 在项目内部，其他包可以通过 @iswangh/element-plus-kit-form 引用此包
   "name": "@iswangh/element-plus-kit-form",
+  
+  // 指定包使用 ES Module（ESM）格式，而不是 CommonJS（CJS）
+  // 使用 ES Module 语法（import/export），现代 JavaScript 标准，更好的 Tree Shaking 支持
+  // 配置一致性：与 vite.config.ts 的 formats: ['es'] 和 tsconfig.json 的 module: "ESNext" 保持一致
   "type": "module",
+  
+  // 包的版本号，遵循语义化版本（SemVer）规范：主版本号.次版本号.修订号
+  // 0.1.0：主版本号（0）= 不兼容的 API 修改，次版本号（1）= 向下兼容的功能性新增，修订号（0）= 向下兼容的问题修正
   "version": "0.1.0",
-  "description": "Element Plus Kit Form component",
+  
+  // 包的简短描述，用于 npm 搜索和展示（建议不超过 160 个字符）
+  "description": "Element Plus Kit 表单组件包",
+  
+  // 包的许可证类型（Apache-2.0 是常用的开源许可证，提供专利保护）
+  // 允许商业使用、修改、分发，并提供专利授权保护
+  "license": "Apache-2.0",
+  
+  // 副作用文件列表：标记包含副作用的文件，帮助构建工具进行 Tree Shaking 优化
+  // 样式文件和入口文件可能包含副作用（如样式注入、全局注册等），需要标记以避免被错误地 Tree Shaking
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/style.css"
+  ],
+  
+  // 定义包的导出入口，这是现代 npm 包的标准配置方式（Node.js 12+ 支持）
+  // 更精确的控制、更好的安全性、支持条件导出、TypeScript 支持、样式文件导出
+  // 配置一致性说明：
+  //   - 输出目录：所有导出路径都指向 dist/ 目录，与 tsconfig.json 的 outDir 和 vite.config.ts 的默认输出目录一致
+  //   - 类型定义：每个入口都提供对应的类型定义文件，与 tsconfig.json 的 declaration: true 配置一致
+  //   - 样式文件：支持单独导入样式文件，与 vite.config.ts 的 cssCodeSplit: false 和 assetFileNames 配置一致
   "exports": {
+    // 主入口点，对应 import pkg from '@iswangh/element-plus-kit-form'
+    // types: TypeScript 类型定义文件路径（与 tsconfig.json 的 outDir 一致）
+    // import: ES Module 导入时的入口文件（与 vite.config.ts 的 build.lib.entry 一致）
+    // sideEffects: 标记此入口包含副作用，避免被错误地 Tree Shaking
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "sideEffects": ["./dist/index.js", "./dist/style.css"]
     },
+    // 样式文件入口点，对应 import '@iswangh/element-plus-kit-form/style.css'
+    // 与 vite.config.ts 的 rollupOptions.output.assetFileNames 配置保持一致
     "./style.css": "./dist/style.css"
   },
+  
+  // 向后兼容旧版本的 Node.js 和构建工具
+  // main: CommonJS 和旧版 Node.js 的入口点
+  // module: 为支持 ESM 的打包器提供 ES Module 入口
+  // types: TypeScript 类型定义文件的路径
+  // 优先级：支持 exports 的环境优先使用 exports，不支持的环境回退到 main、module、types
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  
+  // 发布到 npm 时包含的文件列表
   "files": [
     "README.md",
     "dist"
   ],
+  
+  // 脚本命令配置
   "scripts": {
+    // 构建生产版本：使用 Vite 进行构建，输出到 dist/ 目录，生成优化后的代码、类型定义文件和样式文件
     "build": "vite build",
+    
+    // 开发模式构建：监听文件变化自动重新构建，适用于开发时测试构建输出
     "dev": "vite build --watch",
-    "type-check": "vue-tsc --noEmit"
+    
+    // 类型检查：使用 vue-tsc 检查所有 TypeScript 和 Vue 文件，不生成输出文件，用于 CI/CD 中验证类型正确性
+    "type-check": "vue-tsc --noEmit",
+    
+    // 发布前的自动检查脚本：在发布到 npm 之前自动执行，确保构建和类型检查都通过
+    // 如果构建或类型检查失败，发布会被阻止，保证发布到 npm 的包质量
+    "prepublishOnly": "pnpm build && pnpm type-check"
   },
+  
+  // 对等依赖：使用此包的项目必须安装的依赖
+  // 不自动安装：npm/pnpm 不会自动安装 peer dependencies
+  // 版本要求：
+  //   - element-plus: "^2.11.7" 表示兼容 2.11.7 及以上、3.0.0 以下的版本
+  //   - vue: "^3.5.23" 表示兼容 3.5.23 及以上、4.0.0 以下的版本
+  // 避免重复安装：确保项目中只有一个 Vue 和 Element Plus 实例
+  // 为什么使用 peer dependencies：
+  //   - 避免版本冲突：确保使用项目中的 Vue 和 Element Plus 版本
+  //   - 减小包体积：不将 Vue 和 Element Plus 打包进库中
+  //   - 灵活性：允许用户选择 Vue 和 Element Plus 版本（在兼容范围内）
+  // 配置一致性：与 vite.config.ts 的 rollupOptions.external 配置保持一致，这些依赖不会被打包进库中
   "peerDependencies": {
     "element-plus": "^2.11.7",
     "vue": "^3.5.23"
   },
+  
+  // 运行时依赖：会被打包进库中
+  // workspace:*：Monorepo 工作区协议，表示使用工作区内的 core 包
+  // 此依赖会被打包进最终的库文件中，用户安装 form 包时，core 包也会被安装
+  // 为什么使用 workspace 协议：
+  //   - 开发时使用源码：开发时直接使用工作区内的源码
+  //   - 发布时自动解析：发布到 npm 时，pnpm 会自动解析为正确的版本号
+  //   - 避免版本冲突：确保使用工作区内的版本
+  // 注意：form 包依赖 core 包，core 包提供工具函数
+  // 配置一致性：core 包在 vite.config.ts 的 rollupOptions.external 中也被标记为外部依赖，不会被打包进库中
   "dependencies": {
     "@iswangh/element-plus-kit-core": "workspace:*"
   },
+  
+  // 开发时依赖：只在开发、构建、测试时需要，不会被打包发布
   "devDependencies": {
+    // Element Plus 图标库：用于表单操作按钮的图标，开发时需要，用于类型定义和测试
     "@element-plus/icons-vue": "^2.3.2",
+    
+    // Vite 的 Vue 插件：用于处理 .vue 文件，构建时必需
     "@vitejs/plugin-vue": "^6.0.1",
+    
+    // Element Plus 组件库（开发版本）：开发时测试组件、类型定义（TypeScript）、构建时可能需要
+    // 注意：element-plus 在 devDependencies 中是开发版本，实际运行时使用 peerDependencies 中的版本
     "element-plus": "^2.11.7",
+    
+    // Sass 预处理器：用于编译 SCSS 样式文件
+    "sass": "^1.93.3",
+    
+    // TypeScript 编译器：类型检查、编译 TypeScript 代码
     "typescript": "^5.9.2",
+    
+    // 现代前端构建工具：构建、打包、开发服务器
     "vite": "^7.1.5",
+    
+    // Vite 的类型定义生成插件：自动生成 TypeScript 类型定义文件（.d.ts），确保发布的包包含完整的类型支持
+    "vite-plugin-dts": "^4.5.4",
+    
+    // Vue 3 框架（开发版本）：开发时测试组件、类型定义（TypeScript）
+    // 注意：vue 在 devDependencies 中是开发版本，实际运行时使用 peerDependencies 中的版本
     "vue": "^3.5.23",
+    
+    // Vue 3 的 TypeScript 类型检查工具：检查 .vue 文件中的 TypeScript 类型，生成类型定义文件（.d.ts）
     "vue-tsc": "^3.0.7"
   },
+  
+  // 发布配置：指定发布到 npm 时的访问权限
   "publishConfig": {
     "access": "public"
   }
 }
 ```
-
-### 📦 基础信息配置
-
-#### `name`
-
-```json
-"name": "@iswangh/element-plus-kit-form"
-```
-
-**作用**：定义包的唯一标识符，用于 npm 安装和导入。
-
-**说明**：
-- 使用 **scoped package** 命名（`@iswangh/` 前缀），避免命名冲突
-- 遵循 Monorepo 命名规范：`@组织名/项目名/包名`
-- 在项目内部，其他包可以通过 `@iswangh/element-plus-kit-form` 引用此包
-
-**使用示例**：
-```bash
-# 安装包
-npm install @iswangh/element-plus-kit-form
-
-# 在代码中导入
-import { WForm } from '@iswangh/element-plus-kit-form'
-import '@iswangh/element-plus-kit-form/style.css'
-```
-
----
-
-#### `type`
-
-```json
-"type": "module"
-```
-
-**作用**：指定包使用 ES Module（ESM）格式，而不是 CommonJS（CJS）。
-
-**说明**：
-- `"module"`：使用 ES Module 语法（`import`/`export`）
-- 此配置影响 Node.js 如何解析 `.js` 文件
-- 现代 JavaScript 标准，更好的 Tree Shaking 支持
-
----
-
-#### `version`
-
-```json
-"version": "0.1.0"
-```
-
-**作用**：定义包的版本号，遵循 [语义化版本（SemVer）](https://semver.org/) 规范。
-
-**版本格式**：`主版本号.次版本号.修订号`
-- **主版本号（0）**：不兼容的 API 修改
-- **次版本号（1）**：向下兼容的功能性新增
-- **修订号（0）**：向下兼容的问题修正
-
----
-
-### 📤 导出配置
-
-#### `exports`
-
-```json
-"exports": {
-  ".": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.js"
-  },
-  "./style.css": "./dist/style.css"
-}
-```
-
-**作用**：定义包的导出入口，这是**现代 npm 包的标准配置方式**（Node.js 12+ 支持）。
-
-**字段说明**：
-
-- **`"."`**：主入口点，对应 `import pkg from '@iswangh/element-plus-kit-form'`
-  - `types`：TypeScript 类型定义文件路径
-  - `import`：ES Module 导入时的入口文件
-
-- **`"./style.css"`**：样式文件入口点，对应 `import '@iswangh/element-plus-kit-form/style.css'`
-
-**为什么使用 `exports`**：
-- ✅ **更精确的控制**：可以分别指定不同模块系统的入口
-- ✅ **更好的安全性**：只暴露指定的文件，隐藏内部实现
-- ✅ **支持条件导出**：可以根据环境（Node.js、浏览器等）提供不同的入口
-- ✅ **TypeScript 支持**：通过 `types` 字段提供类型定义
-- ✅ **样式文件导出**：支持单独导入样式文件
-
-**使用示例**：
-```typescript
-// 导入组件
-import { WForm } from '@iswangh/element-plus-kit-form'
-
-// 导入样式
-import '@iswangh/element-plus-kit-form/style.css'
-```
-
----
-
-#### `main`、`module`、`types`（兼容性字段）
-
-```json
-"main": "./dist/index.js",
-"module": "./dist/index.js",
-"types": "./dist/index.d.ts"
-```
-
-**作用**：向后兼容旧版本的 Node.js 和构建工具。
-
-**说明**：
-- `main`：CommonJS 和旧版 Node.js 的入口点
-- `module`：为支持 ESM 的打包器提供 ES Module 入口
-- `types`：TypeScript 类型定义文件的路径
-
-**优先级**：
-- 支持 `exports` 的环境：优先使用 `exports`
-- 不支持 `exports` 的环境：回退到 `main`、`module`、`types`
-
----
-
-### 🛠️ 脚本配置
-
-#### `scripts`
-
-```json
-"scripts": {
-  "build": "vite build",
-  "dev": "vite build --watch",
-  "type-check": "vue-tsc --noEmit"
-}
-```
-
-**脚本说明**：
-
-1. **`build`**：构建生产版本
-   ```bash
-   npm run build
-   ```
-   - 使用 Vite 进行构建
-   - 输出到 `dist/` 目录
-   - 生成优化后的代码、类型定义文件和样式文件
-
-2. **`dev`**：开发模式构建，监听文件变化自动重新构建
-   ```bash
-   npm run dev
-   ```
-   - `--watch` 标志启用文件监听
-   - 当源代码变化时自动重新构建
-   - 适用于开发时测试构建输出
-
-3. **`type-check`**：进行 TypeScript 类型检查，不生成文件
-   ```bash
-   npm run type-check
-   ```
-   - `vue-tsc`：Vue 3 的 TypeScript 编译器
-   - `--noEmit`：只检查类型，不生成输出文件
-   - 用于 CI/CD 中验证类型正确性
-
----
-
-### 🔗 依赖配置
-
-#### `peerDependencies`
-
-```json
-"peerDependencies": {
-  "element-plus": "^2.11.7",
-  "vue": "^3.5.23"
-}
-```
-
-**作用**：声明包的**对等依赖**，即使用此包的项目必须安装的依赖。
-
-**说明**：
-- **不自动安装**：npm/pnpm 不会自动安装 peer dependencies
-- **版本要求**：
-  - `element-plus: "^2.11.7"` 表示兼容 2.11.7 及以上、3.0.0 以下的版本
-  - `vue: "^3.5.23"` 表示兼容 3.5.23 及以上、4.0.0 以下的版本
-- **避免重复安装**：确保项目中只有一个 Vue 和 Element Plus 实例
-
-**为什么使用 peer dependencies**：
-- ✅ **避免版本冲突**：确保使用项目中的 Vue 和 Element Plus 版本
-- ✅ **减小包体积**：不将 Vue 和 Element Plus 打包进库中
-- ✅ **灵活性**：允许用户选择 Vue 和 Element Plus 版本（在兼容范围内）
-
-**正确安装方式**：
-```bash
-# 同时安装包和 peer dependencies
-npm install @iswangh/element-plus-kit-form vue@^3.5.23 element-plus@^2.11.7
-```
-
----
-
-#### `dependencies`
-
-```json
-"dependencies": {
-  "@iswangh/element-plus-kit-core": "workspace:*"
-}
-```
-
-**作用**：声明**运行时依赖**，会被打包进库中。
-
-**说明**：
-- **`workspace:*`**：Monorepo 工作区协议，表示使用工作区内的 core 包
-- 此依赖会被打包进最终的库文件中
-- 用户安装 form 包时，core 包也会被安装
-
-**为什么使用 workspace 协议**：
-- ✅ **开发时使用源码**：开发时直接使用工作区内的源码
-- ✅ **发布时自动解析**：发布到 npm 时，pnpm 会自动解析为正确的版本号
-- ✅ **避免版本冲突**：确保使用工作区内的版本
-
----
-
-#### `devDependencies`
-
-```json
-"devDependencies": {
-  "@element-plus/icons-vue": "^2.3.2",
-  "@vitejs/plugin-vue": "^6.0.1",
-  "element-plus": "^2.11.7",
-  "typescript": "^5.9.2",
-  "vite": "^7.1.5",
-  "vue": "^3.5.23",
-  "vue-tsc": "^3.0.7"
-}
-```
-
-**作用**：声明**开发时依赖**，只在开发、构建、测试时需要，不会被打包发布。
-
-**依赖说明**：
-
-1. **`@element-plus/icons-vue`**：Element Plus 图标库
-   - 用于表单操作按钮的图标
-   - 开发时需要，用于类型定义和测试
-
-2. **`@vitejs/plugin-vue`**：Vite 的 Vue 插件
-   - 用于处理 `.vue` 文件
-   - 构建时必需
-
-3. **`element-plus`**：Element Plus 组件库（开发版本）
-   - 开发时测试组件
-   - 类型定义（TypeScript）
-   - 构建时可能需要（取决于构建配置）
-
-4. **`typescript`**：TypeScript 编译器
-   - 类型检查、编译 TypeScript 代码
-
-5. **`vite`**：现代前端构建工具
-   - 构建、打包、开发服务器
-
-6. **`vue`**：Vue 3 框架（开发版本）
-   - 开发时测试组件
-   - 类型定义（TypeScript）
-
-7. **`vue-tsc`**：Vue 3 的 TypeScript 类型检查工具
-   - 检查 `.vue` 文件中的 TypeScript 类型
-   - 生成类型定义文件（`.d.ts`）
-
-**注意**：`element-plus` 和 `vue` 在 `devDependencies` 中是开发版本，实际运行时使用 `peerDependencies` 中的版本。
 
 ---
 
@@ -336,420 +177,61 @@ npm install @iswangh/element-plus-kit-form vue@^3.5.23 element-plus@^2.11.7
 
 ```json
 {
+  // 继承根目录的基础 TypeScript 配置
   "extends": "../../tsconfig.app.json",
   "compilerOptions": {
+    // 启用复合项目模式，支持 TypeScript Project References
     "composite": true,
+    // 增量编译信息文件路径
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-form.tsbuildinfo",
+    // 类型库：ES2022 和 DOM API
     "lib": ["ES2022", "DOM"],
+    // 基础路径：当前包目录
     "baseUrl": ".",
+    // 根目录：src 目录
     "rootDir": "./src",
+    // 模块系统：ESNext（ES 模块）
     "module": "ESNext",
+    // 模块解析策略：使用 bundler 模式
     "moduleResolution": "bundler",
+    // 路径别名：清空继承的 paths，强制使用包名导入
+    // 配置一致性：与 vite.config.ts 不配置 resolve.alias 保持一致，统一使用包名导入，pnpm workspace 自动解析到工作区内的源码
     "paths": {},
+    // 启用 package.json exports 字段解析
     "resolvePackageJsonExports": true,
+    // 生成类型声明文件（.d.ts）
     "declaration": true,
+    // 生成类型声明文件的 source map
     "declarationMap": true,
+    // 允许输出文件（构建时需要）
     "noEmit": false,
+    // 输出目录：dist
+    // 配置一致性：与 package.json 的 exports 路径和 vite.config.ts 的默认输出目录保持一致
     "outDir": "./dist",
+    // 跳过类型库的类型检查（提升编译速度）
     "skipLibCheck": true
   },
+  // 项目引用：依赖 core 包（通过 TypeScript Project References 管理类型依赖）
   "references": [
     {
       "path": "../core",
+      // 不前置输出：form 包不包含 core 包的代码
       "prepend": false
     }
   ],
+  // Vue 编译器选项（form 包包含 Vue 组件，必须配置）
   "vueCompilerOptions": {
+    // Vue 版本：3（Vue 3）
     "target": 3,
+    // 全局类型定义文件路径
     "globalTypesPath": "../../node_modules/.tmp/vue-global-types.d.ts"
   },
+  // 包含的文件：src 目录下的所有文件
   "include": ["src/**/*"],
+  // 排除的文件：node_modules 和 dist 目录
   "exclude": ["node_modules", "dist"]
 }
 ```
-
-### 🔧 配置继承
-
-#### `extends`
-
-```json
-"extends": "../../tsconfig.app.json"
-```
-
-**作用**：继承根目录的基础 TypeScript 配置。
-
-**说明**：
-- 复用公共配置，避免重复
-- 基础配置定义在 `tsconfig.app.json` 中
-- 当前配置会覆盖或扩展基础配置
-
-**基础配置包含**：
-- Vue 3 相关配置
-- 模块解析策略
-- ES2022 标准库配置
-
----
-
-### ⚙️ 编译器选项
-
-#### `composite`
-
-```json
-"composite": true
-```
-
-**作用**：启用 TypeScript 项目引用（Project References）功能。
-
-**说明**：
-- 启用后，TypeScript 会生成 `.tsbuildinfo` 文件用于增量编译
-- 支持 Monorepo 中多个包之间的类型引用
-- 提升大型项目的编译性能
-
-**使用场景**：
-- Monorepo 项目结构
-- 需要包之间类型共享
-- 需要增量编译优化
-
----
-
-#### `tsBuildInfoFile`
-
-```json
-"tsBuildInfoFile": "../../node_modules/.tmp/packages-form.tsbuildinfo"
-```
-
-**作用**：指定 TypeScript 增量编译信息文件的存储路径。
-
-**说明**：
-- 存储上次编译的信息，用于增量编译
-- 路径指向根目录的临时文件夹
-- 不应提交到版本控制（已在 `.gitignore` 中）
-
----
-
-#### `lib`
-
-```json
-"lib": ["ES2022", "DOM"]
-```
-
-**作用**：指定 TypeScript 包含的库定义文件。
-
-**说明**：
-- **`ES2022`**：包含 ES2022 标准的类型定义
-  - ES2022 新特性包括：顶层 await、类字段、私有方法、静态块等
-  - 具有良好的浏览器和 Node.js 支持
-- **`DOM`**：包含浏览器 DOM API 的类型定义（如 `document`、`window` 等）
-
-**为什么使用 ES2022**：
-- ✅ 支持更多现代 JavaScript 特性
-- ✅ 良好的浏览器兼容性（现代浏览器都支持）
-- ✅ 构建工具（Vite）会处理兼容性，最终输出兼容目标环境
-
----
-
-#### `baseUrl`
-
-```json
-"baseUrl": "."
-```
-
-**作用**：指定模块解析的基准目录。
-
-**说明**：
-- 用于解析非相对模块导入
-- 与 `paths` 配置配合使用
-- 当前目录（`.`）表示 `tsconfig.json` 所在目录
-
----
-
-#### `rootDir`
-
-```json
-"rootDir": "./src"
-```
-
-**作用**：指定输入文件的根目录。
-
-**说明**：
-- 所有源文件必须在此目录下
-- TypeScript 会保持目录结构到输出目录
-- 确保输出目录结构与源代码一致
-
----
-
-#### `module`
-
-```json
-"module": "ESNext"
-```
-
-**作用**：指定生成的模块系统。
-
-**说明**：
-- **`ESNext`**：使用最新的 ES Module 语法
-- 支持 `import`/`export` 语法
-- 与 `moduleResolution: "bundler"` 配合使用
-
-**为什么使用 ESNext**：
-- ✅ 现代 JavaScript 标准
-- ✅ 更好的 Tree Shaking 支持
-- ✅ 与 Vite 等现代构建工具兼容
-
----
-
-#### `moduleResolution`
-
-```json
-"moduleResolution": "bundler"
-```
-
-**作用**：指定模块解析策略。
-
-**说明**：
-- **`bundler`**：适用于使用打包工具（如 Vite、Webpack）的项目
-- 支持 `package.json` 的 `exports` 字段
-- 支持条件导出（conditional exports）
-
-**为什么使用 bundler**：
-- ✅ 支持 `package.json` 的 `exports` 字段
-- ✅ 与 Vite 等现代构建工具兼容
-- ✅ 更好的类型解析
-
-**注意**：`moduleResolution: "bundler"` 需要 `module: "ESNext"` 或更高版本。
-
----
-
-#### `paths`
-
-```json
-"paths": {}
-```
-
-**作用**：覆盖继承的路径别名配置，使用包名导入。
-
-**说明**：
-- 设置为空对象 `{}` 以覆盖 `tsconfig.app.json` 中的 `paths` 配置
-- 强制使用包名导入（`@iswangh/element-plus-kit-core`）而不是路径别名
-- 确保 TypeScript 通过 `package.json` 的 `exports` 字段解析类型
-
-**为什么设置为空对象**：
-- ✅ **使用包名导入**：在 Monorepo 中，应该使用包名（`@iswangh/element-plus-kit-core`）而不是路径别名
-- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名解析到工作区内的源码
-- ✅ **与发布后一致**：使用包名导入，开发环境和发布后的使用方式完全一致
-- ✅ **更好的类型推断**：TypeScript 可以通过 `package.json` 的 `exports` 字段正确解析类型
-
-**使用示例**：
-```typescript
-// ✅ 推荐：使用包名导入
-import { checkCondition } from '@iswangh/element-plus-kit-core'
-
-// ❌ 不推荐：使用路径别名
-import { checkCondition } from '@/core'
-
-// ❌ 不推荐：使用相对路径
-import { checkCondition } from '../../core/src/index'
-```
-
-**大厂最佳实践**：
-- **Monorepo 包内部**：使用包名导入（如 `@iswangh/element-plus-kit-core`）
-- **应用项目**：使用路径别名（如 `@/components`）指向项目内部文件
-- **原因**：包名导入更符合标准，避免开发和生产环境不一致
-
----
-
-#### `resolvePackageJsonExports`
-
-```json
-"resolvePackageJsonExports": true
-```
-
-**作用**：启用 `package.json` 的 `exports` 字段解析。
-
-**说明**：
-- 启用后，TypeScript 会优先使用 `package.json` 的 `exports` 字段解析模块
-- 支持条件导出（如 `exports.types`、`exports.import`）
-- 与 `moduleResolution: "bundler"` 配合使用
-
-**为什么启用**：
-- ✅ 支持现代包导出规范
-- ✅ 更好的类型解析
-- ✅ 与发布后的包结构一致
-
----
-
-#### `declaration`
-
-```json
-"declaration": true
-```
-
-**作用**：生成 `.d.ts` 类型定义文件。
-
-**说明**：
-- 为每个 `.ts` 和 `.vue` 文件生成对应的 `.d.ts` 文件
-- 其他项目可以使用这些类型定义获得类型提示
-- 发布包时必须启用
-
----
-
-#### `declarationMap`
-
-```json
-"declarationMap": true
-```
-
-**作用**：为类型定义文件生成 source map。
-
-**说明**：
-- 生成 `.d.ts.map` 文件
-- 支持从类型定义跳转到源代码
-- 提升开发体验（IDE 中可以直接跳转到源码）
-
----
-
-#### `noEmit`
-
-```json
-"noEmit": false
-```
-
-**作用**：允许 TypeScript 生成输出文件。
-
-**说明**：
-- `false` 表示会生成 JavaScript 文件
-- 在构建库时通常设置为 `false`
-- 在类型检查时（`type-check` 脚本）使用 `--noEmit` 标志覆盖此设置
-
----
-
-#### `outDir`
-
-```json
-"outDir": "./dist"
-```
-
-**作用**：指定编译输出目录。
-
-**说明**：
-- 所有编译后的文件输出到此目录
-- 与 `rootDir` 配合，保持目录结构
-- 此目录会被发布到 npm（在 `files` 字段中指定）
-
----
-
-#### `skipLibCheck`
-
-```json
-"skipLibCheck": true
-```
-
-**作用**：跳过对声明文件（`.d.ts`）的类型检查。
-
-**说明**：
-- 跳过检查 `node_modules` 中的类型定义
-- 大幅提升编译速度
-- 通常可以安全启用，因为第三方库的类型定义已经验证过
-
----
-
-### 📦 项目引用
-
-#### `references`
-
-```json
-"references": [
-  {
-    "path": "../core",
-    "prepend": false
-  }
-]
-```
-
-**作用**：声明项目引用，建立包之间的类型依赖关系。
-
-**说明**：
-- **`path`**：引用的项目路径（相对于当前 `tsconfig.json`）
-- **`prepend`**：是否将引用的项目输出前置到当前项目输出
-  - `false`：不前置，保持独立输出（库项目推荐）
-  - `true`：前置，合并输出（通常用于应用项目）
-
-**为什么需要项目引用**：
-- ✅ **支持跨包的类型引用**：form 包可以引用 core 包的类型定义
-- ✅ **启用增量编译**：只重新编译变更的包，大幅提升编译速度
-- ✅ **提升编译性能**：TypeScript 可以并行编译多个包
-- ✅ **类型安全**：确保包之间的类型依赖关系正确
-
-**是否必需**：
-- **在 Monorepo 中强烈推荐**：特别是当包之间有类型依赖时
-- **启用 `composite: true` 时必需**：项目引用是启用 composite 模式的前提
-- **提升开发体验**：大幅提升大型项目的编译速度
-
----
-
-### 🎨 Vue 编译器选项
-
-#### `vueCompilerOptions`
-
-```json
-"vueCompilerOptions": {
-  "target": 3,
-  "globalTypesPath": "../../node_modules/.tmp/vue-global-types.d.ts"
-}
-```
-
-**作用**：配置 Vue 3 的 TypeScript 编译器选项。
-
-**字段说明**：
-
-1. **`target`**：Vue 版本目标
-   - `3`：Vue 3（当前使用）
-   - `2`：Vue 2（已弃用）
-
-2. **`globalTypesPath`**：全局类型定义文件路径
-   - 用于存储 Vue 全局组件的类型定义
-   - 临时文件，不应提交到版本控制（已在 `.gitignore` 中）
-
-**为什么需要此配置**：
-- ✅ **Vue 3 的 TypeScript 支持必需**：没有此配置，`.vue` 文件中的 TypeScript 类型检查无法正常工作
-- ✅ **类型推断**：确保 Vue 组件的 props、emits、slots 等类型正确推断
-- ✅ **类型检查**：确保模板中的类型错误能被正确检测
-
-**是否必需**：
-- **包含 Vue 组件的包必需**：form 包包含 `.vue` 文件，必须配置
-- **纯 TypeScript 包不需要**：core 包不包含 Vue 组件，不需要此配置
-
----
-
-### 📁 文件包含与排除
-
-#### `include`
-
-```json
-"include": ["src/**/*"]
-```
-
-**作用**：指定要包含在编译中的文件或目录。
-
-**说明**：
-- `src/**/*` 表示 `src` 目录下的所有文件
-- 使用 glob 模式匹配文件
-- 只编译匹配的文件
-
----
-
-#### `exclude`
-
-```json
-"exclude": ["node_modules", "dist"]
-```
-
-**作用**：指定要排除在编译之外的文件或目录。
-
-**说明**：
-- **`node_modules`**：排除依赖包
-- **`dist`**：排除构建输出目录
-- 即使匹配 `include`，也会被排除
 
 ---
 
@@ -758,11 +240,17 @@ import { checkCondition } from '../../core/src/index'
 ### 📋 完整配置
 
 ```typescript
+// 路径解析工具：在 ES Module 环境中获取当前文件目录
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+// Vue 插件：处理 .vue 文件（form 包包含 Vue 组件，必需配置）
 import vue from '@vitejs/plugin-vue'
+// Vite 配置定义函数：提供类型提示和配置验证
 import { defineConfig } from 'vite'
+// TypeScript 类型定义生成插件：自动生成 .d.ts 文件
+import dts from 'vite-plugin-dts'
 
+// 获取当前文件目录（ES Module 环境中的 __dirname 替代方案）
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 /**
@@ -771,224 +259,59 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
  * 表单组件包，依赖 core 包
  */
 export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    // 不需要配置别名，使用包名导入即可
-    // pnpm workspace 会自动解析 @iswangh/element-plus-kit-core 等包名
-  },
+  plugins: [
+    // Vue 单文件组件支持（form 包包含 Vue 组件，必需配置）
+    vue(),
+    // 类型声明文件生成插件
+    dts({
+      // 包含的文件：所有 src 目录下的文件
+      include: ['src/**/*'],
+      // 排除的文件：测试文件
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      // 输出目录：dist
+      outDir: 'dist',
+      // 复制类型声明文件到输出目录
+      copyDtsFiles: true,
+      // 日志级别：静默（不输出日志）
+      logLevel: 'silent',
+    }),
+  ],
   build: {
+    // 库模式配置
     lib: {
+      // 入口文件（对应 package.json 的 exports["."]）
       entry: resolve(__dirname, 'src/index.ts'),
+      // 库名称（用于 UMD 格式，当前仅使用 ES 格式）
       name: 'ElementPlusKitForm',
+      // 输出文件名：index.js
       fileName: 'index',
+      // 输出格式：仅 ES 模块
+      // 配置一致性：与 package.json 的 type: "module" 和 tsconfig.json 的 module: "ESNext" 保持一致
       formats: ['es'],
     },
     rollupOptions: {
+      // 外部依赖：不打包到库中，由使用者提供（避免重复打包，减小库体积）
+      // 配置一致性：与 package.json 的 peerDependencies 和 dependencies 保持一致
+      //   - vue 和 element-plus：在 peerDependencies 中声明，由使用者提供
+      //   - @iswangh/element-plus-kit-core：在 dependencies 中声明，但标记为外部依赖，运行时通过包管理器解析
       external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
       output: {
+        // 全局变量映射（用于 UMD 格式，当前未使用）
         globals: {
           'vue': 'Vue',
           'element-plus': 'ElementPlus',
         },
+        // 样式文件输出名称：统一输出为 style.css（对应 package.json 的 exports["./style.css"]）
         assetFileNames: 'style.css',
       },
     },
+    // 禁用 CSS 代码分割：所有样式合并到一个文件（style.css）
     cssCodeSplit: false,
   },
 })
 ```
 
-### 📦 导入说明
-
-#### 路径解析工具
-
-```typescript
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-```
-
-**作用**：在 ES Module 环境中获取当前文件目录。
-
-**说明**：
-- `fileURLToPath`：将 `file://` URL 转换为文件路径
-- `import.meta.url`：当前模块的 URL
-- `new URL('.', import.meta.url)`：获取当前目录的 URL
-- 最终得到 `__dirname` 变量（类似 CommonJS 的 `__dirname`）
-
----
-
-#### Vue 插件
-
-```typescript
-import vue from '@vitejs/plugin-vue'
-```
-
-**作用**：Vite 的 Vue 插件，用于处理 `.vue` 文件。
-
-**说明**：
-- 支持单文件组件（SFC）的编译
-- 支持 `<script setup>` 语法
-- 支持 TypeScript
-- 必需配置，因为 form 包包含 Vue 组件
-
----
-
-#### 配置定义函数
-
-```typescript
-import { defineConfig } from 'vite'
-```
-
-**作用**：提供类型提示和配置验证。
-
-**说明**：
-- 提供完整的 TypeScript 类型提示
-- 在配置错误时给出提示
-- 支持配置的智能补全
-
----
-
-### 🏗️ 构建配置
-
-#### `plugins`
-
-```typescript
-plugins: [vue()],
-```
-
-**作用**：配置 Vite 插件。
-
-**说明**：
-- **`vue()`**：Vue 插件，处理 `.vue` 文件
-- 必需配置，因为 form 包包含 Vue 组件
-
-**与 core 包的区别**：
-- core 包不包含 Vue 组件，不需要此插件
-- form 包包含 Vue 组件，必须配置此插件
-
----
-
-#### `resolve.alias`（已移除）
-
-**说明**：form 包不配置 `alias`，使用包名导入即可。
-
-**为什么不需要 `alias`**：
-- ✅ **pnpm workspace 自动解析**：pnpm workspace 会自动将包名（`@iswangh/element-plus-kit-core`）解析到工作区内的源码
-- ✅ **Vite 原生支持**：Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名
-- ✅ **简化配置**：不需要维护路径别名配置，减少配置复杂度
-- ✅ **与发布后一致**：开发环境和发布后的导入方式完全一致
-
-**使用示例**：
-```typescript
-// ✅ 推荐：使用包名导入
-import { checkCondition } from '@iswangh/element-plus-kit-core'
-
-// ❌ 不推荐：使用路径别名
-import { checkCondition } from '@/core'
-```
-
-**大厂最佳实践**：
-- **Monorepo 包内部**：不配置别名，直接使用包名导入
-- **应用项目（如 playground）**：可以配置别名指向项目内部文件
-
----
-
-#### `build.lib`
-
-```typescript
-build: {
-  lib: {
-    entry: resolve(__dirname, 'src/index.ts'),
-    name: 'ElementPlusKitForm',
-    fileName: 'index',
-    formats: ['es'],
-  }
-}
-```
-
-**作用**：配置库模式构建。
-
-**字段说明**：
-
-1. **`entry`**：库的入口文件
-   - 指向 `src/index.ts`
-   - 使用 `resolve` 获取绝对路径
-
-2. **`name`**：库的全局变量名（用于 UMD 格式）
-   - 当前配置为 ES Module，此字段主要用于 UMD 格式
-   - 如果只构建 ES Module，可以省略
-
-3. **`fileName`**：输出文件名
-   - `'index'` 表示输出为 `index.js`
-   - 可以是一个函数来自定义文件名
-
-4. **`formats`**：构建格式
-   - `['es']` 表示只构建 ES Module 格式
-   - 可选值：`'es'`、`'cjs'`、`'umd'`、`'iife'`
-
-**为什么只使用 ES Module**：
-- 现代标准，更好的 Tree Shaking
-- 与 `package.json` 中的 `"type": "module"` 一致
-- 减小包体积
-
----
-
-#### `build.rollupOptions`
-
-```typescript
-rollupOptions: {
-  external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
-  output: {
-    globals: {
-      'vue': 'Vue',
-      'element-plus': 'ElementPlus',
-    },
-    assetFileNames: 'style.css',
-  },
-}
-```
-
-**作用**：配置 Rollup 构建选项（Vite 使用 Rollup 进行生产构建）。
-
-**字段说明**：
-
-1. **`external`**：外部依赖列表
-   - `['vue', 'element-plus', '@iswangh/element-plus-kit-core']` 表示这些依赖不会被打包进库中
-   - 使用库的项目需要自己安装这些依赖
-   - 与 `peerDependencies` 和 `dependencies` 对应
-
-2. **`output.globals`**：全局变量映射（用于 UMD 格式）
-   - `vue: 'Vue'` 表示在 UMD 格式中，Vue 通过全局变量 `Vue` 访问
-   - 当前配置为 ES Module，此字段主要用于 UMD 格式
-
-3. **`output.assetFileNames`**：资源文件命名
-   - `'style.css'` 表示 CSS 文件输出为 `style.css`
-   - 确保样式文件名称固定，便于导入
-
-**为什么将依赖设为外部**：
-- ✅ 避免重复打包，减小库体积
-- ✅ 确保使用项目中的 Vue 和 Element Plus 版本
-- ✅ 避免版本冲突
-
----
-
-#### `build.cssCodeSplit`
-
-```typescript
-cssCodeSplit: false
-```
-
-**作用**：禁用 CSS 代码分割。
-
-**说明**：
-- `false` 表示将所有 CSS 合并到一个文件中
-- 输出文件为 `style.css`（由 `assetFileNames` 指定）
-- 适合库项目，用户只需导入一个 CSS 文件
-
-**为什么禁用 CSS 代码分割**：
-- ✅ 简化使用：用户只需导入一个 CSS 文件
-- ✅ 减少 HTTP 请求
-- ✅ 适合库项目的使用场景
+**注意**：form 包不配置 `resolve.alias`，使用包名导入即可。pnpm workspace 会自动将包名（`@iswangh/element-plus-kit-core`）解析到工作区内的源码，Vite 原生支持通过 `package.json` 的 `exports` 字段解析包名。
 
 ---
 
@@ -1029,66 +352,6 @@ package.json ──────────────────────�
     └─ exports["./style.css"]: "./dist/style.css"
 ```
 
-### 📝 配置一致性
-
-#### 1. 输出目录
-
-- **`tsconfig.json`**：`outDir: "./dist"`
-- **`vite.config.ts`**：默认输出到 `dist/`
-- **`package.json`**：`exports.import: "./dist/index.js"` 和 `exports["./style.css"]: "./dist/style.css"`
-
-**一致性**：所有配置都指向 `dist/` 目录。
-
----
-
-#### 2. 模块格式
-
-- **`package.json`**：`type: "module"` + `exports.import`
-- **`vite.config.ts`**：`formats: ['es']`
-- **`tsconfig.json`**：继承基础配置（ES Module）
-
-**一致性**：统一使用 ES Module 格式。
-
----
-
-#### 3. 外部依赖
-
-- **`package.json`**：
-  - `peerDependencies: { vue: "^3.5.23", element-plus: "^2.11.7" }`
-  - `dependencies: { "@iswangh/element-plus-kit-core": "workspace:*" }`
-- **`vite.config.ts`**：`external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core']`
-
-**一致性**：Vue 和 Element Plus 作为外部依赖，core 包作为运行时依赖。
-
----
-
-#### 4. 模块导入方式
-
-- **代码中**：使用包名导入（`@iswangh/element-plus-kit-core`）
-- **`tsconfig.json`**：不配置 `paths`，TypeScript 通过 `package.json` 的 `exports` 解析
-- **`vite.config.ts`**：不配置 `alias`，Vite 通过 `package.json` 的 `exports` 解析
-
-**一致性**：统一使用包名导入，pnpm workspace 自动解析到工作区内的源码。
-
----
-
-#### 5. 类型定义
-
-- **`tsconfig.json`**：`declaration: true` + `outDir: "./dist"`
-- **`package.json`**：`exports.types: "./dist/index.d.ts"`
-
-**一致性**：类型定义文件与 JavaScript 文件一起生成和导出。
-
----
-
-#### 6. 样式文件
-
-- **`vite.config.ts`**：`cssCodeSplit: false` + `assetFileNames: 'style.css'`
-- **`package.json`**：`exports["./style.css"]: "./dist/style.css"`
-
-**一致性**：样式文件输出为 `style.css`，并通过 `exports` 导出。
-
----
 
 ## 开发工作流
 

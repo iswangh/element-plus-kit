@@ -2,6 +2,7 @@
 <script setup lang='ts'>
 import type { Slot } from 'vue'
 import type { EventExtendedParams, FormItem } from './types'
+import { ElFormItem } from 'element-plus'
 import { computed } from 'vue'
 import { COMPONENT_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
 
@@ -97,7 +98,7 @@ const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.d
 </script>
 
 <template>
-  <el-form-item v-bind="formItemProps">
+  <ElFormItem v-bind="formItemProps">
     <!-- el-form-item slots -->
     <template v-for="(slot, slotIndex) in formItemSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
       <component :is="slot.slotFn" :value="modelValue" :form="formData" :form-item="formItem" v-bind="slotProps" />
@@ -120,5 +121,5 @@ const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.d
     <template v-else>
       <slot :name="formItem.prop" :value="modelValue" :form="formData" :form-item="formItem" />
     </template>
-  </el-form-item>
+  </ElFormItem>
 </template>

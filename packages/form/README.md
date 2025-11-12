@@ -16,6 +16,7 @@ npm install @iswangh/element-plus-kit-form
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { WForm } from '@iswangh/element-plus-kit-form'
 import type { FormItems } from '@iswangh/element-plus-kit-form'
 
@@ -48,11 +49,25 @@ const form = ref({
 
 ### 引入样式
 
-如果使用按需引入，需要手动引入样式：
+**重要说明**：WForm 组件已按需导入了所有内部使用的 Element Plus 组件样式，用户导入组件时样式会自动导入，**无需额外配置**。
+
+#### 自动导入（默认，推荐）
+
+直接导入组件即可，样式会自动导入：
+
+```typescript
+import { WForm } from '@iswangh/element-plus-kit-form'
+```
+
+#### 单独导入样式（可选）
+
+如果需要在 CSS 文件中单独导入样式，可以使用：
 
 ```typescript
 import '@iswangh/element-plus-kit-form/style.css'
 ```
+
+**注意**：此样式文件已包含 WForm 内部使用的所有 Element Plus 组件样式（按需导入，约 185KB，gzip 约 24KB），无需再导入 Element Plus 的全局样式。
 
 ## 📖 API 文档
 

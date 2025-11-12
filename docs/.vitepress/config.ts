@@ -114,11 +114,7 @@ export default defineConfig({
   vite: {
     css: {
       preprocessorOptions: {
-        scss: {
-          // 使用新的 Sass API，避免 legacy-js-api 警告
-          // 注意：Sass 1.93+ 支持 modern-compiler API
-          silenceDeprecations: ['legacy-js-api'],
-        },
+        scss: { api: 'modern-compiler' },
       },
     },
     plugins: [

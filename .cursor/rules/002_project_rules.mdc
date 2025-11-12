@@ -6,46 +6,53 @@ alwaysApply: true
 
 # Element Plus Kit 项目开发规范
 
+> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与通用前端开发规范（000 规范）和 Monorepo 开发规范（001 规范）结合使用。
+
 ## 项目架构概述
 
 ### Monorepo 结构
-- **包管理工具**：pnpm workspace（参考 001 规范）
-- **包结构**：
-  - `packages/core`：核心工具函数包（无 Vue 组件）
-  - `packages/form`：表单组件包（依赖 core）
-  - `packages/kit`：主包，聚合所有组件和工具（依赖 form 和 core）
-  - `playground`：本地开发测试环境
-  - `docs`：VitePress 文档站点
-- **技术栈**：Vue 3 + TypeScript + Vite + Element Plus
-- **模块系统**：ES Module（`type: "module"`）
+- **包管理工具**：pnpm workspace（详细规范请参考 001 规范）
+- **包结构说明**：
+  - `packages/core`：核心工具函数包，提供基础工具函数和类型定义（无 Vue 组件）
+  - `packages/form`：表单组件包，提供表单相关组件和功能（依赖 core）
+  - `packages/kit`：主包，聚合所有组件和工具，提供统一的导出入口（依赖 form 和 core）
+  - `playground`：本地开发测试环境，用于开发和测试组件功能
+  - `docs`：VitePress 文档站点，提供项目文档和 API 文档
+- **技术栈**：
+  - **框架**：Vue 3（Composition API）
+  - **语言**：TypeScript（严格模式）
+  - **构建工具**：Vite（库模式）
+  - **UI 框架**：Element Plus
+- **模块系统**：ES Module（`type: "module"`），支持 Tree Shaking 和按需导入
 
 ### 包依赖关系
 ```
-core (独立包)
+core (独立包，无依赖)
   ↓
 form (依赖 core)
   ↓
 kit (依赖 form 和 core)
 ```
+**依赖原则**：遵循单向依赖关系，避免循环依赖，确保构建和发布顺序清晰
 
 ---
 
 ## 开发环境配置
 
 ### Node.js 版本管理
-- **必须使用 Volta 管理 Node.js 版本**（参考 000 规范）
-- **当前版本**：Node.js 25.1.0（`package.json` 的 `volta.node`）
-- **版本要求**：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines`）
+- **必须使用 Volta 管理 Node.js 版本**（请参考 000 规范）
+- **当前版本**：Node.js 25.1.0（`package.json` 的 `volta.node` 字段）
+- **版本要求**：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines` 字段）
 
 ### 包管理器
-- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（参考 001 规范）
-- **工作区配置**：`pnpm-workspace.yaml` 定义工作区包（`packages/*`、`playground`、`docs`）
+- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（请参考 001 规范）
+- **工作区配置**：`pnpm-workspace.yaml` 文件定义工作区包（`packages/*`、`playground`、`docs`）
 
 ### 开发工具
-- **代码规范**：ESLint（基于 @antfu/eslint-config，参考 000 规范）
-- **构建工具**：Vite
-- **Git Hooks**：Husky + lint-staged（参考 000 规范）
-- **提交规范**：Commitlint（Conventional Commits，参考 000 规范）
+- **代码规范**：ESLint（基于 @antfu/eslint-config，请参考 000 规范）
+- **构建工具**：Vite（库模式）
+- **Git Hooks**：Husky + lint-staged（请参考 000 规范）
+- **提交规范**：Commitlint（遵循 Conventional Commits 规范，请参考 000 规范）
 
 ---
 
@@ -54,32 +61,38 @@ kit (依赖 form 和 core)
 ### 包命名规范
 - **Scoped Package**：所有包使用 `@iswangh/element-plus-kit` 作用域
 - **命名格式**：
-  - `@iswangh/element-plus-kit-core`（core 包）
-  - `@iswangh/element-plus-kit-form`（form 包）
-  - `@iswangh/element-plus-kit`（主包，无后缀）
+  - `@iswangh/element-plus-kit-core`：核心工具函数包
+  - `@iswangh/element-plus-kit-form`：表单组件包
+  - `@iswangh/element-plus-kit`：主包（聚合所有组件和工具，无后缀）
 
 ### 包导入规范
-- **必须使用包名导入**：在代码中使用包名而不是相对路径
-  ```typescript
-  // ✅ 正确
-  import { checkCondition } from '@iswangh/element-plus-kit-core'
-  import { WForm } from '@iswangh/element-plus-kit-form'
-  
-  // ❌ 错误
-  import { checkCondition } from '@/core'
-  import { WForm } from '../../packages/form/src/index'
-  ```
-- **路径别名配置**：
-  - 仅在 `tsconfig.app.json` 中配置，用于根目录类型解析
-  - 在 `playground/vite.config.ts` 中配置，用于开发时直接引用源码，支持 HMR
-  - 不在包内部使用路径别名，必须使用包名导入
+- **必须使用包名导入**（强制要求）：
+  - **原则**：在代码中必须使用包名导入，禁止使用相对路径或路径别名导入其他包
+  - **优势**：提高代码可读性，明确依赖关系，便于维护和重构
+  - **正确示例**：
+    ```typescript
+    // ✅ 正确：使用包名导入
+    import { checkCondition } from '@iswangh/element-plus-kit-core'
+    import { WForm } from '@iswangh/element-plus-kit-form'
+    ```
+  - **错误示例**：
+    ```typescript
+    // ❌ 错误：使用相对路径或路径别名
+    import { checkCondition } from '@/core'
+    import { WForm } from '../../packages/form/src/index'
+    ```
+- **路径别名配置**（使用场景限制）：
+  - **类型解析**：仅在根目录 `tsconfig.app.json` 中配置路径别名，用于 TypeScript 类型解析
+  - **开发环境**：在 `playground/vite.config.ts` 中配置路径别名，用于开发时直接引用源码，支持 HMR
+  - **包内部**：禁止在包内部使用路径别名，必须使用包名导入其他包，保持导入方式一致
+  - **配置原则**：路径别名仅用于开发环境，生产构建时使用包名导入
 
 ---
 
 ## 包依赖管理
 
 ### 内部依赖
-- **使用 `workspace:*` 协议**（参考 001 规范）：
+- **使用 `workspace:*` 协议**（请参考 001 规范）：
   ```json
   {
     "dependencies": {
@@ -89,55 +102,70 @@ kit (依赖 form 和 core)
   ```
 
 ### 外部依赖
-- **使用 `peerDependencies` 声明**（参考 001 规范）
+- **使用 `peerDependencies` 声明**（请参考 001 规范）
 - **版本要求**：
   - Vue: `^3.5.23`
   - Element Plus: `^2.11.7`
-- **注意**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
+- **重要提示**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
 
 ### 开发依赖
-- **统一放在根目录的 `devDependencies`**（参考 001 规范）
+- **统一放在根目录的 `devDependencies`**（请参考 001 规范）
 
 ---
 
 ## 包构建规范
 
 ### 构建命令
-- **单个包**：`cd packages/core && pnpm build`
-- **所有包**：`pnpm build:packages`（根目录，使用 filter 批量构建）
-- **完整流程**：`pnpm build`（并行执行类型检查 + 构建所有包）
+- **单个包构建**：
+  - **命令**：`cd packages/core && pnpm build`
+  - **使用场景**：单独构建某个包，用于快速验证单个包的构建结果
+- **批量构建**：
+  - **命令**：`pnpm build:packages`（在根目录执行）
+  - **实现方式**：使用 pnpm filter 功能批量构建所有包
+  - **使用场景**：构建所有包，但不执行类型检查，用于快速构建
+- **完整构建流程**：
+  - **命令**：`pnpm build`（在根目录执行）
+  - **执行内容**：并行执行类型检查 + 构建所有包
+  - **使用场景**：发布前完整构建，确保代码质量和构建产物正确性
 
 ### 构建配置
-- **构建工具**：Vite（库模式）
-- **类型生成**：使用 `vite-plugin-dts` 自动生成类型声明文件
-- **外部依赖**：所有 `peerDependencies` 和内部依赖都标记为 `external`
+- **构建工具**：Vite（库模式），提供快速的构建速度和现代化的构建体验
+- **类型生成**：
+  - **插件**：使用 `vite-plugin-dts` 插件自动生成类型声明文件
+  - **类型文件**：自动生成 `.d.ts` 和 `.d.ts.map` 文件，提供完整的类型支持
+  - **类型路径**：类型文件路径通过 `package.json` 的 `exports.types` 字段声明
+- **外部依赖处理**（关键配置）：
+  - **标记范围**：所有 `peerDependencies` 和内部依赖（workspace 包）都标记为 `external`
+  - **优势**：避免打包外部依赖，减少构建产物体积，提高构建速度
+  - **注意事项**：确保使用者已安装所有 `peerDependencies`，避免运行时错误
 - **样式处理**：
-  - form 包：样式文件统一输出为 `style.css`（`cssCodeSplit: false`）
-  - 通过 `package.json` 的 `exports` 字段导出样式文件
+  - **form 包样式**：样式文件统一输出为 `style.css`（`cssCodeSplit: false`），便于按需导入
+  - **样式导出**：通过 `package.json` 的 `exports` 字段导出样式文件（如 `./style.css`）
+  - **样式组织**：保持样式文件结构清晰，便于维护和扩展
 
 ### 构建产物
-- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，参考 001 规范）
+- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，请参考 001 规范）
 - **包含文件**：`.js`、`.d.ts`、`.d.ts.map`
 - **样式文件**：`packages/form/dist/style.css`
-- **多入口支持**：kit 包支持多入口（`index` 和 `resolver`）
+- **多入口支持**：kit 包支持多入口导出（`index` 和 `resolver`）
 
 ### 构建前检查
-- **发布前自动执行 `prepublishOnly`**（构建 + 类型检查）
+- **发布前自动执行 `prepublishOnly`**：自动执行构建和类型检查，确保发布前代码质量
 
 ---
 
 ## TypeScript 配置规范
 
 ### 项目引用
-- **使用 TypeScript Project References** 管理包之间的类型依赖（参考 001 规范）
+- **使用 TypeScript Project References** 管理包之间的类型依赖（请参考 001 规范）
 - **配置继承**：
-  - 根目录：`tsconfig.app.json`（基础配置，包含路径别名）
-  - 各包：继承 `tsconfig.app.json`，启用 `composite: true`
-  - Playground：继承 `tsconfig.app.json`，不启用 `composite`
+  - **根目录**：`tsconfig.app.json`（基础配置，包含路径别名）
+  - **各包**：继承 `tsconfig.app.json`，启用 `composite: true`
+  - **Playground**：继承 `tsconfig.app.json`，不启用 `composite`
 
 ### 类型定义
-- **通过 `package.json` 的 `exports.types` 字段导出**（参考 001 规范）
-- **构建时自动生成**（使用 `vite-plugin-dts`）
+- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（请参考 001 规范）
+- **类型生成**：构建时自动生成（使用 `vite-plugin-dts` 插件）
 - **类型文件位置**：`dist/` 目录
 - **路径别名**：仅在根目录 `tsconfig.app.json` 中配置，用于类型解析
 
@@ -146,27 +174,27 @@ kit (依赖 form 和 core)
 ## 代码开发规范
 
 ### Vue 组件规范
-- **单文件组件**：必须使用 `<script setup lang="ts">`（参考 000 规范）
+- **单文件组件**：必须使用 `<script setup lang="ts">`（请参考 000 规范）
 - **组件前缀**：所有组件以 `W` 开头（如 `WForm`、`w-form`）
 - **组件命名**：使用 PascalCase（如 `WForm`、`FormItem`）
 
 ### TypeScript 类型规范
-- **类型推断优先**：充分利用类型推断，避免不必要的类型注解（参考 000 规范）
+- **类型推断优先**：充分利用类型推断，避免不必要的类型注解（请参考 000 规范）
 - **类型导出**：在包的 `src/types.ts` 或 `src/index.ts` 中统一导出类型
 - **类型命名**：使用 PascalCase（如 `FormItems`、`FormConfig`）
-- **接口优先**：优先使用 `interface` 定义对象类型（参考 000 规范）
+- **接口优先**：优先使用 `interface` 定义对象类型（请参考 000 规范）
 
 ### 文件组织规范
-- **包目录结构**：遵循 Monorepo 通用规范（参考 001 规范）
-- **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（参考 000 规范）
+- **包目录结构**：遵循 Monorepo 通用规范（请参考 001 规范）
+- **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（请参考 000 规范）
 - **文件命名**：
-  - TypeScript 文件：`camelCase.ts`
-  - Vue 组件：`PascalCase.vue`
-  - 配置文件：`kebab-case.config.ts`
+  - **TypeScript 文件**：`camelCase.ts`
+  - **Vue 组件**：`PascalCase.vue`
+  - **配置文件**：`kebab-case.config.ts`
 
 ### 导出规范
-- **统一导出**：通过 `src/index.ts` 统一导出所有公共 API（参考 000 规范）
-- **类型导出**：类型和值分开导出，使用 `export type` 导出类型（参考 000 规范）
+- **统一导出**：通过 `src/index.ts` 统一导出所有公共 API（请参考 000 规范）
+- **类型导出**：类型和值分开导出，使用 `export type` 导出类型（请参考 000 规范）
 
 ---
 
@@ -174,47 +202,92 @@ kit (依赖 form 和 core)
 
 ### 构建流程
 - **开发时构建**：
-  - 单个包监听模式：`cd packages/core && pnpm dev`
-  - 所有包构建：`pnpm build:packages`（使用 filter 批量构建）
-  - 完整开发环境：`pnpm dev`（并行运行包的 watch 模式和 playground）
-- **生产构建**：`pnpm build`（并行执行类型检查 + 构建所有包）
-- **类型检查**：`pnpm type-check`（使用 `vue-tsc --build`）
+  - **单个包监听模式**：
+    - **命令**：`cd packages/core && pnpm dev`
+    - **功能**：启动单个包的 watch 模式，文件变更时自动重新构建
+    - **使用场景**：单独开发某个包时使用
+  - **批量构建**：
+    - **命令**：`pnpm build:packages`（在根目录执行）
+    - **功能**：使用 filter 批量构建所有包，但不执行类型检查
+    - **使用场景**：快速构建所有包，验证构建结果
+  - **完整开发环境**：
+    - **命令**：`pnpm dev`（在根目录执行）
+    - **功能**：并行运行包的 watch 模式和 playground，提供完整的开发环境
+    - **使用场景**：日常开发时使用，支持 HMR 和实时预览
+- **生产构建**：
+  - **命令**：`pnpm build`（在根目录执行）
+  - **功能**：并行执行类型检查 + 构建所有包，确保代码质量和构建产物正确性
+  - **使用场景**：发布前完整构建，CI/CD 流程中使用
+- **类型检查**：
+  - **命令**：`pnpm type-check`（在根目录执行）
+  - **实现方式**：使用 `vue-tsc --build` 命令，利用 TypeScript Project References 进行类型检查
+  - **使用场景**：单独执行类型检查，验证类型定义正确性
 
 ### 发布流程
-- **发布顺序**：必须按照依赖顺序发布（core → form → kit）（参考 001 规范）
+- **发布顺序**（强制要求）：
+  - **顺序规则**：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布
+  - **详细规范**：发布顺序的详细要求请参考 001 规范中的"发布顺序"章节
+  - **自动化**：使用发布工具自动处理依赖顺序，避免手动发布导致的顺序错误
 - **发布命令**：
-  - 单个包：`pnpm publish:core`、`pnpm publish:form`、`pnpm publish:kit`
-  - 所有包：`pnpm publish:all`（使用 `run-s` 串行执行）
-  - 分支检查：`pnpm check:branch`（单独检查分支）
-- **发布前检查**：
-  - **分支检查**：自动检查当前 Git 分支，只能在 `main` 或 `master` 分支上发布（通过 `scripts/check-branch.js` 脚本）
-  - 自动执行 `prepublishOnly`（构建 + 类型检查）
-  - 确保版本号已更新
-  - 确保依赖版本已更新（如果被依赖包版本变化）
-- **分支检查机制**：
-  - 每个发布命令（`publish:core`、`publish:form`、`publish:kit`）都会在执行前自动检查分支
-  - 如果当前分支不是 `main` 或 `master`，发布会被阻止并提示错误
-  - 分支检查脚本：`scripts/check-branch.js`
+  - **单个包发布**：
+    - `pnpm publish:core`：发布 core 包
+    - `pnpm publish:form`：发布 form 包
+    - `pnpm publish:kit`：发布 kit 包
+    - **使用场景**：单独发布某个包，用于快速发布或修复问题
+  - **批量发布**：
+    - **命令**：`pnpm publish:all`（在根目录执行）
+    - **实现方式**：使用 `run-s` 串行执行所有包的发布，确保发布顺序正确
+    - **使用场景**：发布所有包，用于版本更新或功能发布
+  - **分支检查**：
+    - **命令**：`pnpm check:branch`（在根目录执行）
+    - **功能**：单独检查当前分支，验证是否在允许发布的分支上
+    - **使用场景**：发布前手动检查分支，避免在错误分支上发布
+- **发布前检查**（自动执行）：
+  - **分支检查**：
+    - **检查机制**：自动检查当前 Git 分支，只能在 `main` 或 `master` 分支上发布
+    - **实现方式**：通过 `scripts/check-branch.js` 脚本自动检查
+    - **错误处理**：如果当前分支不是允许的分支，发布会被阻止并提示错误信息
+  - **自动构建**：
+    - **执行时机**：自动执行 `prepublishOnly` 钩子
+    - **执行内容**：构建 + 类型检查，确保代码质量和构建产物正确性
+  - **版本检查**：
+    - **检查内容**：确保版本号已更新，符合语义化版本规范
+    - **版本格式**：版本号必须符合 SemVer 规范（详细要求请参考 000 规范）
+  - **依赖检查**：
+    - **检查内容**：确保依赖版本已更新（如果被依赖包版本变化）
+    - **版本匹配**：确保内部依赖版本与工作区包版本一致
+- **分支检查机制**（详细说明）：
+  - **检查范围**：每个发布命令（`publish:core`、`publish:form`、`publish:kit`）都会在执行前自动检查分支
+  - **允许分支**：只能在 `main` 或 `master` 分支上发布，其他分支会被阻止
+  - **错误提示**：如果当前分支不是允许的分支，发布会被阻止并提示清晰的错误信息
+  - **脚本位置**：分支检查脚本位于 `scripts/check-branch.js`
 
 ### 版本管理
-- **版本策略**：独立版本（每个包独立管理版本号）（参考 001 规范）
-- **版本格式**：遵循语义化版本（SemVer）（参考 000 规范）
-- **版本更新**：使用 `npm version patch/minor/major` 更新版本
+- **版本策略**：独立版本（每个包独立管理版本号）（请参考 001 规范）
+- **版本格式**：遵循语义化版本（SemVer）（请参考 000 规范）
+- **版本更新**：使用 `npm version patch/minor/major` 或 `pnpm version patch/minor/major` 更新版本
 
 ---
 
 ## 代码质量规范
 
 ### ESLint 规则
-- **基础配置**：基于 @antfu/eslint-config（参考 000 规范）
+- **基础配置**：基于 `@iswangh/eslint-config`，集成了 Vue、TypeScript 和 JSX 支持（请参考 000 规范）
+- **配置文件**：`eslint.config.js`（使用 ESLint 9.x 扁平配置格式）
 - **项目特定规则**：
-  - 允许使用箭头函数声明顶级函数（`antfu/top-level-function: 'off'`）
-  - Vue 组件必须使用 `<script setup lang="ts">`（`vue/block-lang`）
-  - 检测未使用的导入和变量（`unused-imports`）
-- **命令**：`pnpm lint`（检查）、`pnpm lint:fix`（修复）、`pnpm eslint:inspect`（查看配置）
+  - 统一项目代码风格，提高代码质量和可维护性
+  - 支持 Vue 3 Composition API 和 TypeScript 严格模式
+  - 自动检测未使用的导入和变量
+- **命令**：
+  - `pnpm lint`：检查代码规范（`eslint .`）
+  - `pnpm lint:fix`：自动修复代码规范问题（`eslint . --fix`）
+  - `pnpm eslint:inspect`：查看 ESLint 配置（使用 `@eslint/config-inspector`）
 
 ### Git 提交规范
-- **提交格式**：遵循 Conventional Commits 规范（参考 000 规范）
+- **基础配置**：基于 `@iswangh/commitlint-config`，遵循 Conventional Commits 规范（请参考 000 规范）
+- **配置文件**：`commitlint.config.js`
+- **提交格式**：遵循 Conventional Commits 规范：`<type>(<scope>): <subject>`
+- **提交类型**：`feat`（新功能）、`fix`（Bug 修复）、`docs`（文档）、`style`（格式）、`refactor`（重构）、`test`（测试）、`chore`（构建/工具）等
 - **作用域（scope）**：建议使用包名（如 `core`、`form`、`kit`）
 
 ---
@@ -225,7 +298,7 @@ kit (依赖 form 和 core)
 - **README.md**：每个包必须包含 README.md，说明包的功能、安装使用方法、API 文档链接和示例代码
 
 ### 代码注释
-- **JSDoc 标准**：所有公共 API 必须使用 JSDoc 注释（参考 000 规范）
+- **JSDoc 标准**：所有公共 API 必须使用 JSDoc 注释（请参考 000 规范）
 
 ---
 
@@ -233,17 +306,17 @@ kit (依赖 form 和 core)
 
 ### 测试框架
 - **测试框架**：Vitest（已配置但未使用）
-- **测试文件组织**：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（参考 000 规范）
-- **测试要求**：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（参考 000 规范）
+- **测试文件组织**：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（请参考 000 规范）
+- **测试要求**：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（请参考 000 规范）
 
 ---
 
 ## 性能优化规范
 
 ### 构建优化
-- **代码分割**：按需导入，避免全量导入（参考 000 规范）
-- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（参考 001 规范）
-- **外部依赖**：使用 `external` 配置，避免打包外部依赖（参考 001 规范）
+- **代码分割**：按需导入，避免全量导入（请参考 000 规范）
+- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（请参考 001 规范）
+- **外部依赖**：使用 `external` 配置，避免打包外部依赖（请参考 001 规范）
 
 ### 运行时优化
 - **按需导入**：组件库支持按需导入
@@ -254,8 +327,8 @@ kit (依赖 form 和 core)
 ## 开发工作流规范
 
 ### 根目录脚本配置
-- **多包脚本管理**：在项目根目录的 `package.json` 中添加运行或打包多个包的脚本（参考 001 规范）
-- **脚本工具**：使用 `npm-run-all` 和 pnpm filter 功能混用（参考 001 规范）
+- **多包脚本管理**：在项目根目录的 `package.json` 中添加运行或打包多个包的脚本（请参考 001 规范）
+- **脚本工具**：使用 `npm-run-all` 和 pnpm filter 功能混用（请参考 001 规范）
 - **脚本示例**：
   ```json
   {
@@ -269,15 +342,38 @@ kit (依赖 form 和 core)
   ```
 
 ### 开发环境
-- **本地开发**：使用 watch 模式自动构建，通过路径别名直接引用源码支持 HMR，使用 `pnpm dev` 并行启动包的 watch 模式和 playground
-- **测试环境**：使用 playground 进行功能测试，确保测试环境与实际使用环境一致
-- **热更新**：通过路径别名直接引用源码支持 HMR，配置在 `playground/vite.config.ts` 中，确保开发时使用源码，生产构建时使用构建产物
+- **本地开发**：
+  - **Watch 模式**：使用 watch 模式自动构建，文件变更时自动重新构建，提高开发效率
+  - **路径别名**：通过路径别名直接引用源码，支持 HMR，代码变更时自动更新
+  - **并行启动**：使用 `pnpm dev` 并行启动包的 watch 模式和 playground，提供完整的开发环境
+  - **开发体验**：配置合理的构建策略，平衡构建速度和开发体验
+- **测试环境**：
+  - **Playground 应用**：使用 playground 进行功能测试，模拟真实使用场景
+  - **环境一致性**：确保测试环境与实际使用环境一致，包括依赖版本、构建配置等
+  - **集成测试**：在 playground 中进行集成测试，验证包之间的协作是否正常
+- **热更新（HMR）**：
+  - **源码引用**：通过路径别名直接引用源码，支持 HMR，代码变更时自动更新
+  - **配置位置**：HMR 配置在 `playground/vite.config.ts` 中，确保开发时使用源码
+  - **生产构建**：生产构建时使用构建产物，确保构建产物正确性和性能
+  - **配置分离**：开发环境和生产环境使用不同的配置，避免配置冲突
 
 ### 自动导入配置
-- **Vue API 自动导入**：使用 `unplugin-auto-import` 自动导入 Vue API（ref、computed 等）
-- **组件自动导入**：使用 `unplugin-vue-components` 自动导入 Element Plus 和 Element Plus Kit 组件
-- **解析器**：kit 包提供 `ElementPlusKitResolver` 用于自动导入解析
-- **类型声明**：自动生成类型声明文件（`types/auto-imports.d.ts`、`types/components.d.ts`）
+- **Vue API 自动导入**：
+  - **插件**：使用 `unplugin-auto-import` 自动导入 Vue API（ref、computed、watch 等）
+  - **优势**：减少重复导入，提高开发效率，保持代码简洁
+  - **类型支持**：自动生成类型声明文件，提供完整的类型支持
+- **组件自动导入**：
+  - **插件**：使用 `unplugin-vue-components` 自动导入 Element Plus 和 Element Plus Kit 组件
+  - **优势**：无需手动导入组件，提高开发效率，减少代码量
+  - **按需导入**：支持按需导入，只导入使用的组件，减少打包体积
+- **解析器**：
+  - **提供位置**：kit 包提供 `ElementPlusKitResolver` 用于自动导入解析
+  - **功能**：自动识别 Element Plus Kit 组件，支持自动导入和类型声明
+  - **使用方式**：在 Vite 配置中使用 `ElementPlusKitResolver`，配置自动导入规则
+- **类型声明**：
+  - **生成文件**：自动生成类型声明文件（`types/auto-imports.d.ts`、`types/components.d.ts`）
+  - **类型支持**：提供完整的类型支持，包括自动导入的 API 和组件
+  - **文件位置**：类型声明文件位于项目根目录的 `types/` 目录
 
 ---
 

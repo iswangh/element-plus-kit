@@ -3,7 +3,7 @@
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
-import { ElCol, ElRow } from 'element-plus'
+import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, ref, useAttrs, useSlots } from 'vue'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
@@ -182,7 +182,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-form
+  <ElForm
     ref="formRef"
     v-bind="mergedAttrs"
     :model="model"
@@ -203,5 +203,5 @@ defineExpose({
       </component>
       <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
     </component>
-  </el-form>
+  </ElForm>
 </template>

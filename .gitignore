@@ -32,10 +32,9 @@ playwright-report/
 
 # Auto import generated files
 .eslintrc-auto-import.json
-src/types/auto-imports.d.ts
-src/types/components.d.ts
-playground/types/auto-imports.d.ts
-playground/types/components.d.ts
+# unplugin-auto-import 和 unplugin-vue-components 自动生成的类型声明文件
+**/*auto-imports.d.ts
+**/*components.d.ts
 
 .vite-inspect/
 

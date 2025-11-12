@@ -172,7 +172,8 @@ import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import ElementPlusKit from '@iswangh/element-plus-kit'
-import 'element-plus/dist/index.css'
+import App from './App.vue'
+// 注意：WForm 组件已按需导入了所有内部使用的 Element Plus 组件样式，无需导入全局样式
 
 const app = createApp(App)
 
