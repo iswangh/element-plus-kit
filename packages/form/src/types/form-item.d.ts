@@ -1,6 +1,7 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FORM_ITEM_COMP_MAP } from '../config'
+import type { FormCompConfig } from './common'
 import type { ElColAttrs, ElFormItemAttrs, ElRowAttrs } from './el'
+import type { GetComponentOptionsType, InferOptionsType, IsOptionsSupported } from './options'
 
 /** Row 布局属性（扩展自 Element Plus Row 组件属性） */
 export type RowAttrs = ElRowAttrs & { span?: number }
@@ -39,15 +40,21 @@ export type FormItemComp
     | 'tree-select'
     | 'custom'
 
-/** 表单组件配置映射类型 */
-type FormCompConfig = typeof FORM_ITEM_COMP_MAP
-
 /**
  * 根据组件类型推断对应的属性类型（排除事件处理器）
  * @template T - 组件类型
  */
 export type FormItemCompAttrs<T extends FormItemComp = FormItemComp>
   = Omit<InstanceType<FormCompConfig[T]>['$props'], `on${string}`>
+
+/**
+ * 根据组件类型推断 options 类型
+ * 只有支持 options 的组件才会扩展 options 类型
+ * @template C - 组件类型
+ */
+export type FormItemOptions<C extends FormItemComp> = IsOptionsSupported<C> extends true
+  ? InferOptionsType<C, GetComponentOptionsType<C>>
+  : never
 
 /**
  * FormItem 属性
@@ -68,7 +75,9 @@ export interface FormItem<
 > extends ElFormItemAttrs {
   prop: string
   comp: C
-  compAttrs?: FormItemCompAttrs<C> // 根据具体的 C 类型推断
+  compAttrs?: IsOptionsSupported<C> extends true
+    ? FormItemCompAttrs<C> & { options?: FormItemOptions<C> } // 支持 options 的组件：直接覆盖 options 类型为扩展类型
+    : FormItemCompAttrs<C> // 不支持 options 的组件：使用原始属性类型
   vIf?: boolean | ((data: Record<string, any>) => boolean)
   vShow?: boolean | ((data: Record<string, any>) => boolean)
   colAttrs?: ColAttrs
@@ -76,6 +85,16 @@ export interface FormItem<
 
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
 export type FormItems = { [K in FormItemComp]: FormItem<K> }[FormItemComp][]
+
+/**
+ * 事件拓展参数
+ * @template K 属性名类型
+ */
+export interface EventExtendedParams<K = string> {
+  prop: K
+  index: number
+  formItem: FormItem
+}
 
 /**
  * 表单项插槽作用域参数

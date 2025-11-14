@@ -1,14 +1,10 @@
-import type { FormItem } from './form-item'
+import type { FORM_ITEM_COMP_MAP } from '../config'
 
 /** 允许数组类型 */
 export type Arrayable<T> = T | T[]
 
 /**
- * 事件拓展参数
- * @template K 属性名类型
+ * 表单组件配置映射类型
+ * 共享类型定义，避免在多个文件中重复定义导致冲突
  */
-export interface EventExtendedParams<K = string> {
-  prop: K
-  index: number
-  formItem: FormItem
-}
+export type FormCompConfig = typeof FORM_ITEM_COMP_MAP
