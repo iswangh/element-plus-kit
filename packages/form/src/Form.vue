@@ -61,16 +61,19 @@ defineSlots<Slots>()
 const attrs = useAttrs()
 
 /**
+ * 判断是否为事件属性
+ */
+function isEventAttribute(key: string, value: unknown): boolean {
+  return key.startsWith('on') && typeof value === 'function'
+}
+
+/**
  * 提取动态组件的事件
- *
- * 这里不需要显式排除 defineEmits 中定义的事件，因为 useAttrs 会自动过滤掉
- *
+ * useAttrs 会自动过滤掉 defineEmits 中定义的事件
  */
 const dynamicCompEvents = computed(() => {
   return Object.fromEntries(
-    Object.entries(attrs).filter(([key, value]) =>
-      key.startsWith('on') && typeof value === 'function',
-    ),
+    Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value)),
   ) as Record<string, (prop: string, ...args: any) => void>
 })
 
@@ -78,11 +81,8 @@ const dynamicCompEvents = computed(() => {
 const mergedAttrs = computed(() => {
   const { formItems: _f, actionConfig: _a, rowAttrs: _r, ...rest } = props
 
-  // 过滤掉所有事件（以 on 开头且为函数的属性）
   const filteredAttrs = Object.fromEntries(
-    Object.entries(attrs).filter(([key, value]) =>
-      !(key.startsWith('on') && typeof value === 'function'),
-    ),
+    Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)),
   )
 
   return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
@@ -90,8 +90,8 @@ const mergedAttrs = computed(() => {
 
 /**
  * 过滤出需要渲染的 formItem
- *   - 根据 vIf 条件过滤表单项
- *   - 处理每一项的 colAttrs.span 的默认值,默认为 rowAttrs.span
+ * - 根据 vIf 条件过滤表单项
+ * - 处理每一项的 colAttrs.span 的默认值，默认为 rowAttrs.span
  */
 const filteredFormItems = computed(() => {
   const { span: defaultSpan } = props?.rowAttrs ?? {}
@@ -109,17 +109,13 @@ const slots = useSlots()
  * @returns 动态组件插槽配置数组
  */
 function getSlotsByPrefix(prefix: string) {
-  const result = []
-  for (const name in slots) {
-    if (name.startsWith(prefix)) {
-      result.push({
-        rawSlotName: name,
-        slotName: name.replace(prefix, ''),
-        slotFn: slots[name]!,
-      })
-    }
-  }
-  return result
+  return Object.keys(slots)
+    .filter(name => name.startsWith(prefix))
+    .map(name => ({
+      rawSlotName: name,
+      slotName: name.replace(prefix, ''),
+      slotFn: slots[name]!,
+    }))
 }
 
 /** 缓存 el-form-item 和动态组件的插槽配置 */
@@ -139,7 +135,7 @@ const slotsCache = computed(() => {
 })
 
 /** 判断是否渲染 el-row */
-const shouldRenderRow = computed(() => ((props.rowAttrs && Object.keys(props.rowAttrs).length > 0)))
+const shouldRenderRow = computed(() => Object.keys(props.rowAttrs ?? {}).length > 0)
 
 /** 布局组件 */
 const layoutComponents = computed(() => ({
@@ -153,17 +149,20 @@ const formRef = ref<FormInstance>()
  * 处理动作按钮事件
  */
 async function onAction({ eventName }: { eventName: string }) {
-  // 定义需要验证的事件
   const validateEvents = ['submit', 'search']
-  // 定义需要重置的事件
   const resetEvents = ['cancel', 'reset']
+  const specialEvents = [...validateEvents, ...resetEvents]
 
-  if ([...validateEvents, ...resetEvents].includes(eventName)) {
-    validateEvents.includes(eventName) && await formRef.value?.validate?.()
-    resetEvents.includes(eventName) && formRef.value?.resetFields?.()
-    emit(eventName as EmitEventName)
-  }
+  if (!specialEvents.includes(eventName))
+    return emit('action', eventName)
 
+  if (validateEvents.includes(eventName))
+    await formRef.value?.validate?.()
+
+  if (resetEvents.includes(eventName))
+    formRef.value?.resetFields?.()
+
+  emit(eventName as EmitEventName)
   emit('action', eventName)
 }
 
@@ -186,7 +185,7 @@ defineExpose({
     ref="formRef"
     v-bind="mergedAttrs"
     :model="model"
-    @validate="(prop: FormItemProp, isValid: boolean, message: string) => $emit('validate', prop, isValid, message)"
+    @validate="(prop: FormItemProp, isValid: boolean, message: string) => emit('validate', prop, isValid, message)"
     @submit.prevent
   >
     <component :is="layoutComponents.row" v-bind="rowAttrs">
@@ -198,7 +197,7 @@ defineExpose({
           :dynamic-comp-events="dynamicCompEvents"
           :form-slots="slotsCache"
           :index="i"
-          @change="(extendedParams: EventExtendedParams, value: any) => $emit('change', extendedParams, value)"
+          @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
         />
       </component>
       <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />

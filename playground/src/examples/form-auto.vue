@@ -3,7 +3,7 @@
 import type { FormItems } from '@iswangh/element-plus-kit-form'
 import { ref } from 'vue'
 
-const formItems = [
+const formItems: FormItems = [
   {
     prop: 'select',
     label: '选择器',
@@ -14,13 +14,19 @@ const formItems = [
         { label: '选项2', value: '2' },
       ],
     },
+    // vShow({ select }) {
+    //   return select === '1'
+    // },
+    // vIf({ select }) {
+    //   return select === '2'
+    // },
   },
   {
     prop: 'date',
     label: '日期',
     comp: 'date-picker',
   },
-] satisfies FormItems
+]
 
 const form = ref({})
 </script>
@@ -28,9 +34,6 @@ const form = ref({})
 <template>
   <div class="test-container">
     <h2>按需导入测试（自动导入）</h2>
-    <p>组件自动导入，无需手动 import</p>
-    <el-tag>el-tag</el-tag>
-    <!-- WForm 应该被自动导入 -->
     <w-form :model="form" :form-items="formItems" />
   </div>
 </template>

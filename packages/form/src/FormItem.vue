@@ -40,19 +40,13 @@ defineEmits<Emits>()
 
 const modelValue = defineModel()
 
-/**
- * 提取表单项的属性（排除特定的键）
- * @returns 不包含排除键的属性对象
- */
-function extractFormItemProps() {
+/** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
+const formItemProps = computed(() => {
   const excludedKeysSet = new Set(FORM_ITEM_EXCLUDED_KEYS)
   return Object.fromEntries(
     Object.entries(props.formItem).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
   )
-}
-
-/** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
-const formItemProps = computed(() => extractFormItemProps())
+})
 
 /** 获取 el-form-item 的插槽 */
 const formItemSlots = computed(() => props.formSlots.formItemSlots)
@@ -68,33 +62,26 @@ const eventExtendedParams = computed(() => {
 
 /**
  * 创建动态事件处理器
- *
  * 扩展参数 {prop, formItem} 作为第一个参数传递给事件处理器
  *
  * ⚠️ 事件处理限制：
  * - change 事件不能在这里动态处理，否则会与原生 change 事件冲突导致重复触发
  * - 原生 change 事件会冒泡到父组件，这里只处理非 change 的自定义事件
- *
- * @returns 处理后的动态事件处理器
  */
-function createDynamicEventHandlers(): Record<string, (...args: any[]) => any> {
-  const handlers: Record<string, (...args: any[]) => any> = {}
-
-  for (const [eventName, handler] of Object.entries(props.dynamicCompEvents)) {
-    // 确保第一的参数为 拓展参数
-    handlers[eventName] = (...args: any[]) => handler(eventExtendedParams.value, ...args)
-  }
-
-  return handlers
-}
-
-const dynamicEventHandlers = computed(() => createDynamicEventHandlers())
+const dynamicEventHandlers = computed(() => {
+  return Object.fromEntries(
+    Object.entries(props.dynamicCompEvents).map(([eventName, handler]) => [
+      eventName,
+      (...args: any[]) => handler(eventExtendedParams.value, ...args),
+    ]),
+  )
+})
 
 /** 处理后的组件属性（包含默认值和用户配置） */
 const processedCompAttrs = computed(() => ({ ...COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem), ...dynamicEventHandlers.value }))
 
 /** 根据 prop 获取对应的动态组件插槽 */
-const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.dynamicComponentSlots.get(prop))
+const getDynamicComponentSlots = (prop: string) => props.formSlots.dynamicComponentSlots.get(prop)
 </script>
 
 <template>
@@ -112,7 +99,7 @@ const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.d
         @change="$emit('change', eventExtendedParams, $event)"
       >
         <!-- dynamic component slots -->
-        <template v-for="(slot, slotIndex) in dynamicComponentSlots(formItem.prop)" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+        <template v-for="(slot, slotIndex) in getDynamicComponentSlots(formItem.prop) ?? []" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
           <component :is="slot.slotFn" :value="modelValue" :form="formData" :form-item="formItem" v-bind="slotProps" />
         </template>
       </component>

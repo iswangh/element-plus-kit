@@ -26,36 +26,40 @@ const props = withDefaults(defineProps<Props>(), {
 defineEmits<Emits>()
 
 /** 处理后的动作组件属性（合并默认配置和用户自定义配置） */
-const processedActionAttrs = computed(() => {
-  return { ...props, config: { ...ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) } }
-})
+const processedActionAttrs = computed(() => ({
+  ...props,
+  config: { ...ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) },
+}))
 
-/** 标准化后的按钮列表（ 将字符串类型的按钮配置转换为完整的按钮对象，确保每个按钮都有 eventName 属性） */
+/**
+ * 标准化后的按钮列表
+ * 将字符串类型的按钮配置转换为完整的按钮对象，确保每个按钮都有 eventName 属性
+ */
 const normalizedButtons = computed(() => {
   const { buttons } = processedActionAttrs.value.config
 
   return buttons.map((v) => {
-    if (typeof v === 'string') {
-      const defaultButton = DEFAULT_FORM_ACTION_BUTTONS[v]
-      return defaultButton ? { ...defaultButton, eventName: v } as ActionConfigButtonItem : { label: v.toUpperCase(), eventName: v } as ActionConfigButtonItem
-    }
-    return v
-  }) as ActionConfigButtonItem[]
+    if (typeof v !== 'string')
+      return v
+
+    const defaultButton = DEFAULT_FORM_ACTION_BUTTONS[v]
+    return defaultButton
+      ? { ...defaultButton, eventName: v }
+      : { label: v.toUpperCase(), eventName: v }
+  })
 })
 
-/** 提取 el-button 的属性（排除自定的属性） */
-const btnAttrs = computed(() => {
-  return (btn: ActionConfigButtonItem) => {
-    const { label: _label, eventName: _eventName, ...rest } = btn
-    return { ...rest }
-  }
-})
+/** 提取 el-button 的属性（排除自定义属性） */
+const getBtnAttrs = (btn: ActionConfigButtonItem) => {
+  const { label: _label, eventName: _eventName, ...rest } = btn
+  return rest
+}
 </script>
 
 <template>
   <ElFormItem v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow" prop="action">
     <template v-if="!actionSlot">
-      <ElButton v-for="(btn, i) in normalizedButtons" :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
+      <ElButton v-for="(btn, i) in normalizedButtons" :key="`${btn.label}-${i}`" v-bind="getBtnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
         {{ btn.label ?? '' }}
       </ElButton>
     </template>
