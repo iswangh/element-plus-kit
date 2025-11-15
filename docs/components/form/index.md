@@ -278,11 +278,11 @@ const formItems: FormItems = [
 ]
 
 const actionConfig: ActionConfig = {
-  vIf: true, // 必须设置为 true，按钮才会显示
+  vIf: true, // 当 inline 为 false 时，必须设置为 true，按钮才会显示（当 inline 为 true 时，默认 vIf 为 true）
   buttons: ['submit', 'cancel'],
 }
 
-const handleAction = (eventName: string) => {
+const onAction = (eventName: string) => {
   if (eventName === 'submit') {
     ElMessage.success('提交成功！')
     console.log('表单数据:', form.value)
@@ -298,7 +298,7 @@ const handleAction = (eventName: string) => {
     :model="form"
     :form-items="formItems"
     :action-config="actionConfig"
-    @action="handleAction"
+    @action="onAction"
   />
 </template>
 ```
@@ -508,11 +508,11 @@ const formItems: FormItems = [
 ]
 
 const actionConfig: ActionConfig = {
-  vIf: true, // 必须设置为 true，按钮才会显示
+  vIf: true, // 当 inline 为 false 时，必须设置为 true，按钮才会显示（当 inline 为 true 时，默认 vIf 为 true）
   buttons: ['submit', 'cancel'],
 }
 
-const handleAction = (eventName: string) => {
+const onAction = (eventName: string) => {
   if (eventName === 'submit') {
     ElMessage.success('提交成功！')
     console.log('表单数据:', form.value)
@@ -530,7 +530,7 @@ const handleAction = (eventName: string) => {
     :model="form"
     :form-items="formItems"
     :action-config="actionConfig"
-    @action="handleAction"
+    @action="onAction"
   />
 </template>
 ```
@@ -544,8 +544,8 @@ const handleAction = (eventName: string) => {
 **布局逻辑说明**：
 - 当 `inline` 为 `true` 时，使用 `ElRow` 和 `ElCol` 进行布局
 - 当 `inline` 为 `false`（默认）时：
-  - 如果 `rowAttrs` 对象中有配置项（如 `gutter`、`span` 等），也会使用 `ElRow` 和 `ElCol` 进行布局
-  - 如果 `formItem` 的 `colAttrs` 也有值（如 `span`），同样会使用 `ElCol` 进行布局
+  - 如果 `rowAttrs` 对象中有配置项（如 `gutter`、`span` 等），会使用 `ElRow` 和 `ElCol` 进行布局
+  - 如果 `rowAttrs` 没有配置，即使 `formItem` 的 `colAttrs` 有值，也不会使用 `ElCol`，而是使用普通的 `div` 布局
   - 如果两者都没有配置，则使用普通的 `div` 布局
 
 :::demo
@@ -620,6 +620,670 @@ const rowAttrs: RowAttrs = {
 
 :::
 
+## Options 配置模式
+
+`options` 支持三种配置模式：静态数组、函数模式、对象模式。不同模式适用于不同的使用场景。
+
+### 静态模式（数组）
+
+直接使用数组配置选项，适用于选项固定的场景。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'province',
+    label: '省份',
+    comp: 'select',
+    compAttrs: {
+      // 静态模式：直接使用数组
+      options: [
+        { label: '北京市', value: '1' },
+        { label: '上海市', value: '2' },
+        { label: '广东省', value: '3' },
+        { label: '浙江省', value: '4' },
+      ],
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" @change="onChange" />
+</template>
+```
+
+:::
+
+### 函数模式
+
+使用函数动态加载选项，支持同步和异步。函数可以接收 `formData` 参数，也可以不接收参数。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'category',
+    label: '分类',
+    comp: 'select',
+    compAttrs: {
+      // 函数模式：动态返回选项数组
+      options: () => {
+        // 可以在这里进行异步操作或复杂逻辑
+        return [
+          { label: '电子产品', value: 'electronics' },
+          { label: '服装配饰', value: 'clothing' },
+          { label: '食品饮料', value: 'food' },
+          { label: '图书音像', value: 'books' },
+        ]
+      },
+    },
+  },
+  {
+    prop: 'status',
+    label: '状态',
+    comp: 'select',
+    compAttrs: {
+      // 函数模式：接收 formData 参数
+      options: (formData) => {
+        // 可以根据表单数据动态返回选项
+        const category = formData.category as string | undefined
+        if (category === 'electronics')
+          return [
+            { label: '在售', value: 'on-sale' },
+            { label: '缺货', value: 'out-of-stock' },
+            { label: '下架', value: 'offline' },
+          ]
+        return [
+          { label: '可用', value: 'available' },
+          { label: '不可用', value: 'unavailable' },
+        ]
+      },
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" @change="onChange" />
+</template>
+```
+
+:::
+
+### 对象模式
+
+使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。
+
+**自动清理逻辑说明**：
+- 当依赖字段变化导致选项更新时，组件会**智能检查**当前值是否在新的选项中
+- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**（支持用户在 `change` 事件中设置的默认值）
+- **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
+- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理（如 `form.value.tags = undefined`）
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'priority',
+    label: '优先级',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：基础用法
+      options: {
+        loader: () => {
+          // 可以在这里进行异步操作
+          return [
+            { label: '高', value: 'high' },
+            { label: '中', value: 'medium' },
+            { label: '低', value: 'low' },
+          ]
+        },
+        immediate: true, // 立即加载
+      },
+    },
+  },
+  {
+    prop: 'tags',
+    label: '标签',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
+      // 注意：当优先级变化时，如果标签的当前值（如 'normal' 或 'minor'）在新的选项中存在，
+      // 组件会保留该值，不会自动清理。如果需要强制清理，需要手动设置 form.value.tags = undefined
+      options: {
+        loader: (formData) => {
+          // 可以根据表单数据动态返回选项
+          const priority = formData.priority as string | undefined
+          if (priority === 'high')
+            return [
+              { label: '紧急', value: 'urgent' },
+              { label: '重要', value: 'important' },
+            ]
+          return [
+            { label: '普通', value: 'normal' },
+            { label: '次要', value: 'minor' },
+          ]
+        },
+        deps: ['priority'], // 表单字段依赖：依赖优先级字段
+        immediate: true, // 立即加载
+      },
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" @change="onChange" />
+</template>
+```
+
+:::
+
+## 选项依赖
+
+Options 支持表单字段依赖和外部状态依赖，可以单独使用或组合使用。
+
+### 表单字段依赖
+
+通过 `deps` 配置声明表单字段依赖，当依赖字段变化时自动重新加载选项。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const provinces = [
+  { label: '北京市', value: '1' },
+  { label: '上海市', value: '2' },
+  { label: '广东省', value: '3' },
+  { label: '浙江省', value: '4' },
+]
+
+const cities: Record<string, any[]> = {
+  '1': [
+    { label: '北京市', value: '1-1' },
+  ],
+  '2': [
+    { label: '上海市', value: '2-1' },
+  ],
+  '3': [
+    { label: '广州市', value: '3-1' },
+    { label: '深圳市', value: '3-2' },
+    { label: '珠海市', value: '3-3' },
+  ],
+  '4': [
+    { label: '杭州市', value: '4-1' },
+    { label: '宁波市', value: '4-2' },
+    { label: '温州市', value: '4-3' },
+  ],
+}
+
+const districts: Record<string, any[]> = {
+  '1-1': [
+    { label: '东城区', value: '1-1-1' },
+    { label: '西城区', value: '1-1-2' },
+  ],
+  '2-1': [
+    { label: '黄浦区', value: '2-1-1' },
+    { label: '徐汇区', value: '2-1-2' },
+  ],
+  '3-1': [
+    { label: '荔湾区', value: '3-1-1' },
+    { label: '越秀区', value: '3-1-2' },
+  ],
+  '3-2': [
+    { label: '罗湖区', value: '3-2-1' },
+    { label: '福田区', value: '3-2-2' },
+  ],
+  '3-3': [
+    { label: '香洲区', value: '3-3-1' },
+    { label: '斗门区', value: '3-3-2' },
+  ],
+  '4-1': [
+    { label: '上城区', value: '4-1-1' },
+    { label: '下城区', value: '4-1-2' },
+  ],
+  '4-2': [
+    { label: '海曙区', value: '4-2-1' },
+    { label: '江北区', value: '4-2-2' },
+  ],
+  '4-3': [
+    { label: '鹿城区', value: '4-3-1' },
+    { label: '龙湾区', value: '4-3-2' },
+  ],
+}
+
+const formItems: FormItems = [
+  {
+    prop: 'province',
+    label: '省份',
+    comp: 'select',
+    compAttrs: {
+      options: provinces,
+    },
+  },
+  {
+    prop: 'city',
+    label: '城市',
+    comp: 'select',
+    compAttrs: {
+      options: {
+        loader: (formData) => {
+          const province = formData.province as string | undefined
+          if (!province)
+            return []
+          return cities[province] || []
+        },
+        deps: ['province'], // 表单字段依赖：依赖省份字段
+        immediate: true,
+      },
+    },
+  },
+  {
+    prop: 'district',
+    label: '区县',
+    comp: 'select',
+    compAttrs: {
+      options: {
+        loader: (formData) => {
+          const city = formData.city as string | undefined
+          if (!city)
+            return []
+          return districts[city] || []
+        },
+        deps: ['city'], // 表单字段依赖：依赖城市字段
+        immediate: true,
+      },
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" @change="onChange" />
+</template>
+```
+
+:::
+
+### 外部状态依赖
+
+通过闭包访问外部 ref，`watchEffect` 会自动追踪外部状态变化。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+// 外部状态：用户类型
+const userType = ref<'admin' | 'user' | 'guest'>('user')
+
+const form = ref({})
+
+const adminOptions = [
+  { label: '系统管理', value: 'system' },
+  { label: '用户管理', value: 'user' },
+  { label: '权限管理', value: 'permission' },
+]
+
+const userOptions = [
+  { label: '个人信息', value: 'profile' },
+  { label: '我的订单', value: 'orders' },
+  { label: '我的收藏', value: 'favorites' },
+]
+
+const guestOptions = [
+  { label: '登录', value: 'login' },
+  { label: '注册', value: 'register' },
+]
+
+const formItems: FormItems = [
+  {
+    prop: 'userType',
+    label: '用户类型',
+    comp: 'select',
+    compAttrs: {
+      options: [
+        { label: '管理员', value: 'admin' },
+        { label: '普通用户', value: 'user' },
+        { label: '游客', value: 'guest' },
+      ],
+    },
+  },
+  {
+    prop: 'menu',
+    label: '菜单选项',
+    comp: 'select',
+    compAttrs: {
+      // 函数模式：通过闭包访问外部 ref（外部状态依赖）
+      options: () => {
+        // 通过闭包访问外部 ref：userType
+        if (userType.value === 'admin')
+          return adminOptions
+        if (userType.value === 'user')
+          return userOptions
+        return guestOptions
+      },
+    },
+  },
+  {
+    prop: 'action',
+    label: '操作选项',
+    comp: 'select',
+    compAttrs: {
+      // 函数模式：通过闭包访问外部 ref（外部状态依赖）
+      options: () => {
+        // 通过闭包访问外部 ref：userType（外部状态依赖，watchEffect 会自动追踪）
+        if (userType.value === 'admin')
+          return [
+            { label: '查看系统日志', value: 'view-logs' },
+            { label: '清理缓存', value: 'clear-cache' },
+            { label: '添加用户', value: 'add-user' },
+            { label: '删除用户', value: 'delete-user' },
+          ]
+        if (userType.value === 'user')
+          return [
+            { label: '编辑资料', value: 'edit' },
+            { label: '修改密码', value: 'change-password' },
+            { label: '查看订单', value: 'view' },
+            { label: '取消订单', value: 'cancel' },
+          ]
+        return [
+          { label: '登录', value: 'login' },
+          { label: '注册', value: 'register' },
+        ]
+      },
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <div>
+    <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f9ff; border-radius: 4px; border: 1px solid #bae6fd;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <strong style="color: #0369a1;">外部状态：</strong>
+        <el-tag :type="userType === 'admin' ? 'danger' : userType === 'user' ? 'success' : 'info'" size="default">
+          {{ userType === 'admin' ? '管理员' : userType === 'user' ? '普通用户' : '游客' }}
+        </el-tag>
+        <el-button size="small" type="primary" @click="userType = userType === 'admin' ? 'user' : userType === 'user' ? 'guest' : 'admin'">
+          切换用户类型
+        </el-button>
+      </div>
+      <div style="color: #666; font-size: 13px; line-height: 1.5;">
+        💡 切换用户类型后，菜单选项和操作选项会根据外部状态自动更新（通过 watchEffect 自动追踪）
+      </div>
+    </div>
+    <WForm :model="form" :form-items="formItems" @change="onChange" />
+  </div>
+</template>
+```
+
+:::
+
+### 组合依赖（表单字段 + 外部状态）
+
+同时使用表单字段依赖（`deps` 配置）和外部状态依赖（闭包访问），适用于复杂的依赖场景。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+// 外部状态：用户权限级别
+const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
+
+const form = ref({})
+
+const departments = [
+  { label: '技术部', value: 'tech' },
+  { label: '产品部', value: 'product' },
+  { label: '运营部', value: 'operation' },
+  { label: '市场部', value: 'marketing' },
+]
+
+const techRoles = [
+  { label: '前端开发', value: 'frontend' },
+  { label: '后端开发', value: 'backend' },
+  { label: '全栈开发', value: 'fullstack' },
+  { label: '架构师', value: 'architect' },
+]
+
+const productRoles = [
+  { label: '产品经理', value: 'pm' },
+  { label: '产品助理', value: 'pa' },
+  { label: '产品设计师', value: 'designer' },
+]
+
+const operationRoles = [
+  { label: '运营专员', value: 'specialist' },
+  { label: '运营经理', value: 'manager' },
+  { label: '数据分析师', value: 'analyst' },
+]
+
+const marketingRoles = [
+  { label: '市场专员', value: 'specialist' },
+  { label: '市场经理', value: 'manager' },
+  { label: '品牌经理', value: 'brand' },
+]
+
+// 根据权限级别和部门返回不同的功能选项
+function getFeaturesByPermissionAndDept(permission: string, dept: string) {
+  const features: Record<string, Record<string, any[]>> = {
+    admin: {
+      tech: [
+        { label: '系统配置', value: 'system-config' },
+        { label: '用户管理', value: 'user-management' },
+        { label: '代码审查', value: 'code-review' },
+        { label: '部署管理', value: 'deploy' },
+      ],
+      product: [
+        { label: '产品规划', value: 'planning' },
+        { label: '需求管理', value: 'requirements' },
+        { label: '数据分析', value: 'analytics' },
+        { label: '用户反馈', value: 'feedback' },
+      ],
+      operation: [
+        { label: '数据统计', value: 'statistics' },
+        { label: '活动管理', value: 'activities' },
+        { label: '用户运营', value: 'user-operation' },
+        { label: '内容管理', value: 'content' },
+      ],
+      marketing: [
+        { label: '营销活动', value: 'campaigns' },
+        { label: '品牌推广', value: 'branding' },
+        { label: '渠道管理', value: 'channels' },
+        { label: '数据分析', value: 'analytics' },
+      ],
+    },
+    manager: {
+      tech: [
+        { label: '代码审查', value: 'code-review' },
+        { label: '任务分配', value: 'task-assign' },
+        { label: '进度管理', value: 'progress' },
+      ],
+      product: [
+        { label: '需求管理', value: 'requirements' },
+        { label: '数据分析', value: 'analytics' },
+        { label: '用户反馈', value: 'feedback' },
+      ],
+      operation: [
+        { label: '活动管理', value: 'activities' },
+        { label: '用户运营', value: 'user-operation' },
+        { label: '数据统计', value: 'statistics' },
+      ],
+      marketing: [
+        { label: '营销活动', value: 'campaigns' },
+        { label: '渠道管理', value: 'channels' },
+        { label: '数据分析', value: 'analytics' },
+      ],
+    },
+    user: {
+      tech: [
+        { label: '代码提交', value: 'commit' },
+        { label: '任务查看', value: 'view-tasks' },
+      ],
+      product: [
+        { label: '需求查看', value: 'view-requirements' },
+        { label: '反馈提交', value: 'submit-feedback' },
+      ],
+      operation: [
+        { label: '活动查看', value: 'view-activities' },
+        { label: '数据查看', value: 'view-data' },
+      ],
+      marketing: [
+        { label: '活动查看', value: 'view-campaigns' },
+        { label: '数据查看', value: 'view-data' },
+      ],
+    },
+  }
+
+  return features[permission]?.[dept] || []
+}
+
+const formItems: FormItems = [
+  {
+    prop: 'department',
+    label: '部门',
+    comp: 'select',
+    compAttrs: {
+      options: departments,
+    },
+  },
+  {
+    prop: 'role',
+    label: '角色',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：依赖部门字段（表单字段依赖）
+      options: {
+        loader: (formData) => {
+          const dept = formData.department as string | undefined
+          if (!dept)
+            return []
+
+          if (dept === 'tech')
+            return techRoles
+          if (dept === 'product')
+            return productRoles
+          if (dept === 'operation')
+            return operationRoles
+          if (dept === 'marketing')
+            return marketingRoles
+
+          return []
+        },
+        deps: ['department'], // 表单字段依赖：依赖部门字段
+        immediate: true,
+      },
+    },
+  },
+  {
+    prop: 'features',
+    label: '功能权限',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
+      // 注意：配置了 deps 后，表单字段依赖通过 watch 监听，外部状态依赖通过 watchEffect 追踪（在 loader 中访问）
+      options: {
+        loader: (formData) => {
+          const dept = formData.department as string | undefined
+          const role = formData.role as string | undefined
+
+          if (!dept || !role)
+            return []
+
+          // 通过闭包访问外部 ref：permissionLevel（外部状态依赖，watchEffect 会自动追踪）
+          // 通过 formData 访问表单字段：department, role（表单字段依赖，通过 deps 配置）
+          return getFeaturesByPermissionAndDept(permissionLevel.value, dept)
+        },
+        // 配置表单字段依赖：依赖部门和角色字段（表单字段依赖变化时触发）
+        // 外部状态依赖（permissionLevel）通过闭包访问，watchEffect 会自动追踪
+        deps: ['department', 'role'],
+        immediate: true,
+      },
+    },
+  },
+]
+
+const onChange = (extendedParams: any, value: any) => {
+  console.log('onChange', extendedParams.prop, value)
+}
+</script>
+
+<template>
+  <div>
+    <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f9ff; border-radius: 4px; border: 1px solid #bae6fd;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <strong style="color: #0369a1;">外部状态（权限级别）：</strong>
+        <el-tag :type="permissionLevel === 'admin' ? 'danger' : permissionLevel === 'manager' ? 'warning' : 'success'" size="default">
+          {{ permissionLevel === 'admin' ? '管理员' : permissionLevel === 'manager' ? '经理' : '普通用户' }}
+        </el-tag>
+        <el-button size="small" type="primary" @click="permissionLevel = permissionLevel === 'admin' ? 'manager' : permissionLevel === 'manager' ? 'user' : 'admin'">
+          切换权限级别
+        </el-button>
+      </div>
+      <div style="color: #666; font-size: 13px; line-height: 1.5;">
+        💡 切换权限级别后，功能权限选项会根据权限级别（外部状态依赖）、部门和角色（表单字段依赖）动态更新
+      </div>
+    </div>
+    <WForm :model="form" :form-items="formItems" @change="onChange" />
+  </div>
+</template>
+```
+
+:::
+
 ## API
 
 ### Attributes
@@ -648,9 +1312,9 @@ interface FormItem<C extends FormItemComp = FormItemComp> extends ElFormItemAttr
   /** 组件属性配置，根据组件类型自动推断 */
   compAttrs?: FormItemCompAttrs<C>
   /** 条件渲染（v-if），支持布尔值或接收表单数据的函数，依赖表单内部值 */
-  vIf?: boolean | ((data?: any) => boolean)
+  vIf?: boolean | ((data: Record<string, any>) => boolean)
   /** 显示/隐藏（v-show），支持布尔值或接收表单数据的函数，可以依赖外部值 */
-  vShow?: boolean | ((data?: any) => boolean)
+  vShow?: boolean | ((data: Record<string, any>) => boolean)
   /** 列布局属性（ElCol 属性） */
   colAttrs?: ColAttrs
   /** 验证规则 */
@@ -685,6 +1349,566 @@ interface FormItem<C extends FormItemComp = FormItemComp> extends ElFormItemAttr
 - [`transfer`](https://element-plus.org/zh-CN/component/transfer.html) - 穿梭框
 - [`mention`](https://element-plus.org/zh-CN/component/mention.html) - 提及
 - `custom` - 自定义组件（通过插槽实现）
+
+##### Options 配置
+
+`compAttrs.options` 支持三种配置模式，适用于不同的使用场景。
+
+| 模式 | 配置方式 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| **静态模式** | 数组 | `any[]` | 直接使用数组配置选项，适用于选项固定的场景 |
+| **函数模式** | 函数 | `Function` | 支持同步和异步函数，通过闭包访问外部依赖（包括 `form` ref），执行时机为**初始化**和**依赖变更** |
+| **对象模式** | 对象 | `Object` | 通过 `loader`、`immediate`、`deps` 配置选项加载行为 |
+
+**对象模式配置项**：
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `loader` | 选项加载器函数，支持同步和异步 | `Function` | - |
+| `immediate` | 是否立即加载 | `boolean` | `false` |
+| `deps` | 表单字段依赖列表 | `string[]` | `[]` |
+
+**函数模式说明**：
+- 支持同步和异步函数，函数签名：`(formData?: Record<string, any>) => any[] | Promise<any[]>`
+- 通过闭包访问外部依赖（包括 `form` ref），`watchEffect` 会自动追踪依赖变化
+- 可以将 `form` 看作外部依赖，通过 `form.value.xxx` 访问表单字段
+- 执行时机：**初始化**（`watchEffect` 首次执行）和**依赖变更**（函数内部访问的响应式数据变化时）
+
+**对象模式说明**：
+- `loader`：选项加载器函数，支持同步和异步，函数签名：`(formData: Record<string, any>) => any[] | Promise<any[]>`
+- `immediate`：控制是否立即加载，默认值为 `false`（不立即加载）
+- `deps`：声明表单字段依赖，当依赖字段变化时自动重新加载选项
+- `loader` 执行时机受 `immediate` 和 `deps` 控制：
+  - 如果配置了 `deps`：通过 `watch` 监听依赖变化，`immediate` 控制是否立即执行
+  - 如果没有 `deps`：通过 `watchEffect` 追踪外部依赖（闭包访问），`immediate` 控制是否立即执行
+
+**依赖变更特别注意**：
+- 当依赖字段变化导致选项更新时，组件会**智能检查**当前值是否在新的选项中
+- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**（支持用户在 `change` 事件中设置的默认值）
+- **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
+- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理（如 `form.value.tags = undefined`）
+
+**三种模式说明**：
+
+1. **静态模式（数组）**
+   - 直接使用数组配置选项
+   - 适用于选项固定的场景
+   - 示例：`options: [{ label: '选项1', value: '1' }]`
+
+:::demo 静态模式示例
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'priority',
+    label: '优先级',
+    comp: 'select',
+    compAttrs: {
+      // 静态模式：直接使用数组配置选项
+      options: [
+        { label: '高', value: 'high' },
+        { label: '中', value: 'medium' },
+        { label: '低', value: 'low' },
+      ],
+    },
+  },
+  {
+    prop: 'status',
+    label: '状态',
+    comp: 'select',
+    compAttrs: {
+      // 静态模式：选项固定的场景
+      options: [
+        { label: '待处理', value: 'pending' },
+        { label: '进行中', value: 'processing' },
+        { label: '已完成', value: 'completed' },
+      ],
+    },
+  },
+]
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" />
+  <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
+    <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
+    <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
+  </div>
+</template>
+```
+
+:::
+
+2. **函数模式**
+   - 支持同步和异步函数
+   - 通过闭包访问外部依赖（包括 `form` ref），`watchEffect` 会自动追踪依赖变化
+   - 可以将 `form` 看作外部依赖，通过 `form.value.xxx` 访问表单字段
+   - 执行时机：**初始化**（`watchEffect` 首次执行）和**依赖变更**（函数内部访问的响应式数据变化时）
+   - **等价于对象模式**：`{ loader: () => [], immediate: true }`（注意：对象模式默认 `immediate: false`，需要显式设置 `immediate: true` 才能达到函数模式的立即加载效果）
+   - 示例：
+     ```typescript
+     options: () => {
+       // 通过闭包访问外部 ref，watchEffect 会自动追踪
+       return userType.value === 'admin' ? adminOptions : userOptions
+     }
+     ```
+
+:::demo 函数模式示例（外部依赖）
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+// 外部状态：用户类型
+const userType = ref<'admin' | 'user' | 'guest'>('user')
+
+const adminOptions = [
+  { label: '系统管理', value: 'system' },
+  { label: '用户管理', value: 'user' },
+  { label: '权限管理', value: 'permission' },
+]
+
+const userOptions = [
+  { label: '个人信息', value: 'profile' },
+  { label: '我的订单', value: 'orders' },
+  { label: '我的收藏', value: 'favorites' },
+]
+
+const guestOptions = [
+  { label: '登录', value: 'login' },
+  { label: '注册', value: 'register' },
+]
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'userType',
+    label: '用户类型',
+    comp: 'select',
+    compAttrs: {
+      options: [
+        { label: '管理员', value: 'admin' },
+        { label: '普通用户', value: 'user' },
+        { label: '游客', value: 'guest' },
+      ],
+    },
+  },
+  {
+    prop: 'menu',
+    label: '菜单选项',
+    comp: 'select',
+    compAttrs: {
+      // 函数模式：通过闭包访问外部 ref（外部依赖）
+      // watchEffect 会自动追踪 userType 的变化
+      options: () => {
+        if (userType.value === 'admin')
+          return adminOptions
+        if (userType.value === 'user')
+          return userOptions
+        return guestOptions
+      },
+    },
+  },
+]
+
+// 当用户类型字段变化时，同步更新外部状态
+const onChange = (extendedParams: any, value: any) => {
+  if (extendedParams.prop === 'userType')
+    userType.value = value as 'admin' | 'user' | 'guest'
+}
+</script>
+
+<template>
+  <div>
+    <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded flex items-center gap-3">
+      <strong>外部状态：</strong>
+      <el-tag :type="userType === 'admin' ? 'danger' : userType === 'user' ? 'success' : 'info'">
+        {{ userType === 'admin' ? '管理员' : userType === 'user' ? '普通用户' : '游客' }}
+      </el-tag>
+      <el-button size="small" @click="userType = userType === 'admin' ? 'user' : userType === 'user' ? 'guest' : 'admin'">
+        切换用户类型
+      </el-button>
+      <span class="text-xs text-gray-600 dark:text-gray-400">切换后，菜单选项会自动更新</span>
+    </div>
+    <WForm :model="form" :form-items="formItems" @change="onChange" />
+    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
+      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
+      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
+3. **对象模式**
+   - `loader`：选项加载器函数，支持同步和异步
+   - `immediate`：控制是否立即加载，默认值为 `false`（不立即加载）
+   - `deps`：声明表单字段依赖，当依赖字段变化时自动重新加载选项，默认值为 `[]`（空数组，不依赖表单字段）
+   - `loader` 执行时机受 `immediate` 和 `deps` 控制：
+     - 如果配置了 `deps`：通过 `watch` 监听依赖变化，`immediate` 控制是否立即执行
+     - 如果没有 `deps`：通过 `watchEffect` 追踪外部依赖（闭包访问），`immediate` 控制是否立即执行
+   - 适用于需要声明表单字段依赖的场景
+   - 示例：
+     ```typescript
+     options: {
+       loader: (formData) => {
+         // 可以通过 formData 访问表单字段（内部依赖）
+         // 可以通过闭包访问外部 ref（外部依赖，watchEffect 会自动追踪）
+         return getOptionsByFormData(formData)
+       },
+       deps: ['field1', 'field2'],  // 表单字段依赖（可选）
+       immediate: true,              // 立即加载（可选，默认 false，需显式设置）
+     }
+     ```
+
+:::demo 对象模式示例（基础用法）
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'priority',
+    label: '优先级',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：基础用法
+      options: {
+        loader: () => {
+          // 可以在这里进行异步操作
+          return [
+            { label: '高', value: 'high' },
+            { label: '中', value: 'medium' },
+            { label: '低', value: 'low' },
+          ]
+        },
+        immediate: true, // 立即加载（需显式设置，默认 false）
+      },
+    },
+  },
+]
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" />
+  <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
+    <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
+    <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
+  </div>
+</template>
+```
+
+:::
+
+**依赖说明**：
+
+- **表单字段依赖**：通过 `deps` 配置声明，当依赖字段变化时自动重新加载选项
+- **外部状态依赖**：通过闭包访问外部 ref，`watchEffect` 会自动追踪外部状态变化
+- **组合依赖**：可以同时使用表单字段依赖和外部状态依赖
+
+:::demo 对象模式示例（内部依赖 - deps 配置）
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+// 模拟数据
+const provinces = [
+  { label: '北京市', value: '1' },
+  { label: '上海市', value: '2' },
+  { label: '广东省', value: '3' },
+  { label: '浙江省', value: '4' },
+]
+
+const cities = [
+  { label: '北京市', value: '1-1' },
+  { label: '上海市', value: '2-1' },
+  { label: '广州市', value: '3-1' },
+  { label: '深圳市', value: '3-2' },
+  { label: '珠海市', value: '3-3' },
+  { label: '杭州市', value: '4-1' },
+  { label: '宁波市', value: '4-2' },
+  { label: '温州市', value: '4-3' },
+]
+
+const districts = [
+  { label: '东城区', value: '1-1-1' },
+  { label: '西城区', value: '1-1-2' },
+  { label: '黄浦区', value: '2-1-1' },
+  { label: '徐汇区', value: '2-1-2' },
+  { label: '荔湾区', value: '3-1-1' },
+  { label: '越秀区', value: '3-1-2' },
+  { label: '罗湖区', value: '3-2-1' },
+  { label: '福田区', value: '3-2-2' },
+  { label: '香洲区', value: '3-3-1' },
+  { label: '斗门区', value: '3-3-2' },
+  { label: '上城区', value: '4-1-1' },
+  { label: '下城区', value: '4-1-2' },
+  { label: '海曙区', value: '4-2-1' },
+  { label: '江北区', value: '4-2-2' },
+  { label: '鹿城区', value: '4-3-1' },
+  { label: '龙湾区', value: '4-3-2' },
+]
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'province',
+    label: '省份',
+    comp: 'select',
+    compAttrs: {
+      // 静态模式：数组
+      options: provinces,
+    },
+  },
+  {
+    prop: 'city',
+    label: '城市',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：使用 deps 配置内部依赖
+      options: {
+        loader: (formData) => {
+          const province = formData.province as string | undefined
+          if (!province)
+            return []
+          // value 格式：省份-城市，通过 value 前缀匹配
+          return cities.filter(city => city.value.startsWith(`${province}-`))
+        },
+        deps: ['province'], // 内部依赖：依赖省份字段
+        immediate: true,
+      },
+    },
+  },
+  {
+    prop: 'district',
+    label: '区县',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：依赖省市，使用 deps 配置内部依赖
+      options: {
+        loader: (formData) => {
+          const city = formData.city as string | undefined
+          if (!city)
+            return []
+          // value 格式：省份-城市-区县，通过 value 前缀匹配
+          return districts.filter(district => district.value.startsWith(`${city}-`))
+        },
+        immediate: true,
+        deps: ['province', 'city'], // 内部依赖：依赖省市字段
+      },
+    },
+  },
+]
+</script>
+
+<template>
+  <div>
+    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+      省份：静态模式（数组） | 城市：对象模式（deps: ['province']） | 区县：对象模式（deps: ['province', 'city']）
+    </p>
+    <WForm :model="form" :form-items="formItems" />
+    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
+      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
+      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
+:::demo 对象模式示例（混合依赖 - 内部 + 外部）
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+// 外部状态：用户权限级别
+const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
+
+const departments = [
+  { label: '技术部', value: 'tech' },
+  { label: '产品部', value: 'product' },
+  { label: '运营部', value: 'operation' },
+  { label: '市场部', value: 'marketing' },
+]
+
+const techRoles = [
+  { label: '前端开发', value: 'frontend' },
+  { label: '后端开发', value: 'backend' },
+  { label: '全栈开发', value: 'fullstack' },
+  { label: '架构师', value: 'architect' },
+]
+
+const productRoles = [
+  { label: '产品经理', value: 'pm' },
+  { label: '产品助理', value: 'pa' },
+  { label: '产品设计师', value: 'designer' },
+]
+
+// 根据权限级别和部门返回不同的功能选项
+function getFeaturesByPermissionAndDept(permission: string, dept: string) {
+  const features: Record<string, Record<string, any[]>> = {
+    admin: {
+      tech: [
+        { label: '系统配置', value: 'system-config' },
+        { label: '用户管理', value: 'user-management' },
+        { label: '代码审查', value: 'code-review' },
+      ],
+      product: [
+        { label: '产品规划', value: 'planning' },
+        { label: '需求管理', value: 'requirements' },
+        { label: '数据分析', value: 'analytics' },
+      ],
+    },
+    manager: {
+      tech: [
+        { label: '代码审查', value: 'code-review' },
+        { label: '任务分配', value: 'task-assign' },
+      ],
+      product: [
+        { label: '需求管理', value: 'requirements' },
+        { label: '数据分析', value: 'analytics' },
+      ],
+    },
+    user: {
+      tech: [
+        { label: '代码提交', value: 'commit' },
+        { label: '任务查看', value: 'view-tasks' },
+      ],
+      product: [
+        { label: '需求查看', value: 'view-requirements' },
+        { label: '反馈提交', value: 'submit-feedback' },
+      ],
+    },
+  }
+  return features[permission]?.[dept] || []
+}
+
+const form = ref({})
+
+const formItems: FormItems = [
+  {
+    prop: 'department',
+    label: '部门',
+    comp: 'select',
+    compAttrs: {
+      options: departments,
+    },
+  },
+  {
+    prop: 'role',
+    label: '角色',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：依赖部门字段（内部依赖）
+      options: {
+        loader: (formData) => {
+          const dept = formData.department as string | undefined
+          if (!dept)
+            return []
+          if (dept === 'tech')
+            return techRoles
+          if (dept === 'product')
+            return productRoles
+          return []
+        },
+        deps: ['department'], // 内部依赖：依赖部门字段
+        immediate: true,
+      },
+    },
+  },
+  {
+    prop: 'features',
+    label: '功能权限',
+    comp: 'select',
+    compAttrs: {
+      // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
+      // 注意：配置了 deps 后，内部依赖通过 watch 监听，外部依赖通过 watchEffect 追踪（在 loader 中访问）
+      options: {
+        loader: (formData) => {
+          const dept = formData.department as string | undefined
+          const role = formData.role as string | undefined
+          if (!dept || !role)
+            return []
+          // 通过闭包访问外部 ref：permissionLevel（外部依赖，watchEffect 会自动追踪）
+          // 通过 formData 访问表单字段：department, role（内部依赖，通过 deps 配置）
+          return getFeaturesByPermissionAndDept(permissionLevel.value, dept)
+        },
+        // 配置内部依赖：依赖部门和角色字段（内部依赖变化时触发）
+        // 外部依赖（permissionLevel）通过闭包访问，watchEffect 会自动追踪
+        deps: ['department', 'role'],
+        immediate: true,
+      },
+    },
+  },
+]
+</script>
+
+<template>
+  <div>
+    <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded flex items-center gap-3 flex-wrap">
+      <strong>外部状态（权限级别）：</strong>
+      <el-tag :type="permissionLevel === 'admin' ? 'danger' : permissionLevel === 'manager' ? 'warning' : 'success'">
+        {{ permissionLevel === 'admin' ? '管理员' : permissionLevel === 'manager' ? '经理' : '普通用户' }}
+      </el-tag>
+      <el-button size="small" @click="permissionLevel = permissionLevel === 'admin' ? 'manager' : permissionLevel === 'manager' ? 'user' : 'admin'">
+        切换权限级别
+      </el-button>
+      <span class="text-xs text-gray-600 dark:text-gray-400">切换后，功能权限选项会根据权限级别、部门和角色动态更新</span>
+    </div>
+    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+      部门：静态模式 | 角色：对象模式（deps: ['department']，内部依赖） | 功能权限：对象模式（deps: ['department', 'role']，内部依赖 + 闭包访问 permissionLevel，外部依赖）
+    </p>
+    <WForm :model="form" :form-items="formItems" />
+    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
+      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
+      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
+**模式等价关系**：
+
+```typescript
+// 函数模式
+options: () => [{ label: '选项1', value: '1' }]
+
+// 等价于对象模式（显式指定默认值）
+options: {
+  loader: () => [{ label: '选项1', value: '1' }],
+  immediate: true,  // 显式设置为 true（立即加载，默认 false）
+  deps: [],          // 默认值：[]（不依赖表单字段）
+}
+
+// 等价于对象模式（省略默认值）
+options: {
+  loader: () => [{ label: '选项1', value: '1' }],
+  // immediate 默认为 false（不立即加载），deps 默认为 []（不依赖表单字段）
+}
+```
+
+**注意**：函数模式和对象模式都会通过 `watchEffect` 自动追踪外部状态依赖（通过闭包访问的外部 ref）。
 
 ##### 使用示例
 
@@ -751,11 +1975,11 @@ const formItems: FormItems = [
 
 ```typescript
 interface ActionConfig {
-  /** 是否显示操作区域（v-if） */
-  vIf?: boolean | ((data?: any) => boolean)
-  /** 显示/隐藏操作区域（v-show） */
-  vShow?: boolean | ((data?: any) => boolean)
-  /** 按钮列表 */
+  /** 是否显示操作区域（v-if），默认值：`inline`（当 inline 为 true 时，默认显示；当 inline 为 false 时，默认不显示） */
+  vIf?: boolean | ((data: Record<string, any>) => boolean)
+  /** 显示/隐藏操作区域（v-show），默认值：`true` */
+  vShow?: boolean | ((data: Record<string, any>) => boolean)
+  /** 按钮列表，默认值：`inline` 为 `true` 时 `['search', 'reset']`，`inline` 为 `false` 时 `['submit', 'cancel']` */
   buttons?: ActionConfigButtons[]
 }
 ```

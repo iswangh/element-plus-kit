@@ -1,0 +1,51 @@
+<script setup lang="ts">
+import type { FormItems } from '@iswangh/element-plus-kit-form'
+import { WForm } from '@iswangh/element-plus-kit'
+import { ref } from 'vue'
+
+const formItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    comp: 'input',
+  },
+  {
+    prop: 'age',
+    label: '年龄',
+    comp: 'input-number',
+    compAttrs: {
+      min: 0,
+      max: 120,
+    },
+  },
+] satisfies FormItems
+
+const form = ref({
+  username: '',
+  age: 0,
+})
+</script>
+
+<template>
+  <el-card class="example-container" shadow="hover">
+    <template #header>
+      <h2 class="example-title m-0">
+        手动导入测试
+      </h2>
+    </template>
+    <el-space class="w-full" direction="vertical" :size="20" fill>
+      <el-alert
+        type="info"
+        :closable="false"
+        show-icon
+      >
+        <template #default>
+          <p class="example-description m-0">
+            从主包手动导入组件
+          </p>
+        </template>
+      </el-alert>
+      <WForm :model="form" :form-items="formItems" />
+    </el-space>
+  </el-card>
+</template>

@@ -368,6 +368,15 @@ const actionConfig: ActionConfig = {
 const form = ref({
   keyword: '',
 })
+
+const onSearch = () => {
+  console.log('搜索:', form.value)
+}
+
+const onReset = () => {
+  form.value.keyword = ''
+  console.log('重置表单')
+}
 </script>
 
 <template>
@@ -375,8 +384,8 @@ const form = ref({
     :model="form"
     :form-items="formItems"
     :action-config="actionConfig"
-    @search="handleSearch"
-    @reset="handleReset"
+    @search="onSearch"
+    @reset="onReset"
   />
 </template>
 ```

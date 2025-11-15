@@ -293,17 +293,17 @@ const formItems: FormItems = [
   <WForm
     :model="form"
     :form-items="formItems"
-    @change="handleChange"
-    @submit="handleSubmit"
+    @change="onChange"
+    @submit="onSubmit"
   />
 </template>
 
 <script setup lang="ts">
-const handleChange = (extendedParams: EventExtendedParams, value: any) => {
+const onChange = (extendedParams: EventExtendedParams, value: any) => {
   console.log('字段变化:', extendedParams.prop, value)
 }
 
-const handleSubmit = () => {
+const onSubmit = () => {
   console.log('提交表单:', form.value)
 }
 </script>

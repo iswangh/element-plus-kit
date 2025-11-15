@@ -10,4 +10,4 @@
 
 import iswangh from '@iswangh/eslint-config'
 
-export default iswangh()
+export default iswangh({ unocss: true })

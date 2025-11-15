@@ -48,7 +48,7 @@ export interface OptionsConfig {
    */
   loader: OptionsLoader
   /**
-   * 是否立即加载（默认 true，同函数模式默认初始化获取）
+   * 是否立即加载（默认 false，需要显式设置为 true 才会立即加载）
    */
   immediate?: boolean
   /**

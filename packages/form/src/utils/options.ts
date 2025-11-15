@@ -1,4 +1,6 @@
 /* eslint-disable ts/no-explicit-any */
+import type { OptionsConfig } from '../types'
+
 /**
  * 处理依赖列表：排除自身并去重
  * @param deps 依赖字段列表
@@ -26,4 +28,13 @@ export function getDepsValues(deps: string[], formData: Record<string, any>, cur
     result[dep] = formData[dep]
   }
   return result
+}
+
+/**
+ * 检查是否为对象模式的 options 配置
+ * @param options - 待检查的选项配置
+ * @returns 是否为对象模式配置
+ */
+export function isOptionsConfig(options: any): options is OptionsConfig {
+  return options && typeof options === 'object' && typeof options.loader === 'function'
 }

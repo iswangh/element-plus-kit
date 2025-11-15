@@ -11,14 +11,17 @@
   "dependencies": {
     "@iswangh/element-plus-kit": "workspace:*",
     "@iswangh/element-plus-kit-form": "workspace:*",
-    "element-plus": "^2.11.7",
-    "vue": "^3.5.23"
+    "element-plus": "^2.11.8",
+    "unocss": "^66.5.6",
+    "vue": "^3.5.24"
   },
   "devDependencies": {
+    "@unocss/eslint-plugin": "^66.5.6",
+    "@unocss/vite": "^66.5.6",
     "@vitejs/plugin-vue": "^6.0.1",
-    "sass": "^1.93.3",
-    "unplugin-auto-import": "^20.1.0",
+    "sass": "^1.94.0",
+    "unplugin-auto-import": "^0.18.6",
     "unplugin-vue-components": "^30.0.0",
-    "vite": "^7.1.5"
+    "vite": "^7.2.2"
   }
 }

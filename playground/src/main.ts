@@ -1,8 +1,9 @@
+import { createApp } from 'vue'
+import App from './App.vue'
 // import ElementPlusKit from '@iswangh/element-plus-kit'
 // import ElementPlus from 'element-plus'
 // import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import { createApp } from 'vue'
-import App from './App.vue'
+import 'virtual:uno.css'
 
 const app = createApp(App)
 

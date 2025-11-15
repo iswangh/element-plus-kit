@@ -1,6 +1,8 @@
+import type { PluginOption } from 'vite'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
+import UnoCSS from '@unocss/vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -12,6 +14,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export default defineConfig({
   plugins: [
     vue(),
+    UnoCSS(),
     // 自动导入插件
     AutoImport({
       dts: './src/types/auto-imports.d.ts',
@@ -20,7 +23,7 @@ export default defineConfig({
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
-    }),
+    }) as PluginOption,
     // 自动注册组件
     Components({
       dts: './src/types/components.d.ts',
@@ -29,7 +32,7 @@ export default defineConfig({
         ElementPlusResolver(),
         ElementPlusKitResolver(),
       ],
-    }),
+    }) as PluginOption,
   ],
   resolve: {
     // 路径别名配置：用于开发时直接引用包源码，支持 HMR
@@ -59,8 +62,6 @@ export default defineConfig({
         replacement: resolve(__dirname, './src'),
       },
     ],
-    // 依赖去重：确保 vue 和 element-plus 只使用一个版本
-    dedupe: ['vue', 'element-plus'],
   },
   optimizeDeps: {
     // 注意：不在这里预构建 packages，让 Vite 在运行时通过 resolve.alias 正确解析
