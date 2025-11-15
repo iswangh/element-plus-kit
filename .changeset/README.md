@@ -22,10 +22,31 @@ pnpm changeset
 nr changeset
 ```
 
-交互式选择：
-- 受影响的包（core、form、kit）
-- 变更类型（patch、minor、major）
-- 变更描述
+交互式选择流程：
+
+1. **选择要包含的包**（空格选择，回车确认）
+   - `@iswangh/element-plus-kit-core`
+   - `@iswangh/element-plus-kit-form`
+   - `@iswangh/element-plus-kit`
+
+2. **选择 major 版本**（直接回车 = 不选择 = 不是 major）
+   - 提示：`Which packages should have a major bump?`
+   - **选择 patch/minor**：直接回车（不选择任何包）
+   - **选择 major**：选择包后回车
+
+3. **选择 minor 版本**（如果上一步没选 major，会继续问）
+   - 提示：`Which packages should have a minor bump?`
+   - **选择 patch**：直接回车（不选择任何包）
+   - **选择 minor**：选择包后回车
+
+4. **输入变更描述**
+   - 简要描述本次变更的内容
+   - 将出现在 CHANGELOG.md 中
+
+**版本选择规则**：
+- 不选 major + 不选 minor = **patch**（0.1.2 → 0.1.3）
+- 不选 major + 选 minor = **minor**（0.1.2 → 0.2.0）
+- 选 major = **major**（0.1.2 → 1.0.0）
 
 ### 2. 更新版本号
 
