@@ -19,6 +19,11 @@
     "lint:fix": "eslint . --fix",
     "eslint:inspect": "eslint-config-inspector --config ./eslint.config.js",
     "check:branch": "node scripts/check-branch.js",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "pnpm run check:branch && changeset publish",
+    "version": "pnpm run check:branch && pnpm build && pnpm changeset:version",
+    "release": "pnpm run check:branch && pnpm build && pnpm changeset:publish",
     "publish:patch": "pnpm run check:branch && run-s publish:core:patch publish:form:patch publish:kit:patch",
     "publish:core:patch": "pnpm --filter \"./packages/core\" publish:patch",
     "publish:form:patch": "pnpm --filter \"./packages/form\" publish:patch",
@@ -36,6 +41,7 @@
     "docs:preview": "pnpm --filter \"./docs\" preview"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/config-inspector": "^1.3.0",
