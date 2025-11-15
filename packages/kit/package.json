@@ -39,10 +39,7 @@
     "dev": "vite build --watch",
     "type-check": "vue-tsc --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
-    "prepublishOnly": "pnpm type-check && pnpm build",
-    "publish:patch": "pnpm version patch --no-git-tag-version && pnpm publish",
-    "publish:minor": "pnpm version minor --no-git-tag-version && pnpm publish",
-    "publish:major": "pnpm version major --no-git-tag-version && pnpm publish"
+    "prepublishOnly": "pnpm type-check && pnpm build"
   },
   "peerDependencies": {
     "element-plus": "^2.11.7",

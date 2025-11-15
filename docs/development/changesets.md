@@ -132,49 +132,6 @@ pnpm release
 }
 ```
 
-## 🔄 与旧发布流程对比
-
-### 旧流程（手动）
-
-```bash
-# 1. 构建
-pnpm build
-
-# 2. 发布（会失败，因为版本号变更了）
-pnpm publish:patch
-
-# 3. 提交版本变更
-git add .
-git commit -m "chore: bump version"
-git push
-
-# 4. 重新发布
-pnpm publish:patch
-```
-
-### 新流程（Changesets）
-
-```bash
-# 1. 创建变更集
-pnpm changeset
-
-# 2. 提交变更集
-git add .changeset/
-git commit -m "chore: add changeset"
-git push
-
-# 3. 更新版本（自动处理依赖顺序）
-pnpm version
-
-# 4. 提交版本更新
-git add .
-git commit -m "chore: version packages"
-git push
-
-# 5. 发布（自动处理依赖顺序）
-pnpm release
-```
-
 ## ✨ Changesets 的优势
 
 1. **自动化依赖顺序**：自动按依赖顺序发布（core → form → kit）
@@ -189,4 +146,3 @@ pnpm release
 - [Changesets 官方文档](https://github.com/changesets/changesets)
 - [常见问题](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
 - [项目规范](../.cursor/rules/001_monorepo_development-standards.mdc)
-

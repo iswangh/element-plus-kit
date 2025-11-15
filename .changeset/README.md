@@ -113,21 +113,6 @@ git push
 pnpm release
 ```
 
-### 方式二：使用旧脚本（备选）
-
-如果不想使用 Changesets，仍可使用旧的发布脚本：
-
-```bash
-# 发布 patch 版本
-pnpm publish:patch
-
-# 发布 minor 版本
-pnpm publish:minor
-
-# 发布 major 版本
-pnpm publish:major
-```
-
 ## ⚙️ 配置说明
 
 配置文件：`.changeset/config.json`
