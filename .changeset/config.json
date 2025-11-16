@@ -10,5 +10,9 @@
   "ignore": [
     "element-plus-kit-playground",
     "element-plus-kit-docs"
-  ]
+  ],
+  "pre": {
+    "version": "node scripts/check-branch.js",
+    "publish": "node scripts/check-branch.js"
+  }
 }
