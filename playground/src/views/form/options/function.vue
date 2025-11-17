@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// 不导入，依赖 unplugin-vue-components 自动导入
+// 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
+// ref 会自动导入，无需手动导入
 import type { EventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
-import { ref } from 'vue'
 
 // 模拟数据
 const provinces = [
@@ -57,18 +57,6 @@ const formItems: FormItems = [
     label: '城市',
     comp: 'select',
     compAttrs: {
-      // 对象模式：使用 deps 配置内部依赖
-      // options: {
-      //   loader: (formData) => {
-      //     const province = formData.province as string | undefined
-      //     if (!province)
-      //       return []
-      //     // value 格式：省份-城市，通过 value 前缀匹配
-      //     return cities.filter(city => city.value.startsWith(`${province}-`))
-      //   },
-      //   deps: ['province'], // 内部依赖：依赖省份字段
-      // },
-
       options: () => {
         const province = form.value.province as string | undefined
         if (!province)
@@ -82,18 +70,6 @@ const formItems: FormItems = [
     label: '区县',
     comp: 'select',
     compAttrs: {
-      // // 对象模式：依赖省市，使用 deps 配置内部依赖
-      // options: {
-      //   loader: (formData) => {
-      //     const city = formData.city as string | undefined
-      //     if (!city)
-      //       return []
-      //     // value 格式：省份-城市-区县，通过 value 前缀匹配
-      //     return districts.filter(district => district.value.startsWith(`${city}-`))
-      //   },
-      //   immediate: true,
-      //   deps: ['province', 'city'], // 内部依赖：依赖省市字段
-      // },
       options: () => {
         const city = form.value.city as string | undefined
         if (!city)

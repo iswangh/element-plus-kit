@@ -1,13 +1,14 @@
 import type { PluginOption } from 'vite'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 import UnoCSS from '@unocss/vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
+import { ElementPlusKitResolver } from '../packages/kit/src/utils/resolver'
+import { lodashImports } from './build'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -18,7 +19,13 @@ export default defineConfig({
     // 自动导入插件
     AutoImport({
       dts: './src/types/auto-imports.d.ts',
-      // 解析器（如果使用 UI 组件库）
+      imports: [
+        'vue',
+        {
+          'vue-router': ['createRouter', 'createWebHistory', 'useRouter', 'useRoute', 'useLink', 'onBeforeRouteLeave', 'onBeforeRouteUpdate'],
+          'lodash-es': lodashImports,
+        },
+      ],
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),
@@ -27,7 +34,6 @@ export default defineConfig({
     // 自动注册组件
     Components({
       dts: './src/types/components.d.ts',
-      // 解析器（如果使用 UI 组件库）
       resolvers: [
         ElementPlusResolver(),
         ElementPlusKitResolver(),

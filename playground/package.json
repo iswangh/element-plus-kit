@@ -12,8 +12,10 @@
     "@iswangh/element-plus-kit": "workspace:*",
     "@iswangh/element-plus-kit-form": "workspace:*",
     "element-plus": "^2.11.8",
+    "lodash-es": "^4.17.21",
     "unocss": "^66.5.6",
-    "vue": "^3.5.24"
+    "vue": "^3.5.24",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@unocss/eslint-plugin": "^66.5.6",

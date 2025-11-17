@@ -1,18 +1,10 @@
-import { createApp } from 'vue'
+// createApp 会自动导入，无需手动导入
 import App from './App.vue'
-// import ElementPlusKit from '@iswangh/element-plus-kit'
-// import ElementPlus from 'element-plus'
-// import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import router from './router'
 import 'virtual:uno.css'
 
 const app = createApp(App)
 
-// 注册 Element Plus（配置中文语言）
-// app.use(ElementPlus, {
-//   locale: zhCn,
-// })
-
-// 注册 Element Plus Kit（全局导入）
-// app.use(ElementPlusKit)
+app.use(router)
 
 app.mount('#app')

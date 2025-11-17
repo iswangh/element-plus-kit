@@ -34,33 +34,8 @@ export const layoutShortcuts: UserShortcuts = [
   ['absolute-center-inset', 'absolute inset-0 m-auto'],
 ]
 
-export const containerShortcuts: UserShortcuts = [
-  // 容器样式
-  ['container-center', 'max-w-1200 mx-auto px-5'],
-  ['card', 'bg-white rounded shadow p-4'],
-  ['card-hover', 'card transition-shadow hover:shadow-lg'],
-]
-
-export const exampleShortcuts: UserShortcuts = [
-  // 示例组件容器
-  ['example-container', 'mb-5'],
-  ['example-title', 'text-xl font-bold text-gray-800'],
-  ['example-description', 'text-sm text-gray-600 leading-relaxed'],
-  ['example-code', 'bg-gray-50 px-2 py-1 rounded text-xs font-mono text-gray-700'],
-  ['example-form-data', 'mt-6'],
-  ['example-form-data-title', 'text-base font-semibold text-gray-700'],
-  ['example-form-data-content', 'text-xs font-mono text-gray-600 whitespace-pre-wrap break-words'],
-  ['example-external-state', 'mb-4'],
-  ['example-test-tips', 'mb-4'],
-  ['example-test-tips-title', 'text-base font-semibold text-yellow-700'],
-  ['example-test-tips-list', 'm-0 pl-5'],
-  ['example-test-tips-item', 'mb-2 leading-relaxed'],
-]
-
 export const unoShortcuts: UserShortcuts = [
   ['full', 'w-full h-full'],
   ...flexShortcuts,
   ...layoutShortcuts,
-  ...containerShortcuts,
-  ...exampleShortcuts,
 ]

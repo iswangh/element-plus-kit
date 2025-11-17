@@ -1,7 +1,10 @@
 <script setup lang="ts">
-// 不导入，依赖 unplugin-vue-components 自动导入
+// ref 会自动导入，无需手动导入
 import type { FormItems } from '@iswangh/element-plus-kit-form'
-import { ref } from 'vue'
+
+// 全局注册（在 main.ts 中调用）
+// const app = createApp(App)
+// app.use(ElementPlusKit)
 
 const formItems: FormItems = [
   {
@@ -19,14 +22,17 @@ const formItems: FormItems = [
   },
 ]
 
-const form = ref({})
+const form = ref({
+  username: '',
+  email: '',
+})
 </script>
 
 <template>
   <el-card class="example-container" shadow="hover">
     <template #header>
       <h2 class="example-title m-0">
-        自动导入测试
+        全局导入测试
       </h2>
     </template>
     <el-space class="w-full" direction="vertical" :size="20" fill>
@@ -37,7 +43,7 @@ const form = ref({})
       >
         <template #default>
           <p class="example-description m-0">
-            使用 unplugin-vue-components 自动导入组件，无需手动导入
+            使用全局注册的方式导入组件
           </p>
         </template>
       </el-alert>

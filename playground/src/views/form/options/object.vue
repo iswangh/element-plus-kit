@@ -1,6 +1,6 @@
 <script setup lang="ts">
+// ref 会自动导入，无需手动导入
 import type { FormItems } from '@iswangh/element-plus-kit'
-import { ref } from 'vue'
 
 const form = ref({})
 
