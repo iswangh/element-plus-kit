@@ -87,9 +87,9 @@ const onChange = ({ prop }: EventExtendedParams, value: any) => {
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         智能清理功能测试
       </h2>
     </template>
@@ -100,7 +100,7 @@ const onChange = ({ prop }: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             测试自动清理功能：<br>
             <strong>城市（自动清理）</strong>：依赖变化时，如果当前值不在新的选项中，自动清除值<br>
             <strong>城市（自定义处理）</strong>：同样支持自动清理，但用户可以在 change 事件中设置默认值（如果值在新的选项中，会被保留）<br>
@@ -114,38 +114,38 @@ const onChange = ({ prop }: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #title>
-          <h3 class="example-test-tips-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             测试步骤：
           </h3>
         </template>
         <template #default>
-          <ol class="example-test-tips-list">
-            <li class="example-test-tips-item">
+          <ol class="list-decimal ml-5 my-2">
+            <li class="text-sm text-gray-600 my-1">
               选择省份为 "北京市"（值为 '1'）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               观察：城市（自动清理）会被清除，城市（自定义处理）会自动设置为 '1-1'
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               选择城市（自动清理）的值为 "北京市"（值为 '1-1'）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               切换省份为 "上海市"（值为 '2'）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               观察：城市（自动清理）会被自动清除，城市（自定义处理）会被手动清除
             </li>
           </ol>
         </template>
       </el-alert>
       <w-form :model="form" :form-items="formItems" @change="onChange" />
-      <el-card class="example-form-data" shadow="never">
+      <el-card class="w-full" shadow="never">
         <template #header>
-          <h3 class="example-form-data-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             表单数据
           </h3>
         </template>
-        <pre class="example-form-data-content">{{ JSON.stringify(form, null, 2) }}</pre>
+        <pre class="text-sm text-gray-600 whitespace-pre-wrap break-all m-0">{{ JSON.stringify(form, null, 2) }}</pre>
       </el-card>
     </el-space>
   </el-card>

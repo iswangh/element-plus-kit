@@ -27,9 +27,9 @@ const form = ref({
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         手动导入测试
       </h2>
     </template>
@@ -40,7 +40,7 @@ const form = ref({
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             从主包手动导入组件
           </p>
         </template>

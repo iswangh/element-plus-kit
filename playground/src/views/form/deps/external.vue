@@ -104,9 +104,9 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         外部依赖测试（闭包访问）
       </h2>
     </template>
@@ -117,7 +117,7 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             通过闭包访问外部 ref（<code class="example-code">userType</code>）作为外部依赖<br>
             用户类型：静态模式 | 菜单选项：函数模式（闭包访问 <code class="example-code">userType</code>） | 操作选项：对象模式（闭包访问 <code class="example-code">userType</code> 和表单数据）
           </p>
@@ -143,13 +143,13 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         </template>
       </el-alert>
       <w-form :model="form" :form-items="formItems" @change="onChange" />
-      <el-card class="example-form-data" shadow="never">
+      <el-card class="w-full" shadow="never">
         <template #header>
-          <h3 class="example-form-data-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             表单数据
           </h3>
         </template>
-        <pre class="example-form-data-content">{{ JSON.stringify(form, null, 2) }}</pre>
+        <pre class="text-sm text-gray-600 whitespace-pre-wrap break-all m-0">{{ JSON.stringify(form, null, 2) }}</pre>
       </el-card>
     </el-space>
   </el-card>

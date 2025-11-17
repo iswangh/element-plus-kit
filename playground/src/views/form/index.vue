@@ -11,8 +11,7 @@
 
 <style scoped lang="scss">
 .form-index {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 
   &-content {
     padding: 20px 0;

@@ -58,9 +58,9 @@ const onChange = (extendedParams: any, value: any) => {
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         对象模式测试
       </h2>
     </template>
@@ -71,20 +71,20 @@ const onChange = (extendedParams: any, value: any) => {
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             使用对象模式配置选项加载：<br>
             优先级：对象模式（immediate: true） | 标签：对象模式（deps: ['priority'], immediate: true）
           </p>
         </template>
       </el-alert>
       <WForm :model="form" :form-items="formItems" @change="onChange" />
-      <el-card class="example-form-data" shadow="never">
+      <el-card class="w-full" shadow="never">
         <template #header>
-          <h3 class="example-form-data-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             表单数据
           </h3>
         </template>
-        <pre class="example-form-data-content">{{ JSON.stringify(form, null, 2) }}</pre>
+        <pre class="text-sm text-gray-600 whitespace-pre-wrap break-all m-0">{{ JSON.stringify(form, null, 2) }}</pre>
       </el-card>
     </el-space>
   </el-card>

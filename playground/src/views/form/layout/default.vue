@@ -1,0 +1,134 @@
+<script setup lang="ts">
+import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
+
+const form = ref({})
+const useColumnLayout = ref(false)
+
+// 默认配置的表单项（无分栏）
+const defaultFormItems: FormItems = [
+  {
+    prop: 'name',
+    label: '姓名',
+    comp: 'input',
+  },
+  {
+    prop: 'age',
+    label: '年龄',
+    comp: 'input-number',
+    compAttrs: {
+      min: 0,
+      max: 120,
+    },
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    comp: 'input',
+    compAttrs: {
+      type: 'email',
+    },
+  },
+  {
+    prop: 'phone',
+    label: '手机号',
+    comp: 'input',
+  },
+  {
+    prop: 'address',
+    label: '地址',
+    comp: 'input',
+  },
+]
+
+// 分栏布局的表单项
+const columnFormItems: FormItems = [
+  {
+    prop: 'name',
+    label: '姓名',
+    comp: 'input',
+    colAttrs: {
+      span: 12,
+    },
+  },
+  {
+    prop: 'age',
+    label: '年龄',
+    comp: 'input-number',
+    colAttrs: {
+      span: 12,
+    },
+    compAttrs: {
+      min: 0,
+      max: 120,
+    },
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    comp: 'input',
+    colAttrs: {
+      span: 12,
+    },
+    compAttrs: {
+      type: 'email',
+    },
+  },
+  {
+    prop: 'phone',
+    label: '手机号',
+    comp: 'input',
+    colAttrs: {
+      span: 12,
+    },
+  },
+  {
+    prop: 'address',
+    label: '地址',
+    comp: 'input',
+    colAttrs: {
+      span: 24,
+    },
+  },
+]
+
+const formItems = computed(() => useColumnLayout.value ? columnFormItems : defaultFormItems)
+
+const rowAttrs: RowAttrs = {
+  gutter: 20,
+}
+</script>
+
+<template>
+  <el-card class="w-full" shadow="hover">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          默认布局
+        </h2>
+        <el-switch
+          v-model="useColumnLayout"
+          active-text="分栏布局"
+          inactive-text="默认布局"
+        />
+      </div>
+    </template>
+    <el-space class="w-full" direction="vertical" :size="20" fill>
+      <el-alert
+        type="info"
+        :closable="false"
+        show-icon
+      >
+        <template #default>
+          <p class="text-sm text-gray-600 m-0">
+            {{ useColumnLayout ? '通过 rowAttrs 和 colAttrs 配置布局，每个表单项占据指定的列数（span）' : '默认配置不使用分栏布局，表单项垂直排列' }}
+          </p>
+        </template>
+      </el-alert>
+      <WForm
+        :model="form"
+        :form-items="formItems"
+        :row-attrs="useColumnLayout ? rowAttrs : undefined"
+      />
+    </el-space>
+  </el-card>
+</template>

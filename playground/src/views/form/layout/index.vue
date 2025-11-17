@@ -2,13 +2,13 @@
 </script>
 
 <template>
-  <div class="options-index">
+  <div class="layout-index">
     <router-view />
   </div>
 </template>
 
 <style scoped lang="scss">
-.options-index {
+.layout-index {
   width: 100%;
 }
 </style>

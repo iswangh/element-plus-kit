@@ -86,9 +86,9 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         函数模式测试
       </h2>
     </template>
@@ -99,20 +99,20 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             使用函数模式动态加载选项：<br>
             省份：静态模式（数组） | 城市：函数模式（闭包访问 form.value.province） | 区县：函数模式（闭包访问 form.value.city）
           </p>
         </template>
       </el-alert>
       <w-form :model="form" :form-items="formItems" @change="onChange" />
-      <el-card class="example-form-data" shadow="never">
+      <el-card class="w-full" shadow="never">
         <template #header>
-          <h3 class="example-form-data-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             表单数据
           </h3>
         </template>
-        <pre class="example-form-data-content">{{ JSON.stringify(form, null, 2) }}</pre>
+        <pre class="text-sm text-gray-600 whitespace-pre-wrap break-all m-0">{{ JSON.stringify(form, null, 2) }}</pre>
       </el-card>
     </el-space>
   </el-card>

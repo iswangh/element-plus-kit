@@ -188,9 +188,9 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
 </script>
 
 <template>
-  <el-card class="example-container" shadow="hover">
+  <el-card class="w-full" shadow="hover">
     <template #header>
-      <h2 class="example-title m-0">
+      <h2 class="text-lg text-gray-800 font-semibold m-0">
         混合依赖测试（内部 + 外部）
       </h2>
     </template>
@@ -201,7 +201,7 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #default>
-          <p class="example-description m-0">
+          <p class="text-sm text-gray-600 m-0">
             测试同时依赖内部依赖（表单字段）和外部依赖（外部 ref）的场景<br>
             部门：静态模式 | 角色：对象模式（deps: ['department']，内部依赖） | 功能权限：对象模式（deps: ['department', 'role']，内部依赖 + 闭包访问 permissionLevel，外部依赖）
           </p>
@@ -228,13 +228,13 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         </template>
       </el-alert>
       <w-form :model="form" :form-items="formItems" @change="onChange" />
-      <el-card class="example-form-data" shadow="never">
+      <el-card class="w-full" shadow="never">
         <template #header>
-          <h3 class="example-form-data-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             表单数据
           </h3>
         </template>
-        <pre class="example-form-data-content">{{ JSON.stringify(form, null, 2) }}</pre>
+        <pre class="text-sm text-gray-600 whitespace-pre-wrap break-all m-0">{{ JSON.stringify(form, null, 2) }}</pre>
       </el-card>
       <el-alert
         type="warning"
@@ -242,28 +242,28 @@ const onChange = (extendedParams: EventExtendedParams, value: any) => {
         show-icon
       >
         <template #title>
-          <h3 class="example-test-tips-title m-0">
+          <h3 class="text-base text-gray-800 font-semibold m-0">
             测试步骤：
           </h3>
         </template>
         <template #default>
-          <ol class="example-test-tips-list">
-            <li class="example-test-tips-item">
+          <ol class="list-decimal ml-5 my-2">
+            <li class="text-sm text-gray-600 my-1">
               选择部门（如：技术部）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               观察：角色选项会根据部门动态更新（内部依赖）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               选择角色（如：前端开发）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               观察：功能权限选项会根据权限级别、部门和角色动态更新（内部依赖 + 外部依赖）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               切换权限级别（点击按钮）
             </li>
-            <li class="example-test-tips-item">
+            <li class="text-sm text-gray-600 my-1">
               观察：功能权限选项会根据新的权限级别更新（外部依赖变化）
             </li>
           </ol>
