@@ -79,6 +79,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 | formItems | 表单项配置数组 | `FormItems` | `[]` |
 | rowAttrs | 行布局属性（ElRow 属性） | `RowAttrs` | `{}` |
 | actionConfig | 操作按钮配置 | `ActionConfig` | `{}` |
+| expandConfig | 展开/折叠配置 | `ExpandConfig` | `{}` |
 
 **继承 Element Plus Form 属性**：组件继承所有 `ElForm` 的属性，如 `rules`、`labelPosition`、`size` 等。
 
@@ -93,6 +94,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 | reset | 重置按钮点击事件 | - |
 | submit | 提交按钮点击事件 | - |
 | cancel | 取消按钮点击事件 | - |
+| form-expand-change | 展开状态变化事件 | `(value: boolean)` |
 
 ### Slots
 
@@ -100,6 +102,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 | --- | --- | --- |
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
+| `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
 
 ### FormItem 配置
 
@@ -307,6 +310,148 @@ const onSubmit = () => {
   console.log('提交表单:', form.value)
 }
 </script>
+```
+
+### 展开/折叠功能
+
+表单支持展开/折叠功能，可以控制表单项的显示和隐藏，适用于字段较多的表单场景。
+
+#### 基础用法
+
+```vue
+<template>
+  <WForm
+    :model="form"
+    :form-items="formItems"
+    :expand-config="{
+      enabled: true,
+      defaultExpandCount: 3,
+      togglePosition: 'bottom',
+    }"
+  />
+</template>
+```
+
+#### 配置说明
+
+| 配置项 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| enabled | 是否启用展开/折叠功能 | `boolean` | `false` |
+| defaultExpandCount | 默认展开的字段数量（从第一个开始） | `number` | - |
+| defaultExpandRows | 默认展开的行数（根据布局计算） | `number` | - |
+| include | 指定展示的字段（白名单，字段 prop 数组） | `string[]` | - |
+| exclude | 指定折叠的字段（黑名单，字段 prop 数组） | `string[]` | - |
+| togglePosition | 按钮位置 | `'top' \| 'bottom' \| 'action'` | `'bottom'` |
+| toggleConfig | 按钮配置 | `ExpandToggleConfig` | - |
+| animationConfig | 动画配置 | `ExpandAnimationConfig` | - |
+| autoExpandOnError | 验证错误时是否自动展开包含错误字段的区域 | `boolean` | `true` |
+| persist | 是否持久化展开状态到 localStorage（传字符串作为存储 key） | `string` | - |
+
+**优先级说明**：`exclude` > `include` > `defaultExpandRows` > `defaultExpandCount`
+
+#### 按钮配置
+
+按钮默认只显示图标，可以通过 `toggleConfig` 自定义图标和样式：
+
+```typescript
+const expandConfig: ExpandConfig = {
+  enabled: true,
+  toggleConfig: {
+    expandIcon: ArrowDown,
+    collapseIcon: ArrowUp,
+    buttonType: 'text',
+    buttonSize: 'default',
+  },
+}
+```
+
+如需自定义按钮样式（如文字、图标+文字等），请使用 `#expand-toggle` 插槽：
+
+```vue
+<template>
+  <WForm
+    :model="form"
+    :form-items="formItems"
+    :expand-config="{ enabled: true }"
+  >
+    <template #expand-toggle="{ expanded, toggle }">
+      <el-button type="success" :icon="expanded ? ArrowUp : ArrowDown" @click="toggle()">
+        {{ expanded ? '收起高级搜索' : '展开高级搜索' }}
+      </el-button>
+    </template>
+  </WForm>
+</template>
+```
+
+#### 受控模式
+
+使用 `v-model:expanded` 实现受控模式：
+
+```vue
+<template>
+  <WForm
+    v-model:expanded="isExpanded"
+    :model="form"
+    :form-items="formItems"
+    :expand-config="{ enabled: true }"
+  />
+  <el-button @click="formRef?.toggleExpanded(true)">展开</el-button>
+  <el-button @click="formRef?.toggleExpanded(false)">折叠</el-button>
+</template>
+
+<script setup lang="ts">
+const isExpanded = ref(false)
+const formRef = ref<InstanceType<typeof WForm>>()
+
+// 或者使用组件暴露的方法
+function toggle() {
+  formRef.value?.toggleExpanded() // 切换
+  formRef.value?.toggleExpanded(true) // 展开
+  formRef.value?.toggleExpanded(false) // 折叠
+}
+</script>
+```
+
+#### 状态持久化
+
+```typescript
+const expandConfig: ExpandConfig = {
+  enabled: true,
+  persist: 'my-form-expand-state', // 使用唯一的 key，避免多个表单实例冲突
+}
+```
+
+**注意**：确保 `persist` 的 key 具有唯一性，避免多个表单实例互相影响。
+
+#### 验证错误自动展开
+
+当表单验证失败时，如果错误字段在折叠区域，表单会自动展开并滚动到错误字段：
+
+```typescript
+const expandConfig: ExpandConfig = {
+  enabled: true,
+  autoExpandOnError: true, // 默认 true
+}
+```
+
+#### 自定义按钮
+
+使用 `expand-toggle` 插槽自定义按钮：
+
+```vue
+<template>
+  <WForm
+    :model="form"
+    :form-items="formItems"
+    :expand-config="{ enabled: true }"
+  >
+    <template #expand-toggle="{ expanded, toggle }">
+      <el-button @click="toggle()">
+        {{ expanded ? '收起' : '展开' }}
+      </el-button>
+    </template>
+  </WForm>
+</template>
 ```
 
 ## 🔗 相关链接

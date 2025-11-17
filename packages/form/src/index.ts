@@ -30,6 +30,8 @@ import 'element-plus/es/components/row/style/css'
 import 'element-plus/es/components/col/style/css'
 // 按钮组件
 import 'element-plus/es/components/button/style/css'
+// 图标组件
+import 'element-plus/es/components/icon/style/css'
 // ============================================
 // Element Plus 表单控件组件样式（动态组件）
 // ============================================
@@ -71,6 +73,7 @@ export type {
   ColAttrs,
   ElFormAttrs,
   EventExtendedParams,
+  ExpandRule,
   FormItem,
   FormItemComp,
   FormItemCompAttrs,

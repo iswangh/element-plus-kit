@@ -5,7 +5,7 @@ import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormIte
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, ref, useAttrs, useSlots } from 'vue'
-import { DEFAULT_FORM_ATTRS } from './config'
+import { DEFAULT_EXPAND_ANIMATION_CONFIG, DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
 
@@ -23,6 +23,7 @@ interface Emits {
   (e: 'reset'): void
   (e: 'submit'): void
   (e: 'cancel'): void
+  (e: 'formExpandChange', value: boolean): void
 }
 
 type EmitEventName = Exclude<keyof Emits, 'validate' | 'change' | 'action'>
@@ -44,7 +45,13 @@ interface Slots {
    * 自定义组件插槽
    * @example #custom-field
    */
-  [key: string]: (props: FormItemSlotScope) => any
+  [key: string]: ((props: FormItemSlotScope) => any) | ((props: { expanded: boolean, toggle: (value?: boolean) => void }) => any)
+  /**
+   * 展开/折叠按钮插槽
+   * @example #expand-toggle="{ expanded, toggle }"
+   */
+  // @ts-expect-error - expand-toggle 插槽类型与索引签名不兼容，但运行时正常
+  'expand-toggle'?: (props: { expanded: boolean, toggle: (value?: boolean) => void }) => any
 }
 
 defineOptions({ name: 'WForm' })
@@ -88,18 +95,163 @@ const mergedAttrs = computed(() => {
   return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
 })
 
+// 展开/折叠状态（内置响应式）
+const isExpanded = ref(false)
+
 /**
- * 过滤出需要渲染的 formItem
+ * 切换或设置表单展开/折叠状态
+ *
+ * @param value - 可选，不传参则切换状态，传布尔值则设置状态
+ */
+function toggleExpanded(value?: boolean) {
+  if (value === undefined) {
+    isExpanded.value = !isExpanded.value
+  }
+  else {
+    isExpanded.value = value
+  }
+  emit('formExpandChange', isExpanded.value)
+}
+
+// 判断是否启用展开/折叠功能（通过 actionConfig.buttons 是否包含 'expand' 来判断）
+const expandEnabled = computed(() => {
+  if (!mergedAttrs.value.inline)
+    return false
+  const buttons = props.actionConfig?.buttons ?? []
+  return buttons.some(v => (typeof v === 'string' ? v === 'expand' : v.eventName === 'expand'))
+})
+
+// 动画配置（使用内置默认值）
+const animationConfig = computed(() => DEFAULT_EXPAND_ANIMATION_CONFIG)
+
+/**
+ * 过滤出需要渲染的 formItem（仅根据 vIf 条件，不包含展开/折叠状态）
  * - 根据 vIf 条件过滤表单项
  * - 处理每一项的 colAttrs.span 的默认值，默认为 rowAttrs.span
  */
 const filteredFormItems = computed(() => {
   const { span: defaultSpan } = props?.rowAttrs ?? {}
-  return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true })).map((v) => {
-    const { colAttrs = {} } = v ?? {}
-    return { ...v, colAttrs: { ...colAttrs, span: colAttrs.span ?? defaultSpan } }
-  })
+  return props.formItems
+    .filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
+    .map((v) => {
+      const { colAttrs = {} } = v ?? {}
+      return { ...v, colAttrs: { ...colAttrs, span: colAttrs.span ?? defaultSpan } }
+    })
 })
+
+/**
+ * 根据展开/折叠状态过滤出需要渲染的 formItem
+ * - 基于 filteredFormItems，根据展开/折叠状态进一步过滤
+ * - 保留原始索引信息，用于 shouldCollapseField 等函数
+ */
+const visibleFormItems = computed(() => {
+  return filteredFormItems.value
+    .map((v, originalIndex) => ({ ...v, _originalIndex: originalIndex }))
+    .filter((v) => {
+      const originalIndex = v._originalIndex
+      // 如果展开/折叠功能未启用，或者字段不应该被折叠，则显示
+      if (!expandEnabled.value || !shouldCollapseFieldByConfig(v, originalIndex))
+        return true
+        // 如果应该被折叠，则根据当前展开状态决定是否显示
+      return !shouldCollapseField(v, originalIndex)
+    })
+})
+
+/**
+ * 判断字段是否应该被折叠
+ *
+ * @param field - 表单项配置对象
+ * @param fieldIndex - 字段在数组中的索引
+ * @returns 是否应该被折叠
+ */
+function shouldCollapseField(field: any, fieldIndex: number): boolean {
+  if (!expandEnabled.value)
+    return false
+
+  if (isExpanded.value)
+    return false
+
+  const expandRule = props.actionConfig?.expand
+  if (!expandRule)
+    return false
+
+  // 优先级 1：exclude（黑名单）
+  if ('exclude' in expandRule) {
+    if (expandRule.exclude.length > 0 && expandRule.exclude.includes(field.prop))
+      return true
+  }
+
+  // 优先级 2：include（白名单）
+  if ('include' in expandRule) {
+    if (expandRule.include.length > 0 && !expandRule.include.includes(field.prop))
+      return true
+  }
+
+  // 优先级 3：count
+  if ('count' in expandRule) {
+    if (fieldIndex >= expandRule.count)
+      return true
+  }
+
+  return false
+}
+
+/**
+ * 判断字段是否应该被折叠（不考虑当前展开状态，仅基于配置）
+ *
+ * @param field - 表单项配置对象
+ * @param fieldIndex - 字段在数组中的索引
+ * @returns 是否应该被折叠
+ */
+function shouldCollapseFieldByConfig(field: any, fieldIndex: number): boolean {
+  if (!expandEnabled.value)
+    return false
+
+  const expandRule = props.actionConfig?.expand
+  if (!expandRule)
+    return false
+
+  // 优先级 1：exclude（黑名单）
+  if ('exclude' in expandRule) {
+    if (expandRule.exclude.length > 0 && expandRule.exclude.includes(field.prop))
+      return true
+  }
+
+  // 优先级 2：include（白名单）
+  if ('include' in expandRule) {
+    if (expandRule.include.length > 0 && !expandRule.include.includes(field.prop))
+      return true
+  }
+
+  // 优先级 3：count
+  if ('count' in expandRule) {
+    if (fieldIndex >= expandRule.count)
+      return true
+  }
+
+  return false
+}
+
+/**
+ * 获取字段的类名
+ */
+function getFieldClass(field: any, fieldIndex: number) {
+  if (!expandEnabled.value || !shouldCollapseFieldByConfig(field, fieldIndex))
+    return ''
+  return isExpanded.value ? 'form-item-collapsible form-item-expanded' : 'form-item-collapsible form-item-collapsed'
+}
+
+/**
+ * 获取字段的样式
+ */
+function getFieldStyle(field: any, fieldIndex: number) {
+  if (!expandEnabled.value || !shouldCollapseFieldByConfig(field, fieldIndex))
+    return undefined
+  return {
+    '--animation-duration': `${animationConfig.value.duration}ms`,
+    '--animation-easing': animationConfig.value.easing,
+  }
+}
 
 const slots = useSlots()
 
@@ -151,19 +303,34 @@ const formRef = ref<FormInstance>()
 async function onAction({ eventName }: { eventName: string }) {
   const validateEvents = ['submit', 'search']
   const resetEvents = ['cancel', 'reset']
-  const specialEvents = [...validateEvents, ...resetEvents]
+  const expandEvents = ['expand']
+  const specialEvents = [...validateEvents, ...resetEvents, ...expandEvents]
+
+  // 处理展开/折叠事件
+  if (expandEvents.includes(eventName)) {
+    toggleExpanded()
+    return
+  }
 
   if (!specialEvents.includes(eventName))
     return emit('action', eventName)
 
-  if (validateEvents.includes(eventName))
+  if (validateEvents.includes(eventName)) {
     await formRef.value?.validate?.()
+  }
 
   if (resetEvents.includes(eventName))
     formRef.value?.resetFields?.()
 
   emit(eventName as EmitEventName)
   emit('action', eventName)
+}
+
+/**
+ * 处理表单验证事件
+ */
+function onValidate(prop: FormItemProp, isValid: boolean, message: string) {
+  emit('validate', prop, isValid, message)
 }
 
 defineExpose({
@@ -177,6 +344,11 @@ defineExpose({
   resetFields: (props?: Arrayable<FormItemProp>) => formRef.value?.resetFields?.(props),
   clearValidate: (props?: Arrayable<FormItemProp>) => formRef.value?.clearValidate?.(props),
   scrollToField: (prop: FormItemProp) => formRef.value?.scrollToField?.(prop),
+  // 展开/折叠控制方法
+  toggleExpanded,
+  get expanded() {
+    return isExpanded.value
+  },
 })
 </script>
 
@@ -185,22 +357,170 @@ defineExpose({
     ref="formRef"
     v-bind="mergedAttrs"
     :model="model"
-    @validate="(prop: FormItemProp, isValid: boolean, message: string) => emit('validate', prop, isValid, message)"
+    @validate="onValidate"
     @submit.prevent
   >
-    <component :is="layoutComponents.row" v-bind="rowAttrs">
-      <component :is="layoutComponents.col" v-for="(v, i) in filteredFormItems" v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })" :key="`${v.prop}-${i}`" v-bind="v.colAttrs">
-        <FormItemComp
-          v-model="model[v.prop]"
-          :form-item="v"
-          :form-data="model"
-          :dynamic-comp-events="dynamicCompEvents"
-          :form-slots="slotsCache"
-          :index="i"
-          @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
-        />
-      </component>
-      <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
+    <component
+      :is="layoutComponents.row"
+      v-bind="rowAttrs"
+    >
+      <TransitionGroup
+        v-if="expandEnabled"
+        name="form-item-collapse"
+        :duration="animationConfig.duration"
+        tag="div"
+        class="form-items-transition-group"
+        :style="{ display: 'contents' }"
+      >
+        <component
+          :is="layoutComponents.col"
+          v-for="(v, i) in visibleFormItems"
+          v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+          :key="`${v.prop}-${v._originalIndex ?? i}`"
+          v-bind="v.colAttrs"
+          :class="getFieldClass(v, v._originalIndex ?? i)"
+          :style="getFieldStyle(v, v._originalIndex ?? i)"
+          class="form-item-transition-wrapper"
+        >
+          <FormItemComp
+            v-model="model[v.prop]"
+            :form-item="v"
+            :form-data="model"
+            :dynamic-comp-events="dynamicCompEvents"
+            :form-slots="slotsCache"
+            :index="v._originalIndex ?? i"
+            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+          />
+        </component>
+      </TransitionGroup>
+      <template v-else>
+        <component
+          :is="layoutComponents.col"
+          v-for="(v, i) in visibleFormItems"
+          v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+          :key="`${v.prop}-${i}`"
+          v-bind="v.colAttrs"
+          :class="getFieldClass(v, v._originalIndex ?? i)"
+          :style="getFieldStyle(v, v._originalIndex ?? i)"
+        >
+          <FormItemComp
+            v-model="model[v.prop]"
+            :form-item="v"
+            :form-data="model"
+            :dynamic-comp-events="dynamicCompEvents"
+            :form-slots="slotsCache"
+            :index="v._originalIndex ?? i"
+            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+          />
+        </component>
+      </template>
+      <FormAction
+        :inline="mergedAttrs.inline"
+        :action-slot="$slots.action"
+        :config="actionConfig"
+        :expanded="isExpanded"
+        @action="onAction"
+      />
     </component>
   </ElForm>
 </template>
+
+<style scoped>
+/* TransitionGroup 容器样式 */
+.form-items-transition-group {
+  display: contents;
+}
+
+/* 表单项过渡包装器 */
+.form-item-transition-wrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+.form-item-transition-wrapper > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 表单项展开/折叠动画 */
+.form-item-collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    opacity var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    transform var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    margin-top var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    margin-bottom var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    padding-top var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    padding-bottom var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1));
+  overflow: hidden;
+  will-change: grid-template-rows, opacity, transform;
+}
+
+.form-item-collapsible > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.form-item-collapsible.form-item-collapsed {
+  opacity: 0;
+  grid-template-rows: 0fr;
+  transform: translateY(-4px);
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.form-item-collapsible.form-item-expanded {
+  opacity: 1;
+  grid-template-rows: 1fr;
+  transform: translateY(0);
+  height: auto;
+  min-height: auto;
+  max-height: none;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Transition 动画 - 使用 grid-template-rows 实现平滑的展开/折叠动画 */
+.form-item-collapse-enter-active,
+.form-item-collapse-leave-active {
+  transition:
+    grid-template-rows var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    opacity var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    margin-top var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    margin-bottom var(--animation-duration, 300ms) var(--animation-easing, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.form-item-collapse-enter-from {
+  opacity: 0;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.form-item-collapse-enter-to {
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+
+.form-item-collapse-leave-from {
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+
+.form-item-collapse-leave-to {
+  opacity: 0;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+</style>

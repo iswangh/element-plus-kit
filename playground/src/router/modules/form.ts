@@ -18,4 +18,5 @@ export const formRouteMeta = {
   '/form/layout': { title: '布局示例', showInSidebar: true },
   '/form/layout/default': { title: '默认布局', description: '通过 rowAttrs 和 colAttrs 配置布局', showInSidebar: true },
   '/form/layout/inline': { title: '一行展示', description: '使用 inline 属性，表单项在一行内展示', showInSidebar: true },
+  '/form/expand': { title: '展开/折叠', description: '表单字段展开/折叠功能', showInSidebar: true },
 } as const

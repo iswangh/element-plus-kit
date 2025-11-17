@@ -165,6 +165,7 @@ export const DEFAULT_FORM_ACTION_BUTTONS: Record<string, Partial<Omit<ActionConf
   reset: { label: '重置', icon: Refresh },
   submit: { label: '确认', type: 'primary' },
   cancel: { label: '取消' },
+  expand: { type: 'text' },
 }
 
 /**
@@ -186,7 +187,16 @@ export const ACTION_DEFAULT_CONFIG = {
     return {
       buttons: this.generateActionButtons(inline),
       vIf: inline,
+      autoExpandOnError: true,
       vShow: true,
     }
   },
 }
+
+/**
+ * 展开/折叠动画默认配置
+ */
+export const DEFAULT_EXPAND_ANIMATION_CONFIG = {
+  duration: 300,
+  easing: 'ease-in-out',
+} as const
