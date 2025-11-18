@@ -60,12 +60,12 @@ const showExpandButton = computed(() => {
 })
 
 /** 展开/折叠按钮配置 */
-const expandButtonConfig = computed(() => {
+const expandButtonConfig = computed((): ActionConfigButtonItem => {
   const expandButton = normalizedButtons.value.find(v => v.eventName === 'expand')
-  if (typeof expandButton === 'object' && expandButton !== null) {
+  if (expandButton)
     return expandButton
-  }
-  return DEFAULT_FORM_ACTION_BUTTONS.expand
+  // 返回默认配置，确保包含 eventName
+  return { ...DEFAULT_FORM_ACTION_BUTTONS.expand, eventName: 'expand' }
 })
 
 /** 提取 el-button 的属性（排除自定义属性） */
