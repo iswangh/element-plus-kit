@@ -4,8 +4,6 @@
   "compilerOptions": {
     // 基础路径：playground 目录
     "baseUrl": ".",
-    // 模块解析策略：使用 bundler 模式
-    "moduleResolution": "bundler",
     // 路径别名：用于开发时直接引用包源码，支持 HMR
     "paths": {
       // playground 内部别名
@@ -15,10 +13,6 @@
       "@iswangh/element-plus-kit": ["../packages/kit/src/index.ts"],
       "@iswangh/element-plus-kit-core": ["../packages/core/src/index.ts"]
     },
-    // 启用 package.json exports 字段解析
-    "resolvePackageJsonExports": true,
-    // 启用 package.json imports 字段解析
-    "resolvePackageJsonImports": true,
     // 类型定义根目录：支持 playground 和根目录的 node_modules
     "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
   },
