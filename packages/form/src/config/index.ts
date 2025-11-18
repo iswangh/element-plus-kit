@@ -192,11 +192,3 @@ export const ACTION_DEFAULT_CONFIG = {
     }
   },
 }
-
-/**
- * 展开/折叠动画默认配置
- */
-export const DEFAULT_EXPAND_ANIMATION_CONFIG = {
-  duration: 300,
-  easing: 'ease-in-out',
-} as const

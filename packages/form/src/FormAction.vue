@@ -6,6 +6,7 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { ElButton, ElFormItem, ElIcon } from 'element-plus'
 import { computed } from 'vue'
 import { ACTION_DEFAULT_CONFIG, DEFAULT_FORM_ACTION_BUTTONS } from './config'
+import { hasButtonEvent } from './utils'
 
 interface Props {
   inline?: boolean
@@ -27,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   expanded: false,
 })
 
-const emit = defineEmits<Emits>()
+defineEmits<Emits>()
 
 /** 处理后的动作组件属性（合并默认配置和用户自定义配置） */
 const processedActionAttrs = computed(() => ({
@@ -56,7 +57,7 @@ const normalizedButtons = computed(() => {
 /** 是否显示展开/折叠按钮 */
 const showExpandButton = computed(() => {
   const { buttons } = processedActionAttrs.value.config
-  return buttons.some(v => (typeof v === 'string' ? v === 'expand' : v.eventName === 'expand'))
+  return hasButtonEvent(buttons, 'expand')
 })
 
 /** 展开/折叠按钮配置 */
@@ -72,11 +73,6 @@ const expandButtonConfig = computed((): ActionConfigButtonItem => {
 const getBtnAttrs = (btn: ActionConfigButtonItem) => {
   const { label: _label, eventName: _eventName, ...rest } = btn
   return rest
-}
-
-/** 处理展开/折叠按钮点击 */
-function handleExpandClick() {
-  emit('action', { eventName: 'expand' })
 }
 </script>
 
@@ -94,7 +90,7 @@ function handleExpandClick() {
         v-bind="getBtnAttrs(expandButtonConfig)"
         :aria-expanded="expanded"
         :aria-label="expanded ? '收起' : '展开'"
-        @click="handleExpandClick"
+        @click="$emit('action', { eventName: 'expanded', data: expanded })"
       >
         <ElIcon class="expand-toggle-icon" :class="{ 'is-expanded': expanded }">
           <ArrowDown />
@@ -106,17 +102,12 @@ function handleExpandClick() {
   </ElFormItem>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .expand-toggle-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: rotate(0deg);
-  will-change: transform;
-}
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-.expand-toggle-icon.is-expanded {
-  transform: rotate(180deg);
+  &.is-expanded {
+    transform: rotate(-180deg);
+  }
 }
 </style>
