@@ -1,19 +1,15 @@
 {
+  // 继承根目录的基础 TypeScript 配置
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
-    "composite": false,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 基础路径：docs 目录
     "baseUrl": ".",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    // 路径别名：VitePress 内部别名
     "paths": {
       "@/*": ["./.vitepress/*"]
     },
-    "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true,
-    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
-    "types": [],
-    "skipLibCheck": true
+    // 类型定义根目录：支持 docs 和根目录的 node_modules
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"]
   },
   "include": [
     ".vitepress/**/*.ts",
@@ -25,7 +21,9 @@
     ".vitepress/dist",
     ".vitepress/cache"
   ],
+  // Vue 编译器选项
   "vueCompilerOptions": {
+    // Vue 版本：3（Vue 3）
     "target": 3
   }
 }
