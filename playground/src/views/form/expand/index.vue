@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ActionConfig, FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElRadioButton, ElRadioGroup } from 'element-plus'
 
 const form = ref({})
 const formRef = ref<InstanceType<typeof WForm>>()
@@ -156,6 +156,50 @@ const actionConfig12: ActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { count: 3 },
 }
+
+// 示例 13：展开/收起后自动滚动到表单中心
+const actionConfig13: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 3,
+    scrollOnToggle: true,
+    scrollIntoViewOptions: {
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest',
+    },
+  },
+}
+
+// 测试区域：滚动选项配置
+const scrollBlockOptions = [
+  { label: '顶部', value: 'start' },
+  { label: '中心', value: 'center' },
+  { label: '底部', value: 'end' },
+  { label: '最近', value: 'nearest' },
+] as const
+
+const scrollBehaviorOptions = [
+  { label: '平滑', value: 'smooth' },
+  { label: '立即', value: 'auto' },
+] as const
+
+const selectedScrollBlock = ref<ScrollLogicalPosition>('center')
+const selectedScrollBehavior = ref<ScrollBehavior>('smooth')
+
+// 测试区域的 actionConfig（动态配置 scrollIntoViewOptions）
+const testActionConfig = computed<ActionConfig>(() => ({
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 3,
+    scrollOnToggle: true,
+    scrollIntoViewOptions: {
+      behavior: selectedScrollBehavior.value,
+      block: selectedScrollBlock.value,
+      inline: 'nearest',
+    },
+  },
+}))
 
 // 手动控制方法
 function expandForm() {
@@ -522,6 +566,107 @@ function onReset(resetData: Record<string, unknown>) {
           :action-config="actionConfig12"
           @reset="onReset"
         />
+      </el-card>
+
+      <!-- 示例 13：展开/收起后自动滚动到表单中心 -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <h2 class="text-lg text-gray-800 font-semibold m-0">
+            示例 13：展开/收起后自动滚动到表单中心
+          </h2>
+        </template>
+        <el-alert type="info" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>expand: { count: 3, scrollOnToggle: true, scrollIntoViewOptions: {...} }</code> 启用展开/收起后自动滚动功能。
+              <br>
+              <strong>功能说明</strong>：
+              <br>
+              • 展开/收起动画完成后，表单会自动滚动到页面中心
+              <br>
+              • 使用平滑滚动动画，提升用户体验
+              <br>
+              • 可通过 <code>scrollIntoViewOptions</code> 自定义滚动行为（如 <code>block: 'start'</code> 滚动到顶部）
+              <br>
+              • 适用于表单较长，展开/收起后需要重新定位的场景
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="actionConfig13"
+          @reset="onReset"
+        />
+      </el-card>
+
+      <!-- 测试区域：展开/收起后自动滚动到表单中心 -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <h2 class="text-lg text-gray-800 font-semibold m-0">
+            测试区域：展开/收起后自动滚动到表单中心
+          </h2>
+        </template>
+        <el-alert type="warning" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              <strong>测试说明</strong>：此区域用于测试自动滚动功能。请先滚动页面，然后点击展开/收起按钮，观察表单是否自动滚动到指定位置。
+            </p>
+          </template>
+        </el-alert>
+        <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+          <div class="flex items-center gap-4 flex-wrap">
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">滚动位置：</span>
+              <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+              <el-radio-group v-model="selectedScrollBlock" size="small">
+                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                <el-radio-button
+                  v-for="option in scrollBlockOptions"
+                  :key="option.value"
+                  :label="option.value"
+                >
+                  {{ option.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">滚动行为：</span>
+              <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+              <el-radio-group v-model="selectedScrollBehavior" size="small">
+                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                <el-radio-button
+                  v-for="option in scrollBehaviorOptions"
+                  :key="option.value"
+                  :label="option.value"
+                >
+                  {{ option.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </div>
+          </div>
+          <div class="mt-2 text-xs text-gray-500">
+            当前配置：<code>{{ JSON.stringify(testActionConfig.expand?.scrollIntoViewOptions) }}</code>
+          </div>
+        </div>
+        <div class="h-screen bg-gray-100 flex items-center justify-center mb-4">
+          <p class="text-gray-500">
+            上方空白区域（用于测试滚动）
+          </p>
+        </div>
+        <WForm
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="testActionConfig"
+          @reset="onReset"
+        />
+        <div class="h-screen bg-gray-100 flex items-center justify-center mt-4">
+          <p class="text-gray-500">
+            下方空白区域（用于测试滚动）
+          </p>
+        </div>
       </el-card>
     </el-space>
   </div>

@@ -8,7 +8,7 @@ import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
-import { computed, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
 import { useAutoExpandOnHover } from './composables'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
@@ -147,6 +147,8 @@ const autoExpandHover = useAutoExpandOnHover(
   },
 )
 
+const formRef = ref<FormInstance>()
+
 /**
  * 切换或设置表单展开/折叠状态
  *
@@ -156,6 +158,21 @@ function toggleExpand(value?: boolean) {
   const newValue = value ?? !isExpanded.value
   isExpanded.value = newValue
   autoExpandHover.recordManualToggle(newValue)
+
+  // 如果启用了自动滚动，在动画完成后滚动到表单中心
+  const expandRule = props.actionConfig?.expand
+  if (expandRule?.scrollOnToggle) {
+    // 等待 DOM 更新和动画完成（动画时长约 250ms）
+    nextTick(() => {
+      setTimeout(() => {
+        formRef.value?.$el?.scrollIntoView?.(expandRule.scrollIntoViewOptions ?? {
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest',
+        })
+      }, 250) // 略大于动画时长，确保动画完成
+    })
+  }
 }
 
 /**
@@ -267,8 +284,6 @@ const layoutComponents = computed(() => ({
   row: mergedAttrs.value.inline || shouldRenderRow.value ? ElRow : 'div',
   col: shouldRenderRow.value ? ElCol : 'div',
 }))
-
-const formRef = ref<FormInstance>()
 
 /**
  * 获取所有表单项的 prop 列表

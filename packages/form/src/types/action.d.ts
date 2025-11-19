@@ -21,6 +21,32 @@ export interface ActionConfigButtonItem extends Partial<ButtonProps> {
 export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' | 'search' | 'reset' | 'expand'
 
 /**
+ * 展开规则基础配置
+ *
+ * **鼠标悬停自动展开**：
+ * - `autoExpandOnHover`：是否启用鼠标悬停自动展开功能
+ *   - 当鼠标移入表单区域时自动展开（延迟 500ms）
+ *   - 如果用户手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
+ *
+ * **展开/收起后自动滚动**：
+ * - `scrollOnToggle`：是否在展开/收起后自动滚动到表单中心
+ *   - 默认值为 false
+ *   - 启用后，展开/收起动画完成后会自动滚动，使表单保持在页面中心
+ * - `scrollIntoViewOptions`：自定义滚动选项（仅在 `scrollOnToggle` 为 true 时生效）
+ *   - 用于自定义 `scrollIntoView` 的行为（如 `block`、`behavior`、`inline` 等）
+ *   - 默认值为 `{ behavior: 'smooth', block: 'center', inline: 'nearest' }`
+ *   - 支持所有 `ScrollIntoViewOptions` 类型的选项配置
+ */
+export interface ExpandRuleBase {
+  /** 是否启用鼠标悬停自动展开功能 */
+  autoExpandOnHover?: boolean
+  /** 是否在展开/收起后自动滚动到表单中心 */
+  scrollOnToggle?: boolean
+  /** 滚动选项配置（用于自定义 scrollIntoView 的行为） */
+  scrollIntoViewOptions?: ScrollIntoViewOptions
+}
+
+/**
  * 默认展开规则（联合类型）
  *
  * 用于配置表单默认展开哪些字段，支持三种配置方式：
@@ -29,16 +55,11 @@ export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' |
  * - `exclude`：指定折叠的字段（黑名单，字段 prop 数组）
  *
  * **配置优先级**：`exclude` > `include` > `count`
- *
- * **鼠标悬停自动展开**：
- * - `autoExpandOnHover`：是否启用鼠标悬停自动展开功能
- *   - 当鼠标移入表单区域时自动展开（延迟 500ms）
- *   - 如果用户手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
  */
 export type ExpandRule
-  = | { count: number, autoExpandOnHover?: boolean }
-    | { include: string[], autoExpandOnHover?: boolean }
-    | { exclude: string[], autoExpandOnHover?: boolean }
+  = | ({ count: number } & ExpandRuleBase)
+    | ({ include: string[] } & ExpandRuleBase)
+    | ({ exclude: string[] } & ExpandRuleBase)
 
 /**
  * 表单操作项配置
