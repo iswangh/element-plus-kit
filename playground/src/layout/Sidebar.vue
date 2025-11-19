@@ -147,10 +147,17 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
   const menuMap = new Map<string, MenuItemType>()
   const rootMenus: MenuItemType[] = []
 
-  // 按路径深度排序（浅层在前）
+  // 按路径深度排序（浅层在前），首页始终在第一位
   const sortedRoutes = [...routes].sort((a, b) => {
     const fullPathA = getFullPath(a)
     const fullPathB = getFullPath(b)
+
+    // 首页始终在第一位
+    if (fullPathA === '/')
+      return -1
+    if (fullPathB === '/')
+      return 1
+
     const depthA = fullPathA.split('/').filter(Boolean).length
     const depthB = fullPathB.split('/').filter(Boolean).length
     return depthA - depthB

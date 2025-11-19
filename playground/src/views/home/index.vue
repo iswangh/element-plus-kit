@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="home">
+  <div>
     <el-card shadow="never">
       <template #header>
         <h1 class="text-2xl font-bold m-0">
@@ -20,12 +20,4 @@
 </template>
 
 <style scoped lang="scss">
-.home {
-  max-width: 800px;
-  margin: 0 auto;
-
-  &-content {
-    padding: 20px 0;
-  }
-}
 </style>

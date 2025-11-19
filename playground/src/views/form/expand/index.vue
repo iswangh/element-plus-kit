@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ActionConfig, FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
-import { ElMessage, ElRadioButton, ElRadioGroup } from 'element-plus'
 
 const form = ref({})
 const formRef = ref<InstanceType<typeof WForm>>()
@@ -214,11 +213,6 @@ function toggleForm() {
   formRef.value?.toggleExpand()
 }
 
-function checkExpanded() {
-  const expanded = formRef.value?.expanded ?? false
-  ElMessage.info(`当前展开状态: ${expanded ? '展开' : '折叠'}`)
-}
-
 // 计算属性：当前展开状态（用于模板显示）
 const currentExpanded = computed(() => formRef.value?.expanded ?? false)
 
@@ -239,15 +233,19 @@ function onReset(resetData: Record<string, unknown>) {
 </script>
 
 <template>
-  <div class="p-4">
-    <el-alert type="info" :closable="false" show-icon class="mb-4">
-      <template #default>
-        <p class="text-sm text-gray-600 m-0">
-          <strong>注意</strong>：展开/折叠功能仅在 <code>inline</code> 模式下有效，按钮位置固定在 action 按钮右侧。
-          对于默认布局（非 inline），建议使用 <code>el-collapse</code> 组件包裹表单。
-        </p>
-      </template>
-    </el-alert>
+  <div>
+    <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+    <el-affix :offset="0">
+      <el-alert type="info" :closable="false" show-icon>
+        <template #default>
+          <p class="text-sm text-gray-600 m-0">
+            <strong>注意</strong>：展开/折叠功能仅在 <code>inline</code> 模式下有效，按钮位置固定在 action 按钮右侧。
+            对于默认布局（非 inline），建议使用 <code>el-collapse</code> 组件包裹表单。
+          </p>
+        </template>
+      </el-alert>
+    </el-affix>
+    <div class="mb-4" />
     <el-space class="w-full" direction="vertical" :size="20" fill>
       <!-- 示例 1：count -->
       <el-card class="w-full" shadow="hover">
@@ -314,8 +312,8 @@ function onReset(resetData: Record<string, unknown>) {
               <el-button size="small" @click="toggleForm">
                 切换
               </el-button>
-              <el-button size="small" @click="checkExpanded">
-                检查状态
+              <el-button size="small" disabled>
+                状态：{{ currentExpanded ? '展开' : '折叠' }}
               </el-button>
             </div>
           </div>
@@ -328,7 +326,7 @@ function onReset(resetData: Record<string, unknown>) {
           :action-config="actionConfig4"
           @reset="onReset"
         />
-        <el-alert type="info" :closable="false" show-icon class="m-t-4">
+        <el-alert type="info" :closable="false" show-icon class="mt-4">
           <template #default>
             <p class="text-sm text-gray-600 m-0">
               当前展开状态：{{ currentExpanded ? '展开' : '折叠' }}
@@ -344,20 +342,22 @@ function onReset(resetData: Record<string, unknown>) {
             示例 5：与 vIf 一起使用（phone、gender、birthday 根据前一个字段联动显示）
           </h2>
         </template>
-        <el-alert type="warning" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="formItems5"
-          :action-config="actionConfig5"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="warning" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="formItems5"
+            :action-config="actionConfig5"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 6：与 vShow 一起使用 -->
@@ -367,20 +367,22 @@ function onReset(resetData: Record<string, unknown>) {
             示例 6：与 vShow 一起使用（phone、gender、birthday 根据前一个字段联动显示）
           </h2>
         </template>
-        <el-alert type="warning" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="formItems6"
-          :action-config="actionConfig6"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="warning" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="formItems6"
+            :action-config="actionConfig6"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 7：与 vIf vShow 一起使用 -->
@@ -390,20 +392,22 @@ function onReset(resetData: Record<string, unknown>) {
             示例 7：与 vIf vShow 一起使用（phone、gender、birthday 根据前一个字段联动显示）
           </h2>
         </template>
-        <el-alert type="warning" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="formItems7"
-          :action-config="actionConfig7"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="warning" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：输入邮箱后，手机号才会显示；输入手机号后，性别才会显示；选择性别后，生日才会显示。
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="formItems7"
+            :action-config="actionConfig7"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 8：rowAttrs 和 colAttrs 布局配置 -->
@@ -413,21 +417,23 @@ function onReset(resetData: Record<string, unknown>) {
             示例 8：rowAttrs 和 colAttrs 布局配置（inline 模式，每行 4 个表单项）
           </h2>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过 <code>rowAttrs</code> 配置行布局（如 <code>gutter: 20</code>），通过 <code>colAttrs</code> 配置每个表单项的列布局（如 <code>span: 6</code> 表示每行 4 个表单项）。
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="formItems8"
-          :row-attrs="rowAttrs8"
-          :action-config="actionConfig8"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过 <code>rowAttrs</code> 配置行布局（如 <code>gutter: 20</code>），通过 <code>colAttrs</code> 配置每个表单项的列布局（如 <code>span: 6</code> 表示每行 4 个表单项）。
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="formItems8"
+            :row-attrs="rowAttrs8"
+            :action-config="actionConfig8"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 9：鼠标悬停自动展开/收起 -->
@@ -437,26 +443,28 @@ function onReset(resetData: Record<string, unknown>) {
             示例 9：鼠标悬停自动展开/收起
           </h2>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过 <code>expand: { count: 3, autoExpandOnHover: true }</code> 启用鼠标悬停自动展开功能。
-              <br>
-              <strong>交互说明</strong>：
-              <br>
-              • 鼠标移入展开图标区域时，表单会自动展开（延迟 500ms）
-              <br>
-              • 如果手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="actionConfig9"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过 <code>expand: { count: 3, autoExpandOnHover: true }</code> 启用鼠标悬停自动展开功能。
+                <br>
+                <strong>交互说明</strong>：
+                <br>
+                • 鼠标移入展开图标区域时，表单会自动展开（延迟 500ms）
+                <br>
+                • 如果手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="actionConfig9"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 10：使用对象数组配置 buttons（展开放在第一位） -->
@@ -466,28 +474,30 @@ function onReset(resetData: Record<string, unknown>) {
             示例 10：使用对象数组配置 buttons（展开放在第一位）
           </h2>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过对象数组配置 <code>buttons</code>，可以自定义按钮的顺序和属性。
-              <br>
-              <strong>配置说明</strong>：
-              <br>
-              • 展开按钮放在第一位，使用 <code>type: 'text'</code> 样式
-              <br>
-              • 搜索按钮使用 <code>type: 'primary'</code> 样式
-              <br>
-              • 重置按钮使用默认样式
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="actionConfig10"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过对象数组配置 <code>buttons</code>，可以自定义按钮的顺序和属性。
+                <br>
+                <strong>配置说明</strong>：
+                <br>
+                • 展开按钮放在第一位，使用 <code>type: 'text'</code> 样式
+                <br>
+                • 搜索按钮使用 <code>type: 'primary'</code> 样式
+                <br>
+                • 重置按钮使用默认样式
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="actionConfig10"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 11：展开按钮使用圆形主题色 plain 样式 -->
@@ -497,28 +507,30 @@ function onReset(resetData: Record<string, unknown>) {
             示例 11：展开按钮使用圆形主题色 plain 样式
           </h2>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过对象数组配置 <code>buttons</code>，可以自定义展开按钮的样式。
-              <br>
-              <strong>配置说明</strong>：
-              <br>
-              • 展开按钮使用 <code>type: 'primary'</code> 主题色
-              <br>
-              • 使用 <code>plain: true</code> 实现 plain 样式（浅色背景）
-              <br>
-              • 使用 <code>circle: true</code> 实现圆形按钮
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="actionConfig11"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过对象数组配置 <code>buttons</code>，可以自定义展开按钮的样式。
+                <br>
+                <strong>配置说明</strong>：
+                <br>
+                • 展开按钮使用 <code>type: 'primary'</code> 主题色
+                <br>
+                • 使用 <code>plain: true</code> 实现 plain 样式（浅色背景）
+                <br>
+                • 使用 <code>circle: true</code> 实现圆形按钮
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="actionConfig11"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 12：v-model:expanded 双向绑定（受控模式） -->
@@ -541,31 +553,33 @@ function onReset(resetData: Record<string, unknown>) {
             </div>
           </div>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过 <code>v-model:expanded</code> 实现双向绑定，外部可以完全控制展开/折叠状态。
-              <br>
-              <strong>使用场景</strong>：
-              <br>
-              • 配合路由缓存（keep-alive）保持状态
-              <br>
-              • 配合 localStorage/sessionStorage 实现持久化
-              <br>
-              • 多个表单实例共享展开状态
-              <br>
-              <strong>当前状态</strong>：{{ isExpanded12 ? '展开' : '折叠' }}
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          v-model:expanded="isExpanded12"
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="actionConfig12"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过 <code>v-model:expanded</code> 实现双向绑定，外部可以完全控制展开/折叠状态。
+                <br>
+                <strong>使用场景</strong>：
+                <br>
+                • 配合路由缓存（keep-alive）保持状态
+                <br>
+                • 配合 localStorage/sessionStorage 实现持久化
+                <br>
+                • 多个表单实例共享展开状态
+                <br>
+                <strong>当前状态</strong>：{{ isExpanded12 ? '展开' : '折叠' }}
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            v-model:expanded="isExpanded12"
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="actionConfig12"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 示例 13：展开/收起后自动滚动到表单中心 -->
@@ -575,30 +589,32 @@ function onReset(resetData: Record<string, unknown>) {
             示例 13：展开/收起后自动滚动到表单中心
           </h2>
         </template>
-        <el-alert type="info" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              说明：通过 <code>expand: { count: 3, scrollOnToggle: true, scrollIntoViewOptions: {...} }</code> 启用展开/收起后自动滚动功能。
-              <br>
-              <strong>功能说明</strong>：
-              <br>
-              • 展开/收起动画完成后，表单会自动滚动到页面中心
-              <br>
-              • 使用平滑滚动动画，提升用户体验
-              <br>
-              • 可通过 <code>scrollIntoViewOptions</code> 自定义滚动行为（如 <code>block: 'start'</code> 滚动到顶部）
-              <br>
-              • 适用于表单较长，展开/收起后需要重新定位的场景
-            </p>
-          </template>
-        </el-alert>
-        <WForm
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="actionConfig13"
-          @reset="onReset"
-        />
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="info" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                说明：通过 <code>expand: { count: 3, scrollOnToggle: true, scrollIntoViewOptions: {...} }</code> 启用展开/收起后自动滚动功能。
+                <br>
+                <strong>功能说明</strong>：
+                <br>
+                • 展开/收起动画完成后（延迟 250ms），表单会自动滚动到指定位置
+                <br>
+                • 默认滚动到页面中心（<code>block: 'center'</code>），使用平滑滚动动画（<code>behavior: 'smooth'</code>）
+                <br>
+                • 可通过 <code>scrollIntoViewOptions</code> 自定义滚动行为（如 <code>block: 'start'</code> 滚动到顶部，<code>block: 'end'</code> 滚动到底部）
+                <br>
+                • 适用于表单较长，展开/收起后需要重新定位的场景
+              </p>
+            </template>
+          </el-alert>
+          <WForm
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="actionConfig13"
+            @reset="onReset"
+          />
+        </el-space>
       </el-card>
 
       <!-- 测试区域：展开/收起后自动滚动到表单中心 -->
@@ -608,74 +624,71 @@ function onReset(resetData: Record<string, unknown>) {
             测试区域：展开/收起后自动滚动到表单中心
           </h2>
         </template>
-        <el-alert type="warning" :closable="false" show-icon class="mb-4">
-          <template #default>
-            <p class="text-sm text-gray-600 m-0">
-              <strong>测试说明</strong>：此区域用于测试自动滚动功能。请先滚动页面，然后点击展开/收起按钮，观察表单是否自动滚动到指定位置。
+        <el-space class="w-full" direction="vertical" :size="20" fill>
+          <el-alert type="warning" :closable="false" show-icon>
+            <template #default>
+              <p class="text-sm text-gray-600 m-0">
+                <strong>测试说明</strong>：此区域用于测试自动滚动功能。请先滚动页面，然后点击展开/收起按钮，观察表单是否自动滚动到指定位置。
+              </p>
+            </template>
+          </el-alert>
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-4 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">滚动位置：</span>
+                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                <el-radio-group v-model="selectedScrollBlock" size="small">
+                  <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                  <el-radio-button
+                    v-for="option in scrollBlockOptions"
+                    :key="option.value"
+                    :label="option.value"
+                  >
+                    {{ option.label }}
+                  </el-radio-button>
+                </el-radio-group>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">滚动行为：</span>
+                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                <el-radio-group v-model="selectedScrollBehavior" size="small">
+                  <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
+                  <el-radio-button
+                    v-for="option in scrollBehaviorOptions"
+                    :key="option.value"
+                    :label="option.value"
+                  >
+                    {{ option.label }}
+                  </el-radio-button>
+                </el-radio-group>
+              </div>
+            </div>
+            <div class="mt-2 text-xs text-gray-500">
+              当前配置：<code>{{ JSON.stringify(testActionConfig.expand?.scrollIntoViewOptions) }}</code>
+            </div>
+          </div>
+          <div class="h-screen bg-gray-100 flex items-center justify-center">
+            <p class="text-gray-500">
+              上方空白区域（用于测试滚动）
             </p>
-          </template>
-        </el-alert>
-        <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-          <div class="flex items-center gap-4 flex-wrap">
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-600">滚动位置：</span>
-              <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
-              <el-radio-group v-model="selectedScrollBlock" size="small">
-                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
-                <el-radio-button
-                  v-for="option in scrollBlockOptions"
-                  :key="option.value"
-                  :label="option.value"
-                >
-                  {{ option.label }}
-                </el-radio-button>
-              </el-radio-group>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-600">滚动行为：</span>
-              <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
-              <el-radio-group v-model="selectedScrollBehavior" size="small">
-                <!-- eslint-disable-next-line vue/component-name-in-template-casing -->
-                <el-radio-button
-                  v-for="option in scrollBehaviorOptions"
-                  :key="option.value"
-                  :label="option.value"
-                >
-                  {{ option.label }}
-                </el-radio-button>
-              </el-radio-group>
-            </div>
           </div>
-          <div class="mt-2 text-xs text-gray-500">
-            当前配置：<code>{{ JSON.stringify(testActionConfig.expand?.scrollIntoViewOptions) }}</code>
+          <WForm
+            :model="form"
+            inline
+            :form-items="baseFormItems"
+            :action-config="testActionConfig"
+            @reset="onReset"
+          />
+          <div class="h-screen bg-gray-100 flex items-center justify-center">
+            <p class="text-gray-500">
+              下方空白区域（用于测试滚动）
+            </p>
           </div>
-        </div>
-        <div class="h-screen bg-gray-100 flex items-center justify-center mb-4">
-          <p class="text-gray-500">
-            上方空白区域（用于测试滚动）
-          </p>
-        </div>
-        <WForm
-          :model="form"
-          inline
-          :form-items="baseFormItems"
-          :action-config="testActionConfig"
-          @reset="onReset"
-        />
-        <div class="h-screen bg-gray-100 flex items-center justify-center mt-4">
-          <p class="text-gray-500">
-            下方空白区域（用于测试滚动）
-          </p>
-        </div>
+        </el-space>
       </el-card>
     </el-space>
   </div>
 </template>
 
-<style scoped>
-.custom-expand-btn {
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-weight: bold;
-}
+<style lang="scss" scoped>
 </style>

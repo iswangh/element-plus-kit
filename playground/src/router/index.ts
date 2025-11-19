@@ -42,12 +42,17 @@ interface RouteItem {
  * 将文件路径转换为路由路径
  * @example '../views/form/basic/auto.vue' -> '/form/basic/auto'
  * @example '../views/form/basic/index.vue' -> '/form/basic'
+ * @example '../views/home/index.vue' -> '/' (首页)
  */
 function pathToRoute(filePath: string): string {
   const path = filePath
     .replace('../views', '')
     .replace(/\.vue$/, '')
     .replace(/\/$/, '') || '/'
+
+  // 特殊处理：home/index.vue 对应根路径
+  if (path === '/home/index' || path === 'home/index')
+    return '/'
 
   // 如果是 index.vue，返回父路径
   if (path.endsWith('/index'))
@@ -304,6 +309,13 @@ function generateRoutes(): RouteRecordRaw[] {
 
   // 构建嵌套路由
   const routes = buildNestedRoutes(routeItems)
+
+  // 确保首页路由在第一位
+  const homeIndex = routes.findIndex(r => r.path === '/')
+  if (homeIndex > 0) {
+    const homeRoute = routes.splice(homeIndex, 1)[0]
+    routes.unshift(homeRoute)
+  }
 
   // 添加 404 路由
   routes.push({
