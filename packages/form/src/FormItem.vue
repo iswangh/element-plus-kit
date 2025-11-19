@@ -144,7 +144,9 @@ const processedCompAttrs = computed(() => {
 })
 
 /** 根据 prop 获取对应的动态组件插槽 */
-const getDynamicComponentSlots = (prop: string) => props.formSlots.dynamicComponentSlots.get(prop)
+function getDynamicComponentSlots(prop: string) {
+  return props.formSlots.dynamicComponentSlots.get(prop)
+}
 
 /**
  * 执行 loader 函数（支持同步和异步）

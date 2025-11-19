@@ -29,11 +29,16 @@ export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' |
  * - `exclude`：指定折叠的字段（黑名单，字段 prop 数组）
  *
  * **配置优先级**：`exclude` > `include` > `count`
+ *
+ * **鼠标悬停自动展开**：
+ * - `autoExpandOnHover`：是否启用鼠标悬停自动展开功能
+ *   - 当鼠标移入表单区域时自动展开（延迟 500ms）
+ *   - 如果用户手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
  */
 export type ExpandRule
-  = | { count: number }
-    | { include: string[] }
-    | { exclude: string[] }
+  = | { count: number, autoExpandOnHover?: boolean }
+    | { include: string[], autoExpandOnHover?: boolean }
+    | { exclude: string[], autoExpandOnHover?: boolean }
 
 /**
  * 表单操作项配置

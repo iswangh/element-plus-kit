@@ -6,7 +6,6 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { ElButton, ElFormItem, ElIcon } from 'element-plus'
 import { computed } from 'vue'
 import { ACTION_DEFAULT_CONFIG, DEFAULT_FORM_ACTION_BUTTONS } from './config'
-import { hasButtonEvent } from './utils'
 
 interface Props {
   inline?: boolean
@@ -14,6 +13,12 @@ interface Props {
   config?: ActionConfig
   /** 展开/折叠状态（仅在 buttons 包含 'expand' 时有效） */
   expanded?: boolean
+  /** 是否启用鼠标悬停自动展开 */
+  autoExpandOnHover?: boolean
+  /** 鼠标移入事件处理函数（用于空白区域和展开图标） */
+  onMouseEnter?: () => void
+  /** 鼠标移出事件处理函数（用于空白区域和展开图标） */
+  onMouseLeave?: () => void
 }
 
 interface Emits {
@@ -28,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   expanded: false,
 })
 
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 /** 处理后的动作组件属性（合并默认配置和用户自定义配置） */
 const processedActionAttrs = computed(() => ({
@@ -54,48 +59,88 @@ const normalizedButtons = computed(() => {
   })
 })
 
-/** 是否显示展开/折叠按钮 */
-const showExpandButton = computed(() => {
-  const { buttons } = processedActionAttrs.value.config
-  return hasButtonEvent(buttons, 'expand')
-})
-
-/** 展开/折叠按钮配置 */
-const expandButtonConfig = computed((): ActionConfigButtonItem => {
-  const expandButton = normalizedButtons.value.find(v => v.eventName === 'expand')
-  if (expandButton)
-    return expandButton
-  // 返回默认配置，确保包含 eventName
-  return { ...DEFAULT_FORM_ACTION_BUTTONS.expand, eventName: 'expand' }
-})
+/**
+ * 判断按钮是否为展开/折叠按钮
+ */
+function isExpandButton(btn: ActionConfigButtonItem): boolean {
+  return btn.eventName === 'expand'
+}
 
 /** 提取 el-button 的属性（排除自定义属性） */
-const getBtnAttrs = (btn: ActionConfigButtonItem) => {
+function getBtnAttrs(btn: ActionConfigButtonItem) {
   const { label: _label, eventName: _eventName, ...rest } = btn
+
+  // 如果是 expand 按钮，添加特殊属性
+  if (isExpandButton(btn)) {
+    return {
+      ...rest,
+      'title': props.expanded ? '收起' : '展开',
+      'aria-label': props.expanded ? '收起' : '展开',
+      'aria-expanded': props.expanded,
+    }
+  }
+
   return rest
+}
+
+/**
+ * 处理按钮点击事件
+ *
+ * @param btn - 按钮配置
+ */
+function onButtonClick(btn: ActionConfigButtonItem) {
+  const eventName = btn.eventName
+  const data = isExpandButton(btn) ? props.expanded : undefined
+  emit('action', { eventName, data })
+}
+
+/**
+ * 处理按钮鼠标移入事件
+ *
+ * @param btn - 按钮配置
+ */
+function onButtonMouseEnter(btn: ActionConfigButtonItem) {
+  if (isExpandButton(btn) && props.autoExpandOnHover)
+    props.onMouseEnter?.()
+}
+
+/**
+ * 处理按钮鼠标移出事件
+ *
+ * @param btn - 按钮配置
+ */
+function onButtonMouseLeave(btn: ActionConfigButtonItem) {
+  if (isExpandButton(btn) && props.autoExpandOnHover)
+    props.onMouseLeave?.()
 }
 </script>
 
 <template>
-  <ElFormItem v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow" prop="action">
+  <ElFormItem
+    v-if="processedActionAttrs.config.vIf"
+    v-show="processedActionAttrs.config.vShow"
+    prop="action"
+  >
     <template v-if="!actionSlot">
-      <!-- 操作按钮（排除 expand 按钮） -->
-      <ElButton v-for="(btn, i) in normalizedButtons.filter((v: ActionConfigButtonItem) => v.eventName !== 'expand')" :key="`${btn.label}-${i}`" v-bind="getBtnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
-        {{ btn.label ?? '' }}
-      </ElButton>
-      <!-- 展开/折叠按钮（在 action 按钮右边，仅在 buttons 包含 'expand' 时显示） -->
+      <!-- 统一处理所有按钮（包括 expand 按钮） -->
       <ElButton
-        v-if="showExpandButton && inline"
-        key="expand"
-        v-bind="getBtnAttrs(expandButtonConfig)"
-        :title="expanded ? '收起' : '展开'"
-        :aria-label="expanded ? '收起' : '展开'"
-        :aria-expanded="expanded"
-        @click="$emit('action', { eventName: 'expanded', data: expanded })"
+        v-for="(btn, i) in normalizedButtons"
+        :key="`${btn.eventName}-${i}`"
+        v-bind="getBtnAttrs(btn)"
+        @mouseenter="onButtonMouseEnter(btn)"
+        @mouseleave="onButtonMouseLeave(btn)"
+        @click="onButtonClick(btn)"
       >
-        <ElIcon class="expand-toggle-icon" :class="{ 'is-expanded': expanded }">
-          <ArrowDown />
-        </ElIcon>
+        <!-- expand 按钮：显示图标（仅在 inline 模式下显示） -->
+        <template v-if="isExpandButton(btn) && inline">
+          <ElIcon class="expand-toggle-icon" :class="{ 'is-expanded': expanded }">
+            <ArrowDown />
+          </ElIcon>
+        </template>
+        <!-- 其他按钮：显示文字 -->
+        <template v-else>
+          {{ btn.label ?? '' }}
+        </template>
       </ElButton>
       <slot />
     </template>

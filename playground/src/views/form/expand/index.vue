@@ -124,6 +124,32 @@ const actionConfig8: ActionConfig = {
   expand: { count: 6 },
 }
 
+// 示例 9：鼠标悬停自动展开/收起
+const actionConfig9: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: { count: 3, autoExpandOnHover: true },
+}
+
+// 示例 10：使用对象数组配置 buttons（展开放在第一位）
+const actionConfig10: ActionConfig = {
+  buttons: [
+    { eventName: 'expand', type: 'text' },
+    { eventName: 'search', label: '搜索', type: 'primary' },
+    { eventName: 'reset', label: '重置' },
+  ],
+  expand: { count: 3 },
+}
+
+// 示例 11：展开按钮使用圆形主题色 plain 样式
+const actionConfig11: ActionConfig = {
+  buttons: [
+    { eventName: 'expand', type: 'primary', plain: true, circle: true },
+    { eventName: 'search', label: '搜索', type: 'primary' },
+    { eventName: 'reset', label: '重置' },
+  ],
+  expand: { count: 3 },
+}
+
 // 手动控制方法
 function expandForm() {
   formRef.value?.toggleExpanded(true)
@@ -152,7 +178,12 @@ const currentExpanded = computed(() => formRef.value?.expanded ?? false)
  * @param resetData - 重置数据对象
  */
 function onReset(resetData: Record<string, unknown>) {
-  form.value = { ...form.value, ...resetData }
+  for (const [key, value] of Object.entries(resetData)) {
+    if (value === undefined)
+      delete (form.value as Record<string, unknown>)[key]
+    else
+      (form.value as Record<string, unknown>)[key] = value
+  }
 }
 </script>
 
@@ -328,7 +359,7 @@ function onReset(resetData: Record<string, unknown>) {
       <el-card class="w-full" shadow="hover">
         <template #header>
           <h2 class="text-lg text-gray-800 font-semibold m-0">
-            示例 8：rowAttrs 和 colAttrs 布局配置（非 inline 模式，使用栅格布局）
+            示例 8：rowAttrs 和 colAttrs 布局配置（inline 模式，每行 4 个表单项）
           </h2>
         </template>
         <el-alert type="info" :closable="false" show-icon class="mb-4">
@@ -344,6 +375,97 @@ function onReset(resetData: Record<string, unknown>) {
           :form-items="formItems8"
           :row-attrs="rowAttrs8"
           :action-config="actionConfig8"
+          @reset="onReset"
+        />
+      </el-card>
+
+      <!-- 示例 9：鼠标悬停自动展开/收起 -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <h2 class="text-lg text-gray-800 font-semibold m-0">
+            示例 9：鼠标悬停自动展开/收起
+          </h2>
+        </template>
+        <el-alert type="info" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>expand: { count: 3, autoExpandOnHover: true }</code> 启用鼠标悬停自动展开功能。
+              <br>
+              <strong>交互说明</strong>：
+              <br>
+              • 鼠标移入展开图标区域时，表单会自动展开（延迟 500ms）
+              <br>
+              • 如果手动点击展开/收起按钮，则锁定状态，不再受鼠标移入影响
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="actionConfig9"
+          @reset="onReset"
+        />
+      </el-card>
+
+      <!-- 示例 10：使用对象数组配置 buttons（展开放在第一位） -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <h2 class="text-lg text-gray-800 font-semibold m-0">
+            示例 10：使用对象数组配置 buttons（展开放在第一位）
+          </h2>
+        </template>
+        <el-alert type="info" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过对象数组配置 <code>buttons</code>，可以自定义按钮的顺序和属性。
+              <br>
+              <strong>配置说明</strong>：
+              <br>
+              • 展开按钮放在第一位，使用 <code>type: 'text'</code> 样式
+              <br>
+              • 搜索按钮使用 <code>type: 'primary'</code> 样式
+              <br>
+              • 重置按钮使用默认样式
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="actionConfig10"
+          @reset="onReset"
+        />
+      </el-card>
+
+      <!-- 示例 11：展开按钮使用圆形主题色 plain 样式 -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <h2 class="text-lg text-gray-800 font-semibold m-0">
+            示例 11：展开按钮使用圆形主题色 plain 样式
+          </h2>
+        </template>
+        <el-alert type="info" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过对象数组配置 <code>buttons</code>，可以自定义展开按钮的样式。
+              <br>
+              <strong>配置说明</strong>：
+              <br>
+              • 展开按钮使用 <code>type: 'primary'</code> 主题色
+              <br>
+              • 使用 <code>plain: true</code> 实现 plain 样式（浅色背景）
+              <br>
+              • 使用 <code>circle: true</code> 实现圆形按钮
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="actionConfig11"
           @reset="onReset"
         />
       </el-card>

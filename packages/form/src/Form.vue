@@ -9,10 +9,11 @@ import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormIte
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
+import { useAutoExpandOnHover } from './composables'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
-import { hasButtonEvent } from './utils'
+import { debounce, deepCloneValue, hasButtonEvent } from './utils'
 
 interface Props extends ElFormAttrs {
   formItems: FormItems
@@ -23,12 +24,12 @@ interface Props extends ElFormAttrs {
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
   <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: EventExtendedParams, value: T[K]): void
-  (e: 'action', eventName: string, data?: any): void
+  (e: 'action', eventName: string, data?: unknown): void
   (e: 'search'): void
-  (e: 'reset', resetData: Record<string, any>): void
+  (e: 'reset', resetData: Record<string, unknown>): void
   (e: 'submit'): void
   (e: 'cancel'): void
-  (e: 'expanded', value: boolean): void
+  (e: 'expand', value: boolean): void
 }
 
 type EmitEventName = Exclude<keyof Emits, 'validate' | 'change' | 'action'>
@@ -90,7 +91,7 @@ function isEventAttribute(key: string, value: unknown): boolean {
 const dynamicCompEvents = computed(() => {
   return Object.fromEntries(
     Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value)),
-  ) as Record<string, (prop: string, ...args: any) => void>
+  ) as Record<string, (prop: string, ...args: unknown[]) => void>
 })
 
 /** 提取并合并 form 属性 */
@@ -108,15 +109,6 @@ const mergedAttrs = computed(() => {
 const isExpanded = ref(false)
 
 /**
- * 切换或设置表单展开/折叠状态
- *
- * @param value - 可选，不传参则切换状态，传布尔值则设置状态
- */
-function toggleExpanded(value?: boolean) {
-  isExpanded.value = value ?? !isExpanded.value
-}
-
-/**
  * 判断是否启用展开/折叠功能（通过 actionConfig.buttons 是否包含 'expand' 来判断）
  */
 const expandEnabled = computed(() => {
@@ -124,6 +116,40 @@ const expandEnabled = computed(() => {
     return false
   return hasButtonEvent(props.actionConfig?.buttons, 'expand')
 })
+
+/**
+ * 是否启用鼠标悬停自动展开功能
+ * 默认值为 false
+ */
+const autoExpandOnHover = computed((): boolean => {
+  if (!expandEnabled.value)
+    return false
+  const expandRule = props.actionConfig?.expand
+  if (!expandRule)
+    return false
+  return expandRule.autoExpandOnHover === true
+})
+
+// 鼠标悬停自动展开功能
+const autoExpandHover = useAutoExpandOnHover(
+  isExpanded,
+  autoExpandOnHover,
+  (value) => {
+    isExpanded.value = value
+    emit('expand', value)
+  },
+)
+
+/**
+ * 切换或设置表单展开/折叠状态
+ *
+ * @param value - 可选，不传参则切换状态，传布尔值则设置状态
+ */
+function toggleExpanded(value?: boolean) {
+  const newValue = value ?? !isExpanded.value
+  isExpanded.value = newValue
+  autoExpandHover.recordManualToggle(newValue)
+}
 
 /**
  * 过滤出需要渲染的 formItem（仅根据 vIf 条件，不包含展开/折叠状态）
@@ -165,7 +191,7 @@ const visibleFormItems = computed(() => {
  * @param fieldIndex - 字段在数组中的索引
  * @returns 是否应该被折叠
  */
-function shouldCollapseField(field: any, fieldIndex: number): boolean {
+function shouldCollapseField(field: FormItems[number], fieldIndex: number): boolean {
   // 如果功能未开启，则不应该被折叠
   if (!expandEnabled.value)
     return false
@@ -270,21 +296,7 @@ const collapsedFieldProps = computed(() => {
 /**
  * 可折叠字段的初始值快照
  */
-const collapsedFieldsInitialValues = ref<Record<string, any>>({})
-
-/**
- * 深拷贝值（仅对对象和数组）
- *
- * @param value - 要深拷贝的值
- * @returns 深拷贝后的值
- */
-function deepCloneValue<T = Record<string, unknown>>(value: T): T {
-  if (value == null)
-    return value
-  if (typeof value === 'object')
-    return JSON.parse(JSON.stringify(value)) as T
-  return value
-}
+const collapsedFieldsInitialValues = ref<Record<string, unknown>>({})
 
 /**
  * 记录可折叠字段的初始值
@@ -299,12 +311,18 @@ function recordInitialValues() {
 }
 
 /**
+ * 防抖版本的 recordInitialValues
+ * 用于配置变化时的频繁调用优化（延迟 100ms）
+ */
+const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
+
+/**
  * 获取重置数据（可折叠字段的初始值）
  *
  * @returns 可折叠字段的重置数据对象
  */
-function getResetData(): Record<string, any> {
-  const resetData: Record<string, any> = {}
+function getResetData(): Record<string, unknown> {
+  const resetData: Record<string, unknown> = {}
   for (const prop of collapsedFieldProps.value) {
     const initialValue = collapsedFieldsInitialValues.value[prop]
     resetData[prop] = initialValue != null ? deepCloneValue(initialValue) : undefined
@@ -335,9 +353,9 @@ async function onAction({ eventName }: { eventName: string }) {
   const resetEvents = ['cancel', 'reset']
 
   // 处理展开/折叠事件
-  if (eventName === 'expanded') {
+  if (eventName === 'expand') {
     toggleExpanded()
-    emit('expanded', isExpanded.value)
+    emit('expand', isExpanded.value)
     emit('action', eventName, isExpanded.value)
     return
   }
@@ -396,11 +414,11 @@ onMounted(() => {
   recordInitialValues()
 })
 
-// 监听 formItems 或 expand 配置变化，重新记录初始值
+// 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
 watch(
   [() => props.formItems, () => props.actionConfig?.expand],
   () => {
-    recordInitialValues()
+    debouncedRecordInitialValues()
   },
   { deep: true },
 )
@@ -438,7 +456,7 @@ watch(
             :dynamic-comp-events="dynamicCompEvents"
             :form-slots="slotsCache"
             :index="v._originalIndex ?? i"
-            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+            @change="(extendedParams: EventExtendedParams, value: unknown) => emit('change', extendedParams, value)"
           />
         </component>
       </TransitionGroup>
@@ -457,7 +475,7 @@ watch(
             :dynamic-comp-events="dynamicCompEvents"
             :form-slots="slotsCache"
             :index="v._originalIndex ?? i"
-            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+            @change="(extendedParams: EventExtendedParams, value: unknown) => emit('change', extendedParams, value)"
           />
         </component>
       </template>
@@ -466,6 +484,9 @@ watch(
         :action-slot="$slots.action"
         :config="actionConfig"
         :expanded="isExpanded"
+        :auto-expand-on-hover="autoExpandOnHover"
+        :on-mouse-enter="autoExpandHover.onMouseEnter"
+        :on-mouse-leave="autoExpandHover.onMouseLeave"
         @action="onAction"
       />
     </component>
