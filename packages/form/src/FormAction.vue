@@ -72,10 +72,11 @@ function getBtnAttrs(btn: ActionConfigButtonItem) {
 
   // 如果是 expand 按钮，添加特殊属性
   if (isExpandButton(btn)) {
+    const expandLabel = props.expanded ? '收起' : '展开'
     return {
       ...rest,
-      'title': props.expanded ? '收起' : '展开',
-      'aria-label': props.expanded ? '收起' : '展开',
+      'title': expandLabel,
+      'aria-label': expandLabel,
       'aria-expanded': props.expanded,
     }
   }
