@@ -150,17 +150,24 @@ const actionConfig11: ActionConfig = {
   expand: { count: 3 },
 }
 
+// 示例 12：v-model:expanded 双向绑定（受控模式）
+const isExpanded12 = ref(false)
+const actionConfig12: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: { count: 3 },
+}
+
 // 手动控制方法
 function expandForm() {
-  formRef.value?.toggleExpanded(true)
+  formRef.value?.toggleExpand(true)
 }
 
 function collapseForm() {
-  formRef.value?.toggleExpanded(false)
+  formRef.value?.toggleExpand(false)
 }
 
 function toggleForm() {
-  formRef.value?.toggleExpanded()
+  formRef.value?.toggleExpand()
 }
 
 function checkExpanded() {
@@ -466,6 +473,53 @@ function onReset(resetData: Record<string, unknown>) {
           inline
           :form-items="baseFormItems"
           :action-config="actionConfig11"
+          @reset="onReset"
+        />
+      </el-card>
+
+      <!-- 示例 12：v-model:expanded 双向绑定（受控模式） -->
+      <el-card class="w-full" shadow="hover">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg text-gray-800 font-semibold m-0">
+              示例 12：v-model:expanded 双向绑定（受控模式）
+            </h2>
+            <div class="flex gap-2">
+              <el-button size="small" @click="isExpanded12 = true">
+                展开
+              </el-button>
+              <el-button size="small" @click="isExpanded12 = false">
+                折叠
+              </el-button>
+              <el-button size="small" @click="isExpanded12 = !isExpanded12">
+                切换
+              </el-button>
+            </div>
+          </div>
+        </template>
+        <el-alert type="info" :closable="false" show-icon class="mb-4">
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>v-model:expanded</code> 实现双向绑定，外部可以完全控制展开/折叠状态。
+              <br>
+              <strong>使用场景</strong>：
+              <br>
+              • 配合路由缓存（keep-alive）保持状态
+              <br>
+              • 配合 localStorage/sessionStorage 实现持久化
+              <br>
+              • 多个表单实例共享展开状态
+              <br>
+              <strong>当前状态</strong>：{{ isExpanded12 ? '展开' : '折叠' }}
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          v-model:expanded="isExpanded12"
+          :model="form"
+          inline
+          :form-items="baseFormItems"
+          :action-config="actionConfig12"
           @reset="onReset"
         />
       </el-card>

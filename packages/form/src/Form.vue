@@ -105,8 +105,16 @@ const mergedAttrs = computed(() => {
   return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
 })
 
-// 展开/折叠状态（内置响应式）
-const isExpanded = ref(false)
+// 展开/折叠状态（支持 v-model:expanded）
+const isExpanded = defineModel<boolean>('expanded', { default: false })
+
+// 监听 isExpanded 变化，同步触发 expand 事件
+watch(
+  isExpanded,
+  (value) => {
+    emit('expand', value)
+  },
+)
 
 /**
  * 判断是否启用展开/折叠功能（通过 actionConfig.buttons 是否包含 'expand' 来判断）
@@ -136,7 +144,6 @@ const autoExpandHover = useAutoExpandOnHover(
   autoExpandOnHover,
   (value) => {
     isExpanded.value = value
-    emit('expand', value)
   },
 )
 
@@ -145,7 +152,7 @@ const autoExpandHover = useAutoExpandOnHover(
  *
  * @param value - 可选，不传参则切换状态，传布尔值则设置状态
  */
-function toggleExpanded(value?: boolean) {
+function toggleExpand(value?: boolean) {
   const newValue = value ?? !isExpanded.value
   isExpanded.value = newValue
   autoExpandHover.recordManualToggle(newValue)
@@ -354,8 +361,8 @@ async function onAction({ eventName }: { eventName: string }) {
 
   // 处理展开/折叠事件
   if (eventName === 'expand') {
-    toggleExpanded()
-    emit('expand', isExpanded.value)
+    toggleExpand()
+    // expand 事件由 watch(isExpanded, ...) 自动触发，无需手动 emit
     emit('action', eventName, isExpanded.value)
     return
   }
@@ -406,7 +413,7 @@ defineExpose({
   get expanded() {
     return isExpanded.value
   },
-  toggleExpanded,
+  toggleExpand,
 })
 
 // 组件挂载时记录初始值
