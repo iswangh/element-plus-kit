@@ -79,7 +79,6 @@ import '@iswangh/element-plus-kit-form/style.css'
 | formItems | 表单项配置数组 | `FormItems` | `[]` |
 | rowAttrs | 行布局属性（ElRow 属性） | `RowAttrs` | `{}` |
 | actionConfig | 操作按钮配置 | `ActionConfig` | `{}` |
-| expandConfig | 展开/折叠配置 | `ExpandConfig` | `{}` |
 
 **继承 Element Plus Form 属性**：组件继承所有 `ElForm` 的属性，如 `rules`、`labelPosition`、`size` 等。
 
@@ -94,12 +93,13 @@ import '@iswangh/element-plus-kit-form/style.css'
 | reset | 重置按钮点击事件 | - |
 | submit | 提交按钮点击事件 | - |
 | cancel | 取消按钮点击事件 | - |
-| form-expand-change | 展开状态变化事件 | `(value: boolean)` |
+| expand | 展开状态变化事件 | `(value: boolean)` |
 
 ### Slots
 
 | 插槽名 | 说明 | 作用域参数 |
 | --- | --- | --- |
+| `{prop}` | 自定义组件插槽，当 `comp` 为 `custom` 时使用 | `FormItemSlotScope` |
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
@@ -114,6 +114,10 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
   label: string                   // 标签文本
   comp: FormItemComp              // 组件类型（必填）
   compAttrs?: FormItemCompAttrs<C> // 组件属性配置
+  // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），compAttrs.options 支持三种模式：
+  // 1. 静态数组：options: [{ label: '选项1', value: '1' }]
+  // 2. 函数模式：options: (formData) => [{ label: '选项1', value: '1' }]
+  // 3. 对象模式：options: { loader: (formData) => [...], deps: ['field1'], immediate: true }
   vIf?: boolean | ((data?: any) => boolean)  // 条件渲染（v-if）
   vShow?: boolean | ((data?: any) => boolean) // 显示/隐藏（v-show）
   colAttrs?: ColAttrs             // 列布局属性（ElCol 属性）
@@ -199,6 +203,7 @@ interface ActionConfig {
   vIf?: boolean | ((data?: any) => boolean)  // 是否显示操作区域
   vShow?: boolean | ((data?: any) => boolean) // 显示/隐藏操作区域
   buttons?: ActionConfigButtons[]            // 按钮列表
+  expand?: ExpandRule                        // 默认展开规则（仅在 buttons 包含 'expand' 时生效）
 }
 ```
 
@@ -210,6 +215,7 @@ interface ActionConfig {
 - `'reset'` - 重置按钮
 - `'search'` - 搜索按钮
 - `'cancel'` - 取消按钮
+- `'expand'` - 展开/折叠按钮（仅在 `inline` 模式下可用）
 
 #### 自定义按钮
 
@@ -316,6 +322,11 @@ const onSubmit = () => {
 
 表单支持展开/折叠功能，可以控制表单项的显示和隐藏，适用于字段较多的表单场景。
 
+**重要说明**：
+- 展开/折叠功能仅在 `inline` 模式下可用（`inline: true`）
+- 通过 `actionConfig.buttons` 包含 `'expand'` 来启用展开/折叠功能
+- 通过 `actionConfig.expand` 配置展开规则
+
 #### 基础用法
 
 ```vue
@@ -323,10 +334,12 @@ const onSubmit = () => {
   <WForm
     :model="form"
     :form-items="formItems"
-    :expand-config="{
-      enabled: true,
-      defaultExpandCount: 3,
-      togglePosition: 'bottom',
+    inline
+    :action-config="{
+      buttons: ['expand', 'search', 'reset'],
+      expand: {
+        count: 3, // 默认展开前 3 个字段
+      },
     }"
   />
 </template>
@@ -334,53 +347,37 @@ const onSubmit = () => {
 
 #### 配置说明
 
+展开规则通过 `actionConfig.expand` 配置，支持三种配置方式：
+
+| 配置方式 | 说明 | 类型 | 示例 |
+| --- | --- | --- | --- |
+| `count` | 按字段数量展开（从第一个开始） | `{ count: number }` | `{ count: 3 }` |
+| `include` | 指定展示的字段（白名单，字段 prop 数组） | `{ include: string[] }` | `{ include: ['field1', 'field2'] }` |
+| `exclude` | 指定折叠的字段（黑名单，字段 prop 数组） | `{ exclude: string[] }` | `{ exclude: ['field3', 'field4'] }` |
+
+**配置优先级**：`exclude` > `include` > `count`
+
+#### 展开规则高级配置
+
+展开规则还支持以下高级配置：
+
 | 配置项 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| enabled | 是否启用展开/折叠功能 | `boolean` | `false` |
-| defaultExpandCount | 默认展开的字段数量（从第一个开始） | `number` | - |
-| defaultExpandRows | 默认展开的行数（根据布局计算） | `number` | - |
-| include | 指定展示的字段（白名单，字段 prop 数组） | `string[]` | - |
-| exclude | 指定折叠的字段（黑名单，字段 prop 数组） | `string[]` | - |
-| togglePosition | 按钮位置 | `'top' \| 'bottom' \| 'action'` | `'bottom'` |
-| toggleConfig | 按钮配置 | `ExpandToggleConfig` | - |
-| animationConfig | 动画配置 | `ExpandAnimationConfig` | - |
-| autoExpandOnError | 验证错误时是否自动展开包含错误字段的区域 | `boolean` | `true` |
-| persist | 是否持久化展开状态到 localStorage（传字符串作为存储 key） | `string` | - |
+| `autoExpandOnHover` | 是否启用鼠标悬停自动展开功能 | `boolean` | `false` |
+| `scrollOnToggle` | 是否在展开/收起后自动滚动到表单中心 | `boolean` | `false` |
+| `scrollIntoViewOptions` | 自定义滚动选项（仅在 `scrollOnToggle` 为 true 时生效） | `ScrollIntoViewOptions` | `{ behavior: 'smooth', block: 'center', inline: 'nearest' }` |
 
-**优先级说明**：`exclude` > `include` > `defaultExpandRows` > `defaultExpandCount`
-
-#### 按钮配置
-
-按钮默认只显示图标，可以通过 `toggleConfig` 自定义图标和样式：
+**使用示例**：
 
 ```typescript
-const expandConfig: ExpandConfig = {
-  enabled: true,
-  toggleConfig: {
-    expandIcon: ArrowDown,
-    collapseIcon: ArrowUp,
-    buttonType: 'text',
-    buttonSize: 'default',
+const actionConfig: ActionConfig = {
+  buttons: ['expand', 'search', 'reset'],
+  expand: {
+    count: 3, // 默认展开前 3 个字段
+    autoExpandOnHover: true, // 鼠标悬停时自动展开
+    scrollOnToggle: true, // 展开/收起后自动滚动
   },
 }
-```
-
-如需自定义按钮样式（如文字、图标+文字等），请使用 `#expand-toggle` 插槽：
-
-```vue
-<template>
-  <WForm
-    :model="form"
-    :form-items="formItems"
-    :expand-config="{ enabled: true }"
-  >
-    <template #expand-toggle="{ expanded, toggle }">
-      <el-button type="success" :icon="expanded ? ArrowUp : ArrowDown" @click="toggle()">
-        {{ expanded ? '收起高级搜索' : '展开高级搜索' }}
-      </el-button>
-    </template>
-  </WForm>
-</template>
 ```
 
 #### 受控模式
@@ -393,10 +390,14 @@ const expandConfig: ExpandConfig = {
     v-model:expanded="isExpanded"
     :model="form"
     :form-items="formItems"
-    :expand-config="{ enabled: true }"
+    inline
+    :action-config="{
+      buttons: ['expand', 'search', 'reset'],
+      expand: { count: 3 },
+    }"
   />
-  <el-button @click="formRef?.toggleExpanded(true)">展开</el-button>
-  <el-button @click="formRef?.toggleExpanded(false)">折叠</el-button>
+  <el-button @click="formRef?.toggleExpand(true)">展开</el-button>
+  <el-button @click="formRef?.toggleExpand(false)">折叠</el-button>
 </template>
 
 <script setup lang="ts">
@@ -405,49 +406,36 @@ const formRef = ref<InstanceType<typeof WForm>>()
 
 // 或者使用组件暴露的方法
 function toggle() {
-  formRef.value?.toggleExpanded() // 切换
-  formRef.value?.toggleExpanded(true) // 展开
-  formRef.value?.toggleExpanded(false) // 折叠
+  formRef.value?.toggleExpand() // 切换
+  formRef.value?.toggleExpand(true) // 展开
+  formRef.value?.toggleExpand(false) // 折叠
+}
+
+// 或者直接使用 v-model:expanded
+function toggleExpanded() {
+  isExpanded.value = !isExpanded.value
 }
 </script>
 ```
 
-#### 状态持久化
-
-```typescript
-const expandConfig: ExpandConfig = {
-  enabled: true,
-  persist: 'my-form-expand-state', // 使用唯一的 key，避免多个表单实例冲突
-}
-```
-
-**注意**：确保 `persist` 的 key 具有唯一性，避免多个表单实例互相影响。
-
-#### 验证错误自动展开
-
-当表单验证失败时，如果错误字段在折叠区域，表单会自动展开并滚动到错误字段：
-
-```typescript
-const expandConfig: ExpandConfig = {
-  enabled: true,
-  autoExpandOnError: true, // 默认 true
-}
-```
-
 #### 自定义按钮
 
-使用 `expand-toggle` 插槽自定义按钮：
+使用 `expand-toggle` 插槽自定义展开/折叠按钮：
 
 ```vue
 <template>
   <WForm
     :model="form"
     :form-items="formItems"
-    :expand-config="{ enabled: true }"
+    inline
+    :action-config="{
+      buttons: ['expand', 'search', 'reset'],
+      expand: { count: 3 },
+    }"
   >
     <template #expand-toggle="{ expanded, toggle }">
-      <el-button @click="toggle()">
-        {{ expanded ? '收起' : '展开' }}
+      <el-button type="success" :icon="expanded ? ArrowUp : ArrowDown" @click="toggle()">
+        {{ expanded ? '收起高级搜索' : '展开高级搜索' }}
       </el-button>
     </template>
   </WForm>

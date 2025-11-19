@@ -314,5 +314,6 @@
 
 ## 📚 更多资源
 
+- [Changesets 使用指南](./index.md)
 - [Changesets 官方文档](https://github.com/changesets/changesets)
 - [配置选项参考](https://github.com/changesets/changesets/blob/main/docs/config-file-options.md)

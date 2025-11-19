@@ -66,8 +66,8 @@
   "type": "module",
   
   // 包的版本号，遵循语义化版本（SemVer）规范：主版本号.次版本号.修订号
-  // 0.1.0：主版本号（0）= 不兼容的 API 修改，次版本号（1）= 向下兼容的功能性新增，修订号（0）= 向下兼容的问题修正
-  "version": "0.1.0",
+  // 0.1.3：主版本号（0）= 不兼容的 API 修改，次版本号（1）= 向下兼容的功能性新增，修订号（3）= 向下兼容的问题修正
+  "version": "0.1.3",
   
   // 包的简短描述，用于 npm 搜索和展示（建议不超过 160 个字符）
   "description": "Element Plus Kit - 基于 Element Plus 的 Vue 3 组件集合",
@@ -147,9 +147,10 @@
     // 清理构建输出目录：删除 dist/ 目录及其所有内容，使用跨平台的 Node.js 命令，兼容 Windows、macOS、Linux
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
     
-    // 发布前的自动检查脚本：在发布到 npm 之前自动执行，确保构建和类型检查都通过
-    // 如果构建或类型检查失败，发布会被阻止，保证发布到 npm 的包质量
-    "prepublishOnly": "pnpm build && pnpm type-check"
+    // 发布前的自动检查脚本：在发布到 npm 之前自动执行，确保类型检查和构建都通过
+    // 如果类型检查或构建失败，发布会被阻止，保证发布到 npm 的包质量
+    // 执行顺序：先类型检查，再构建（类型检查更快，可以提前发现问题）
+    "prepublishOnly": "pnpm type-check && pnpm build"
   },
   
   // 对等依赖：使用此包的项目必须安装的依赖
@@ -187,26 +188,26 @@
     "@vitejs/plugin-vue": "^6.0.1",
     
     // TypeScript 编译器：类型检查、编译 TypeScript 代码
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     
     // 自动导入插件：用于生成自动导入配置，kit 包提供的 ElementPlusKitResolver 同时支持 AutoImport 和 Components
-    "unplugin-auto-import": "^20.1.0",
+    "unplugin-auto-import": "^20.2.0",
     
     // Vue 组件自动导入插件：用于生成组件自动导入配置，kit 包提供 ElementPlusKitResolver 需要此依赖
     "unplugin-vue-components": "^30.0.0",
     
     // 现代前端构建工具：构建、打包、开发服务器
-    "vite": "^7.1.5",
+    "vite": "^7.2.2",
     
     // Vite 的类型定义生成插件：自动生成 TypeScript 类型定义文件（.d.ts），支持多入口点的类型声明合并，确保发布的包包含完整的类型支持
     "vite-plugin-dts": "^4.5.4",
     
     // Vue 3 框架（开发版本）：开发时测试和类型定义
     // 注意：element-plus 和 vue 在 devDependencies 中是开发版本，实际运行时使用 peerDependencies 中的版本
-    "vue": "^3.5.23",
+    "vue": "^3.5.24",
     
     // Vue 3 的 TypeScript 类型检查工具：检查 .vue 文件中的 TypeScript 类型，生成类型定义文件（.d.ts）
-    "vue-tsc": "^3.0.7"
+    "vue-tsc": "^3.1.3"
   },
   
   // 发布配置：指定发布到 npm 时的访问权限
@@ -231,25 +232,13 @@
     "composite": true,
     // 增量编译信息文件路径
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-kit.tsbuildinfo",
-    // 类型库：ES2022 和 DOM API
-    "lib": ["ES2022", "DOM"],
     // 基础路径：当前包目录
     "baseUrl": ".",
     // 根目录：src 目录
     "rootDir": "./src",
-    // 模块系统：ESNext（ES 模块）
-    "module": "ESNext",
-    // 模块解析策略：使用 bundler 模式
-    "moduleResolution": "bundler",
     // 路径别名：清空继承的 paths，强制使用包名导入
     // 配置一致性：与 vite.config.ts 不配置 resolve.alias 保持一致，统一使用包名导入，pnpm workspace 自动解析到工作区内的源码
     "paths": {},
-    // 启用 package.json exports 字段解析
-    "resolvePackageJsonExports": true,
-    // 包含的全局类型定义：Node.js 类型（用于构建工具）
-    "types": ["node"],
-    // 禁止导入 .ts 扩展名（由构建工具处理）
-    "allowImportingTsExtensions": false,
     // 生成类型声明文件（.d.ts）
     "declaration": true,
     // 生成类型声明文件的 source map
@@ -258,9 +247,7 @@
     "noEmit": false,
     // 输出目录：dist
     // 配置一致性：与 package.json 的 exports 路径和 vite.config.ts 的默认输出目录保持一致
-    "outDir": "./dist",
-    // 跳过类型库的类型检查（提升编译速度）
-    "skipLibCheck": true
+    "outDir": "./dist"
   },
   // 项目引用：依赖 form 包（通过 TypeScript Project References 管理类型依赖）
   "references": [
@@ -344,7 +331,8 @@ export default defineConfig({
       // 外部依赖：不打包到库中，由使用者提供（避免重复打包，减小库体积）
       // 配置一致性：与 package.json 的 peerDependencies 和 dependencies 保持一致
       //   - vue 和 element-plus：在 peerDependencies 中声明，由使用者提供
-      //   - @iswangh/element-plus-kit-form 和 @iswangh/element-plus-kit-core：在 dependencies 中声明，但标记为外部依赖，运行时通过包管理器解析
+      //   - @iswangh/element-plus-kit-form：在 dependencies 中声明，但标记为外部依赖，运行时通过包管理器解析
+      //   - @iswangh/element-plus-kit-core：虽然 kit 包不直接依赖 core 包，但 form 包依赖了 core 包，为了确保 core 包不会被意外打包，也将其标记为外部依赖
       external: [
         'vue',
         'element-plus',

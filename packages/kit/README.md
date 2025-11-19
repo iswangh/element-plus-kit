@@ -294,6 +294,7 @@ import type {
   ColAttrs,
   ElFormAttrs,
   EventExtendedParams,
+  ExpandRule,
   FormItem,
   FormItems,
   FormItemSlotScope,

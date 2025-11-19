@@ -1981,6 +1981,8 @@ interface ActionConfig {
   vShow?: boolean | ((data: Record<string, any>) => boolean)
   /** 按钮列表，默认值：`inline` 为 `true` 时 `['search', 'reset']`，`inline` 为 `false` 时 `['submit', 'cancel']` */
   buttons?: ActionConfigButtons[]
+  /** 默认展开规则（仅在 buttons 包含 'expand' 时生效） */
+  expand?: ExpandRule
 }
 ```
 
@@ -1992,6 +1994,7 @@ interface ActionConfig {
 - `'reset'` - 重置按钮
 - `'search'` - 搜索按钮（默认：主要按钮，带搜索图标）
 - `'cancel'` - 取消按钮
+- `'expand'` - 展开/折叠按钮（仅在 `inline` 模式下可用）
 
 ##### 自定义按钮
 
@@ -2023,6 +2026,44 @@ const actionConfig: ActionConfig = {
 
 **注意**：当表单 `inline` 为 `true` 时，默认按钮为 `['search', 'reset']`；当 `inline` 为 `false` 时，默认按钮为 `['submit', 'cancel']`。如果设置了 `actionConfig.buttons`，则使用自定义配置。
 
+##### 展开/折叠功能
+
+展开/折叠功能仅在 `inline` 模式下可用（`inline: true`），通过 `actionConfig.buttons` 包含 `'expand'` 来启用。
+
+**展开规则配置**：
+
+```typescript
+interface ExpandRule {
+  /** 按字段数量展开（从第一个开始） */
+  count?: number
+  /** 指定展示的字段（白名单，字段 prop 数组） */
+  include?: string[]
+  /** 指定折叠的字段（黑名单，字段 prop 数组） */
+  exclude?: string[]
+  /** 是否启用鼠标悬停自动展开功能 */
+  autoExpandOnHover?: boolean
+  /** 是否在展开/收起后自动滚动到表单中心 */
+  scrollOnToggle?: boolean
+  /** 自定义滚动选项（仅在 scrollOnToggle 为 true 时生效） */
+  scrollIntoViewOptions?: ScrollIntoViewOptions
+}
+```
+
+**配置优先级**：`exclude` > `include` > `count`
+
+**使用示例**：
+
+```typescript
+const actionConfig: ActionConfig = {
+  buttons: ['expand', 'search', 'reset'],
+  expand: {
+    count: 3, // 默认展开前 3 个字段
+    autoExpandOnHover: true, // 鼠标悬停时自动展开
+    scrollOnToggle: true, // 展开/收起后自动滚动
+  },
+}
+```
+
 ### Events
 
 **继承 Element Plus Form 事件**：组件继承所有 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-events) 的事件。
@@ -2031,6 +2072,7 @@ const actionConfig: ActionConfig = {
 | --- | --- | --- |
 | change | 表单项值变化事件 | `(extendedParams: EventExtendedParams, value: any)` |
 | action | 操作按钮点击事件 | `(eventName: string)` |
+| expand | 展开状态变化事件 | `(value: boolean)` |
 
 **注意**：
 - `change` 事件的第一个参数固定为 `extendedParams`（包含 `prop`、`index`、`formItem`），第二个参数为变化后的值
@@ -2045,6 +2087,7 @@ const actionConfig: ActionConfig = {
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `action` | 自定义操作按钮区域 | - |
+| `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
 
 **插槽作用域参数 `FormItemSlotScope`**：
 - `value`: 当前表单项组件的值
@@ -2055,3 +2098,4 @@ const actionConfig: ActionConfig = {
 - **自定义组件插槽**：当 `formItem.comp` 为 `custom` 时，可以通过 `{prop}` 插槽名称自定义整个表单项的内容
 - **表单项插槽**：通过 `form-item-{prop}` 可以自定义 `el-form-item` 的插槽（如 `label`、`error` 等）
 - **动态组件插槽**：通过 `{prop}-{slotName}` 可以自定义组件内部的插槽（如 `prefix`、`suffix`、`prepend`、`append` 等）
+- **展开/折叠按钮插槽**：通过 `expand-toggle` 可以自定义展开/折叠按钮的样式和内容

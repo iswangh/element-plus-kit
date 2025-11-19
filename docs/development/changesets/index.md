@@ -152,4 +152,5 @@ pnpm release
 
 - [Changesets 官方文档](https://github.com/changesets/changesets)
 - [常见问题](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
-- [项目规范](../.cursor/rules/001_monorepo_development-standards.mdc)
+- [Changesets 配置说明](./config.md)
+- [项目规范](../../../.cursor/rules/001_monorepo_development-standards.mdc)

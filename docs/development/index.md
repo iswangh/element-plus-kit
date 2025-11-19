@@ -4,10 +4,20 @@
 
 ## 文档索引
 
-- [Core 包开发文档](./core.md)
-- [Form 包开发文档](./form.md)
-- [Kit 包开发文档](./kit.md)
-- [VitePress 自动部署文档](./vitepress-deployment.md)
+### 包开发文档
+
+- [Core 包开发文档](../../packages/core/DEVELOPMENT.md)
+- [Form 包开发文档](../../packages/form/DEVELOPMENT.md)
+- [Kit 包开发文档](../../packages/kit/DEVELOPMENT.md)
+
+### Changesets 版本管理
+
+- [Changesets 使用指南](./changesets/)
+- [Changesets 配置说明](./changesets/config.md)
+
+### VitePress 文档部署
+
+- [VitePress 自动部署文档](./vitepress/deployment.md)
 
 ## 快速链接
 

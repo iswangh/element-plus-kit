@@ -8,6 +8,7 @@ export type {
   ColAttrs,
   ElFormAttrs,
   EventExtendedParams,
+  ExpandRule,
   FormItem,
   FormItemComp,
   FormItemCompAttrs,
