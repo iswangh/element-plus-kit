@@ -1,10 +1,14 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
+/**
+ * @file Form.vue
+ * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
+ */
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
-import { computed, ref, useAttrs, useSlots } from 'vue'
+import { computed, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
@@ -21,7 +25,7 @@ interface Emits {
   <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: EventExtendedParams, value: T[K]): void
   (e: 'action', eventName: string, data?: any): void
   (e: 'search'): void
-  (e: 'reset'): void
+  (e: 'reset', resetData: Record<string, any>): void
   (e: 'submit'): void
   (e: 'cancel'): void
   (e: 'expanded', value: boolean): void
@@ -70,6 +74,10 @@ const attrs = useAttrs()
 
 /**
  * 判断是否为事件属性
+ *
+ * @param key - 属性键名
+ * @param value - 属性值
+ * @returns 是否为事件属性
  */
 function isEventAttribute(key: string, value: unknown): boolean {
   return key.startsWith('on') && typeof value === 'function'
@@ -105,7 +113,7 @@ const isExpanded = ref(false)
  * @param value - 可选，不传参则切换状态，传布尔值则设置状态
  */
 function toggleExpanded(value?: boolean) {
-  isExpanded.value = value === undefined ? !isExpanded.value : value
+  isExpanded.value = value ?? !isExpanded.value
 }
 
 /**
@@ -230,14 +238,103 @@ const layoutComponents = computed(() => ({
 const formRef = ref<FormInstance>()
 
 /**
- * 处理动作按钮事件
+ * 获取所有表单项的 prop 列表
  */
-async function onAction({ eventName}: { eventName: string }) {
+const allFormItemProps = computed(() => props.formItems.map(item => item.prop))
+
+/**
+ * 获取可折叠字段的 prop 列表
+ */
+const collapsedFieldProps = computed(() => {
+  if (!expandEnabled.value)
+    return []
+
+  const expandRule = props.actionConfig?.expand
+  if (!expandRule)
+    return []
+
+  return filteredFormItems.value
+    .map((field, index) => ({ field, index }))
+    .filter(({ field, index }) => {
+      if ('exclude' in expandRule && expandRule.exclude.includes(field.prop))
+        return true
+      if ('include' in expandRule && !expandRule.include.includes(field.prop))
+        return true
+      if ('count' in expandRule && index >= expandRule.count)
+        return true
+      return false
+    })
+    .map(({ field }) => field.prop)
+})
+
+/**
+ * 可折叠字段的初始值快照
+ */
+const collapsedFieldsInitialValues = ref<Record<string, any>>({})
+
+/**
+ * 深拷贝值（仅对对象和数组）
+ *
+ * @param value - 要深拷贝的值
+ * @returns 深拷贝后的值
+ */
+function deepCloneValue<T = Record<string, unknown>>(value: T): T {
+  if (value == null)
+    return value
+  if (typeof value === 'object')
+    return JSON.parse(JSON.stringify(value)) as T
+  return value
+}
+
+/**
+ * 记录可折叠字段的初始值
+ * 在组件挂载时和配置变化时调用
+ */
+function recordInitialValues() {
+  collapsedFieldsInitialValues.value = {}
+  for (const prop of collapsedFieldProps.value) {
+    const value = props.model[prop]
+    collapsedFieldsInitialValues.value[prop] = deepCloneValue(value)
+  }
+}
+
+/**
+ * 获取重置数据（可折叠字段的初始值）
+ *
+ * @returns 可折叠字段的重置数据对象
+ */
+function getResetData(): Record<string, any> {
+  const resetData: Record<string, any> = {}
+  for (const prop of collapsedFieldProps.value) {
+    const initialValue = collapsedFieldsInitialValues.value[prop]
+    resetData[prop] = initialValue != null ? deepCloneValue(initialValue) : undefined
+  }
+  return resetData
+}
+
+/**
+ * 处理重置逻辑（内部使用）
+ * 清除验证状态并重置非可折叠字段
+ */
+function onReset() {
+  formRef.value?.clearValidate?.(collapsedFieldProps.value)
+
+  const nonCollapsedProps = allFormItemProps.value.filter(prop => !collapsedFieldProps.value.includes(prop))
+  if (nonCollapsedProps.length > 0)
+    formRef.value?.resetFields?.(nonCollapsedProps)
+}
+
+/**
+ * 处理动作按钮事件
+ *
+ * @param payload - 事件数据对象
+ * @param payload.eventName - 事件名称
+ */
+async function onAction({ eventName }: { eventName: string }) {
   const validateEvents = ['submit', 'search']
   const resetEvents = ['cancel', 'reset']
 
   // 处理展开/折叠事件
-  // 传递给外界的值使用 isExpanded.value,而不是使用子组件抛出的值
   if (eventName === 'expanded') {
     toggleExpanded()
     emit('expanded', isExpanded.value)
@@ -248,8 +345,18 @@ async function onAction({ eventName}: { eventName: string }) {
   if (validateEvents.includes(eventName))
     await formRef.value?.validate?.()
 
-  if (resetEvents.includes(eventName))
+  if (resetEvents.includes(eventName)) {
+    if (eventName === 'reset') {
+      // reset 事件：传递重置数据给外部处理
+      const resetData = getResetData()
+      onReset()
+      emit('reset', resetData)
+      emit('action', eventName, resetData)
+      return
+    }
+    // cancel 事件：保持原有逻辑
     formRef.value?.resetFields?.()
+  }
 
   emit(eventName as EmitEventName)
   emit('action', eventName)
@@ -257,6 +364,10 @@ async function onAction({ eventName}: { eventName: string }) {
 
 /**
  * 处理表单验证事件
+ *
+ * @param prop - 表单项 prop
+ * @param isValid - 是否有效
+ * @param message - 验证消息
  */
 function onValidate(prop: FormItemProp, isValid: boolean, message: string) {
   emit('validate', prop, isValid, message)
@@ -279,6 +390,20 @@ defineExpose({
   },
   toggleExpanded,
 })
+
+// 组件挂载时记录初始值
+onMounted(() => {
+  recordInitialValues()
+})
+
+// 监听 formItems 或 expand 配置变化，重新记录初始值
+watch(
+  [() => props.formItems, () => props.actionConfig?.expand],
+  () => {
+    recordInitialValues()
+  },
+  { deep: true },
+)
 </script>
 
 <template>
@@ -293,23 +418,49 @@ defineExpose({
       :is="layoutComponents.row"
       v-bind="rowAttrs"
     >
-      <component
-        :is="layoutComponents.col"
-        v-for="(v, i) in visibleFormItems"
-        v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
-        :key="`${v.prop}-${v._originalIndex ?? i}`"
-        v-bind="v.colAttrs"
+      <TransitionGroup
+        v-if="expandEnabled"
+        name="form-item"
+        tag="div"
+        class="form-items-transition"
       >
-        <FormItemComp
-          v-model="model[v.prop]"
-          :form-item="v"
-          :form-data="model"
-          :dynamic-comp-events="dynamicCompEvents"
-          :form-slots="slotsCache"
-          :index="v._originalIndex ?? i"
-          @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
-        />
-      </component>
+        <component
+          :is="layoutComponents.col"
+          v-for="(v, i) in visibleFormItems"
+          v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+          :key="`${v.prop}-${v._originalIndex ?? i}`"
+          v-bind="v.colAttrs"
+        >
+          <FormItemComp
+            v-model="model[v.prop]"
+            :form-item="v"
+            :form-data="model"
+            :dynamic-comp-events="dynamicCompEvents"
+            :form-slots="slotsCache"
+            :index="v._originalIndex ?? i"
+            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+          />
+        </component>
+      </TransitionGroup>
+      <template v-else>
+        <component
+          :is="layoutComponents.col"
+          v-for="(v, i) in visibleFormItems"
+          v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+          :key="`${v.prop}-${v._originalIndex ?? i}`"
+          v-bind="v.colAttrs"
+        >
+          <FormItemComp
+            v-model="model[v.prop]"
+            :form-item="v"
+            :form-data="model"
+            :dynamic-comp-events="dynamicCompEvents"
+            :form-slots="slotsCache"
+            :index="v._originalIndex ?? i"
+            @change="(extendedParams: EventExtendedParams, value: any) => emit('change', extendedParams, value)"
+          />
+        </component>
+      </template>
       <FormAction
         :inline="mergedAttrs.inline"
         :action-slot="$slots.action"
@@ -320,3 +471,31 @@ defineExpose({
     </component>
   </ElForm>
 </template>
+
+<style lang="scss" scoped>
+.form-items-transition {
+  display: contents;
+}
+
+.form-item-enter-active {
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-item-leave-active {
+  transition:
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-item-enter-from {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.form-item-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>

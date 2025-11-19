@@ -88,8 +88,9 @@ const getBtnAttrs = (btn: ActionConfigButtonItem) => {
         v-if="showExpandButton && inline"
         key="expand"
         v-bind="getBtnAttrs(expandButtonConfig)"
-        :aria-expanded="expanded"
+        :title="expanded ? '收起' : '展开'"
         :aria-label="expanded ? '收起' : '展开'"
+        :aria-expanded="expanded"
         @click="$emit('action', { eventName: 'expanded', data: expanded })"
       >
         <ElIcon class="expand-toggle-icon" :class="{ 'is-expanded': expanded }">
