@@ -10,7 +10,7 @@ import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
 import { useAutoExpandOnHover } from './composables'
-import { DEFAULT_FORM_ATTRS } from './config'
+import { DEFAULT_EXPAND_SCROLL_OPTIONS, DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
 import { debounce, deepCloneValue, hasButtonEvent } from './utils'
@@ -165,11 +165,7 @@ function toggleExpand(value?: boolean) {
     // 等待 DOM 更新和动画完成（动画时长约 250ms）
     nextTick(() => {
       setTimeout(() => {
-        formRef.value?.$el?.scrollIntoView?.(expandRule.scrollIntoViewOptions ?? {
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'nearest',
-        })
+        formRef.value?.$el?.scrollIntoView?.(expandRule.scrollIntoViewOptions ?? DEFAULT_EXPAND_SCROLL_OPTIONS)
       }, 250) // 略大于动画时长，确保动画完成
     })
   }

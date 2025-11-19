@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-explicit-any */
 /**
  * @file debounce.ts
  * @description 防抖工具函数
