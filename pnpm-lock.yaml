@@ -24,8 +24,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@commitlint/config-conventional@20.0.0)
       '@iswangh/eslint-config':
-        specifier: ^0.2.2
-        version: 0.2.2(@typescript-eslint/eslint-plugin@8.46.4(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@unocss/eslint-plugin@66.5.6(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.24)(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.9(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.0)(yaml@2.8.1))
+        specifier: ^0.2.3
+        version: 0.2.3(@typescript-eslint/eslint-plugin@8.46.4(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@unocss/eslint-plugin@66.5.6(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.24)(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.9(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.0)(yaml@2.8.1))
       '@tsconfig/node22':
         specifier: ^22.0.4
         version: 22.0.4
@@ -1136,8 +1136,8 @@ packages:
     peerDependencies:
       '@commitlint/config-conventional': ^20.0.0
 
-  '@iswangh/eslint-config@0.2.2':
-    resolution: {integrity: sha512-8ywPt3aYtSKK4MKwkXCCR9BaKvsLxP5dchsMHqEn9U2s9JDbPDiUmh96Khad+GxK7ARYdeJL7OscQKzwsyOJGg==}
+  '@iswangh/eslint-config@0.2.3':
+    resolution: {integrity: sha512-b2EHZnkdf29Kl49/CWvSqNlhQoFm+Z70bJYPCR1n0OLd40JhGn5bCHgmiz7Y0vuPSOkiKW6o+vDGyFBt+99Opw==}
     peerDependencies:
       '@unocss/eslint-plugin': ^66.0.0
       eslint: ^9.0.0
@@ -5635,7 +5635,7 @@ snapshots:
       '@commitlint/config-conventional': 20.0.0
       jiti: 2.6.1
 
-  '@iswangh/eslint-config@0.2.2(@typescript-eslint/eslint-plugin@8.46.4(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@unocss/eslint-plugin@66.5.6(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.24)(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.9(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.0)(yaml@2.8.1))':
+  '@iswangh/eslint-config@0.2.3(@typescript-eslint/eslint-plugin@8.46.4(@typescript-eslint/parser@8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@unocss/eslint-plugin@66.5.6(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.24)(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.9(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.0)(yaml@2.8.1))':
     dependencies:
       '@antfu/eslint-config': 6.2.0(@unocss/eslint-plugin@66.5.6(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.24)(eslint-plugin-format@1.0.2(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.9(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.0)(yaml@2.8.1))
       eslint: 9.39.1(jiti@2.6.1)
