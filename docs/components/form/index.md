@@ -22,25 +22,17 @@ const form = ref({
 const formItems: FormItems = [
   {
     prop: 'input',
-    label: '输入框',
+    label: '产品名称',
     comp: 'input',
-    compAttrs: {
-      clearable: true,
-    },
   },
   {
     prop: 'inputNumber',
-    label: '数字输入框',
+    label: '库存数量',
     comp: 'input-number',
-    compAttrs: {
-      min: 0,
-      max: 100,
-      step: 1,
-    },
   },
   {
     prop: 'textarea',
-    label: '文本域',
+    label: '产品描述',
     comp: 'input',
     compAttrs: {
       type: 'textarea',
@@ -49,7 +41,7 @@ const formItems: FormItems = [
   },
   {
     prop: 'select',
-    label: '选择器',
+    label: '产品分类',
     comp: 'select',
     compAttrs: {
       options: [
@@ -60,7 +52,7 @@ const formItems: FormItems = [
   },
   {
     prop: 'autocomplete',
-    label: '自动完成',
+    label: '地址搜索',
     comp: 'autocomplete',
     compAttrs: {
       fetchSuggestions: () => [],
@@ -68,9 +60,10 @@ const formItems: FormItems = [
   },
   {
     prop: 'cascader',
-    label: '级联选择器',
+    label: '省市区',
     comp: 'cascader',
     compAttrs: {
+      style: { width: '100%' },
       options: [
         {
           value: 'beijing',
@@ -93,32 +86,37 @@ const formItems: FormItems = [
   },
   {
     prop: 'datePicker',
-    label: '日期选择器',
+    label: '创建日期',
     comp: 'date-picker',
     compAttrs: {
+      style: { width: '100%' },
       type: 'date',
     },
   },
   {
     prop: 'timePicker',
-    label: '时间选择器',
+    label: '开始时间',
     comp: 'time-picker',
-    compAttrs: {},
+    compAttrs: {
+      style: { width: '100%' },
+    },
   },
   {
     prop: 'timeSelect',
-    label: '时间选择',
+    label: '预约时间',
     comp: 'time-select',
-    compAttrs: {},
+    compAttrs: {
+      style: { width: '100%' },
+    },
   },
   {
     prop: 'switch',
-    label: '开关',
+    label: '启用状态',
     comp: 'switch',
   },
   {
     prop: 'radio',
-    label: '单选框',
+    label: '优先级',
     comp: 'radio',
     compAttrs: {
       options: [
@@ -129,7 +127,7 @@ const formItems: FormItems = [
   },
   {
     prop: 'checkbox',
-    label: '复选框',
+    label: '兴趣爱好',
     comp: 'checkbox',
     compAttrs: {
       options: [
@@ -140,27 +138,27 @@ const formItems: FormItems = [
   },
   {
     prop: 'rate',
-    label: '评分',
+    label: '满意度评分',
     comp: 'rate',
   },
   {
     prop: 'slider',
-    label: '滑块',
+    label: '价格区间',
     comp: 'slider',
   },
   {
     prop: 'colorPicker',
-    label: '颜色选择器',
+    label: '主题颜色',
     comp: 'color-picker',
   },
   {
     prop: 'inputTag',
-    label: '标签输入',
+    label: '标签',
     comp: 'input-tag',
   },
   {
     prop: 'transfer',
-    label: '穿梭框',
+    label: '权限分配',
     comp: 'transfer',
     compAttrs: {
       data: [
@@ -169,17 +167,15 @@ const formItems: FormItems = [
         { key: 3, label: '选项3' },
         { key: 4, label: '选项4' },
       ],
-      props: {
-        key: 'key',
-        label: 'label',
-      },
+      props: { key: 'key', label: 'label' },
     },
   },
   {
     prop: 'treeSelect',
-    label: '树形选择器',
+    label: '部门选择',
     comp: 'tree-select',
     compAttrs: {
+      style: { width: '100%' },
       data: [
         {
           value: '1',
@@ -204,102 +200,91 @@ const formItems: FormItems = [
 </script>
 
 <template>
-  <WForm :model="form" :form-items="formItems" />
+  <WForm :model="form" :form-items="formItems" label-width="100px" />
 </template>
+
 ```
 
 :::
 
-## 表单验证
-
-支持 Element Plus 的表单验证规则和自定义验证函数。
+## 插槽使用
 
 :::demo
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
+import { User, Lock, Search } from '@element-plus/icons-vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
-
-// 自定义验证函数：确认密码
-const validateConfirmPassword = (rule: any, value: any, callback: any) => {
-  if (value !== form.value.password) {
-    callback(new Error('两次输入的密码不一致'))
-  }
-  else {
-    callback()
-  }
-}
 
 const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
     comp: 'input',
-    rules: [
-      { required: true, message: '请输入用户名', trigger: 'blur' },
-      { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
-    ],
-    compAttrs: {
-      clearable: true,
-    },
   },
   {
     prop: 'password',
     label: '密码',
     comp: 'input',
-    rules: [
-      { required: true, message: '请输入密码', trigger: 'blur' },
-      { min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' },
-    ],
     compAttrs: {
       type: 'password',
       showPassword: true,
-      clearable: true,
     },
   },
   {
-    prop: 'confirmPassword',
-    label: '确认密码',
+    prop: 'email',
+    label: '邮箱',
     comp: 'input',
-    rules: [
-      { required: true, message: '请再次输入密码', trigger: 'blur' },
-      { validator: validateConfirmPassword, trigger: 'blur' },
-    ],
     compAttrs: {
-      type: 'password',
-      showPassword: true,
-      clearable: true,
+      type: 'email',
     },
   },
+  {
+    prop: 'customField',
+    label: '自定义字段',
+    comp: 'custom',
+  },
 ]
-
-const actionConfig: ActionConfig = {
-  vIf: true, // 当 inline 为 false 时，必须设置为 true，按钮才会显示（当 inline 为 true 时，默认 vIf 为 true）
-  buttons: ['submit', 'cancel'],
-}
-
-const onAction = (eventName: string) => {
-  if (eventName === 'submit') {
-    ElMessage.success('提交成功！')
-    console.log('表单数据:', form.value)
-  }
-  else if (eventName === 'cancel') {
-    ElMessage.info('已取消')
-  }
-}
 </script>
 
 <template>
-  <WForm
-    :model="form"
-    :form-items="formItems"
-    :action-config="actionConfig"
-    @action="onAction"
-  />
+  <WForm :model="form" :form-items="formItems" label-width="100px">
+    <!-- 动态组件插槽：username-prefix -->
+    <template #username-prefix>
+      <el-icon><User /></el-icon>
+    </template>
+
+    <!-- 动态组件插槽：password-prefix -->
+    <template #password-prefix>
+      <el-icon><Lock /></el-icon>
+    </template>
+
+    <!-- 动态组件插槽：email-suffix -->
+    <template #email-suffix>
+      <el-icon><Search /></el-icon>
+    </template>
+
+    <!-- 表单项插槽：form-item-email-label -->
+    <template #form-item-email-label="{ formItem }">
+      <span style="color: #409eff">{{ formItem.label }}（自定义标签）</span>
+    </template>
+
+    <!-- 自定义组件插槽：customField -->
+    <template #customField="{ value, form, formItem }">
+      <el-input
+        v-model="form.customField"
+        placeholder="自定义输入框"
+        clearable
+      >
+        <template #prefix>
+          <el-icon><User /></el-icon>
+        </template>
+      </el-input>
+    </template>
+  </WForm>
 </template>
 ```
 
@@ -307,7 +292,10 @@ const onAction = (eventName: string) => {
 
 ## 条件渲染
 
-使用 `vIf` 或 `vShow` 实现表单项的条件显示。`vIf` 依赖表单内部值，`vShow` 可以依赖外部值。
+使用 `vIf` 或 `vShow` 实现表单项的条件显示。两者都支持布尔值或接收表单数据的函数，函数可以通过参数访问表单数据，也可以通过闭包访问外部值。
+
+- **`vIf`**：条件渲染（v-if），条件为 `false` 时不会渲染 DOM
+- **`vShow`**：显示/隐藏（v-show），条件为 `false` 时隐藏但保留 DOM
 
 :::demo
 
@@ -315,6 +303,7 @@ const onAction = (eventName: string) => {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Document, InfoFilled, Setting } from '@element-plus/icons-vue'
+import type { FormRules } from 'element-plus'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态
@@ -339,16 +328,10 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    // vIf: 依赖表单内部值，条件为 false 时不会渲染 DOM
-    vIf: (data) => data?.hasEmail === true,
-    rules: [
-      { required: true, message: '请输入邮箱', trigger: 'blur' },
-      { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },
-    ],
     compAttrs: {
       type: 'email',
-      clearable: true,
     },
+    vIf: (data) => data?.hasEmail === true,
   },
   {
     prop: 'hasPhone',
@@ -359,27 +342,27 @@ const formItems: FormItems = [
     prop: 'phone',
     label: '手机号',
     comp: 'input',
-    // vShow: 依赖表单内部值，条件为 false 时隐藏但保留 DOM
     vShow: (data) => data?.hasPhone === true,
-    rules: [
-      { required: true, message: '请输入手机号', trigger: 'blur' },
-      { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' },
-    ],
-    compAttrs: {
-      clearable: true,
-    },
   },
   {
     prop: 'address',
     label: '地址',
     comp: 'input',
-    // vShow: 依赖外部值
     vShow: () => externalStatus.value === true,
-    compAttrs: {
-      clearable: true,
-    },
   },
 ]
+
+// 验证规则
+const rules: FormRules = {
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },
+  ],
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' },
+  ],
+}
 </script>
 
 <template>
@@ -433,7 +416,7 @@ const formItems: FormItems = [
           <span class="font-semibold text-base">表单渲染</span>
         </div>
       </template>
-      <WForm :model="form" :form-items="formItems" />
+      <WForm :model="form" :rules="rules" :form-items="formItems" label-width="100px" />
       <el-divider class="my-5" />
       <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md">
         <div class="flex flex-col gap-3">
@@ -473,9 +456,8 @@ const formItems: FormItems = [
 
 :::
 
-## 操作按钮
 
-通过 `actionConfig` 配置表单底部的操作按钮。注意：`action` 事件和 `submit`、`cancel`、`search`、`reset` 事件不能同时使用，因为所有按钮点击都会统一触发一次 `action` 事件。
+## 操作按钮
 
 :::demo
 
@@ -492,9 +474,6 @@ const formItems: FormItems = [
     prop: 'username',
     label: '用户名',
     comp: 'input',
-    compAttrs: {
-      clearable: true,
-    },
   },
   {
     prop: 'email',
@@ -502,13 +481,12 @@ const formItems: FormItems = [
     comp: 'input',
     compAttrs: {
       type: 'email',
-      clearable: true,
     },
   },
 ]
 
 const actionConfig: ActionConfig = {
-  vIf: true, // 当 inline 为 false 时，必须设置为 true，按钮才会显示（当 inline 为 true 时，默认 vIf 为 true）
+  vIf: true, // 当 inline 为 false 时，需要显式设置为 true 才会显示按钮
   buttons: ['submit', 'cancel'],
 }
 
@@ -520,7 +498,7 @@ const onAction = (eventName: string) => {
   else if (eventName === 'cancel') {
     ElMessage.info('已取消')
   }
-  // 所有按钮点击都会触发 action 事件
+  // 所有预设按钮（submit、cancel、search、reset、expand）点击都会触发 action 事件
   console.log('按钮事件:', eventName)
 }
 </script>
@@ -530,6 +508,7 @@ const onAction = (eventName: string) => {
     :model="form"
     :form-items="formItems"
     :action-config="actionConfig"
+    label-width="100px"
     @action="onAction"
   />
 </template>
@@ -538,15 +517,6 @@ const onAction = (eventName: string) => {
 :::
 
 ## 布局配置
-
-通过 `inline` 属性和 `rowAttrs`、`colAttrs` 配置表单布局。
-
-**布局逻辑说明**：
-- 当 `inline` 为 `true` 时，使用 `ElRow` 和 `ElCol` 进行布局
-- 当 `inline` 为 `false`（默认）时：
-  - 如果 `rowAttrs` 对象中有配置项（如 `gutter`、`span` 等），会使用 `ElRow` 和 `ElCol` 进行布局
-  - 如果 `rowAttrs` 没有配置，即使 `formItem` 的 `colAttrs` 有值，也不会使用 `ElCol`，而是使用普通的 `div` 布局
-  - 如果两者都没有配置，则使用普通的 `div` 布局
 
 :::demo
 
@@ -557,7 +527,8 @@ import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
-const formItems: FormItems = [
+// 分栏布局的表单项（配置了 colAttrs）
+const columnFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
@@ -565,7 +536,6 @@ const formItems: FormItems = [
     colAttrs: {
       span: 12,
     },
-    compAttrs: {},
   },
   {
     prop: 'age',
@@ -597,7 +567,37 @@ const formItems: FormItems = [
     colAttrs: {
       span: 12,
     },
-    compAttrs: {},
+  },
+]
+
+// 默认布局的表单项（无 colAttrs）
+const defaultFormItems: FormItems = [
+  {
+    prop: 'name',
+    label: '姓名',
+    comp: 'input',
+  },
+  {
+    prop: 'age',
+    label: '年龄',
+    comp: 'input-number',
+    compAttrs: {
+      min: 0,
+      max: 120,
+    },
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    comp: 'input',
+    compAttrs: {
+      type: 'email',
+    },
+  },
+  {
+    prop: 'phone',
+    label: '手机号',
+    comp: 'input',
   },
 ]
 
@@ -608,13 +608,309 @@ const rowAttrs: RowAttrs = {
 
 <template>
   <div>
-    <h3>非 inline 布局（默认）</h3>
-    <p>通过 rowAttrs 和 colAttrs 配置布局</p>
-    <WForm :model="form" :form-items="formItems" :row-attrs="rowAttrs" />
+    <h3>场景 1：非 inline 模式 + rowAttrs + colAttrs（分栏布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">配置了 rowAttrs 和 colAttrs，表单项按指定列数分布</p>
+    <WForm :model="form" :form-items="columnFormItems" :row-attrs="rowAttrs" />
     
-    <h3 style="margin-top: 40px">inline 布局</h3>
-    <WForm :model="form" :form-items="formItems" inline />
+    <h3 style="margin-top: 40px">场景 2：非 inline 模式 + 无 rowAttrs（默认布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">未配置 rowAttrs，即使设置了 colAttrs 也不会生效，表单项垂直排列</p>
+    <WForm :model="form" :form-items="columnFormItems" />
+    
+    <h3 style="margin-top: 40px">场景 3：inline 模式 + rowAttrs + colAttrs（分栏布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">配置了 rowAttrs 和 colAttrs，表单项在一行内按指定列数分布</p>
+    <WForm :model="form" :form-items="columnFormItems" :row-attrs="rowAttrs" inline />
+    
+    <h3 style="margin-top: 40px">场景 4：inline 模式 + 无 rowAttrs（默认布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">未配置 rowAttrs，表单项在一行内按默认方式排列（colAttrs 不会生效）</p>
+    <WForm :model="form" :form-items="defaultFormItems" inline />
+    
+    <h3 style="margin-top: 40px">场景 5：colAttrs 有配置但 rowAttrs 无配置（不生效）</h3>
+    <p class="text-sm text-gray-600 mb-2">⚠️ 即使设置了 colAttrs，如果 rowAttrs 没有配置，colAttrs 也不会生效</p>
+    <WForm :model="form" :form-items="columnFormItems" />
   </div>
+</template>
+```
+
+:::
+
+### Inline 模式下的展开/收起功能
+
+展开/收起功能仅在 `inline` 模式下可用，通过 `actionConfig.buttons` 包含 `'expand'` 来启用。适用于字段较多、需要默认隐藏部分字段的场景。
+
+#### 基础展开/收起功能
+
+通过 `expand` 配置展开规则，支持三种方式：`count`（按数量）、`include`（白名单）、`exclude`（黑名单）。
+
+##### 使用 count 配置（按数量展开）
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input' },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'phone', label: '手机号', comp: 'input' },
+  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'address', label: '地址', comp: 'input' },
+  { prop: 'city', label: '城市', comp: 'input' },
+]
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 3, // 默认展开前 3 个字段
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="40px"
+    :form-items="formItems"
+    :action-config="actionConfig"
+  />
+</template>
+```
+
+:::
+
+##### 使用 include 配置（白名单）
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input' },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'phone', label: '手机号', comp: 'input' },
+  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'address', label: '地址', comp: 'input' },
+]
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    include: ['name', 'email', 'phone'], // 只展开指定的字段
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="54px"
+    :form-items="formItems"
+    :action-config="actionConfig"
+  />
+</template>
+```
+
+:::
+
+##### 使用 exclude 配置（黑名单）
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input' },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'phone', label: '手机号', comp: 'input' },
+  { prop: 'address', label: '地址', comp: 'input' },
+  { prop: 'city', label: '城市', comp: 'input' },
+  { prop: 'province', label: '省份', comp: 'input' },
+  { prop: 'postcode', label: '邮编', comp: 'input' },
+]
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    exclude: ['address', 'city', 'province', 'postcode'], // 折叠指定的字段
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="54px"
+    :form-items="formItems"
+    :action-config="actionConfig"
+  />
+</template>
+```
+
+:::
+
+##### 分栏布局 + 展开/收起功能
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems, RowAttrs } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 }, colAttrs: { span: 8 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' }, colAttrs: { span: 8 } },
+  { prop: 'phone', label: '手机号', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colAttrs: { span: 8 } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, colAttrs: { span: 8 } },
+  { prop: 'address', label: '地址', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'city', label: '城市', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'province', label: '省份', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'postcode', label: '邮编', comp: 'input', colAttrs: { span: 8 } },
+]
+
+const rowAttrs: RowAttrs = {
+  gutter: 20,
+}
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 6, // 默认展开前 6 个字段（前两行）
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="54px"
+    :form-items="formItems"
+    :row-attrs="rowAttrs"
+    :action-config="actionConfig"
+  />
+</template>
+```
+
+:::
+
+#### 鼠标悬停自动展开
+
+通过 `autoExpandOnHover: true` 启用鼠标悬停自动展开功能。**注意**：此功能仅支持自动展开，不支持自动收起。如果手动点击展开/收起按钮，则会锁定状态，不再受鼠标移入影响。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input' },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'phone', label: '手机号', comp: 'input' },
+  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'address', label: '地址', comp: 'input' },
+  { prop: 'city', label: '城市', comp: 'input' },
+]
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 3,
+    autoExpandOnHover: true, // 启用鼠标悬停自动展开
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="54px"
+    :form-items="formItems"
+    :action-config="actionConfig"
+  />
+</template>
+```
+
+:::
+
+#### 展开/收起自动滚动
+
+通过 `scrollOnToggle: true` 启用展开/收起后自动滚动功能。可以通过 [`scrollIntoViewOptions`](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView) 配置滚动行为，支持自定义滚动位置（`block`）、滚动方式（`behavior`）等选项。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({})
+
+const formItems: FormItems = [
+  { prop: 'name', label: '姓名', comp: 'input' },
+  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'phone', label: '手机号', comp: 'input' },
+  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'address', label: '地址', comp: 'input' },
+  { prop: 'city', label: '城市', comp: 'input' },
+]
+
+const actionConfig: ActionConfig = {
+  buttons: ['search', 'reset', 'expand'],
+  expand: {
+    count: 3,
+    scrollOnToggle: true, // 启用展开/收起后自动滚动
+    scrollIntoViewOptions: {
+      behavior: 'smooth', // 平滑滚动
+      block: 'center', // 滚动到中心位置
+      inline: 'nearest', // 水平方向最近位置
+    },
+  },
+}
+</script>
+
+<template>
+  <WForm
+    :model="form"
+    inline
+    label-width="54px"
+    :form-items="formItems"
+    :action-config="actionConfig"
+  />
 </template>
 ```
 
@@ -735,13 +1031,7 @@ const onChange = (extendedParams: any, value: any) => {
 
 ### 对象模式
 
-使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。
-
-**自动清理逻辑说明**：
-- 当依赖字段变化导致选项更新时，组件会**智能检查**当前值是否在新的选项中
-- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**（支持用户在 `change` 事件中设置的默认值）
-- **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
-- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理（如 `form.value.tags = undefined`）
+使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。关于依赖变更时的自动清理逻辑，详见 [依赖变更特别注意](#依赖变更特别注意)。
 
 :::demo
 
@@ -1288,14 +1578,16 @@ const onChange = (extendedParams: any, value: any) => {
 
 ### Attributes
 
-**继承 Element Plus Form 属性**：组件继承所有 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-attributes) 的属性。
+支持 [`ElForm`](https://element-plus.org/zh-CN/component/form#form-attributes) 所有的属性。
+
+**拓展属性**：
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| model | 表单数据对象 | `Record<string, any>` | `{}` |
 | formItems | 表单项配置数组，详见 [FormItem 配置](#formitem-配置) | `FormItems` | `[]` |
-| rowAttrs | 行布局属性（ElRow 属性） | `RowAttrs` | `{}` |
-| actionConfig | 操作按钮配置，详见 [ActionConfig 配置](#actionconfig-配置) | `ActionConfig` | `{}` |
+| rowAttrs | 行布局属性，详见 [rowAttrs 配置](#rowattrs-配置) | `RowAttrs` | `{}` |
+| actionConfig | 操作按钮配置，详见 [actionConfig 配置](#actionconfig-配置) | `ActionConfig` | `{}` |
+| expanded | 展开/折叠状态（双向绑定，仅在 `inline` 模式下且 `actionConfig.buttons` 包含 `'expand'` 时可用） | `boolean` | `false` |
 
 #### FormItem 配置
 
@@ -1303,781 +1595,161 @@ const onChange = (extendedParams: any, value: any) => {
 
 ##### 基础配置
 
-```typescript
-interface FormItem<C extends FormItemComp = FormItemComp> extends ElFormItemAttrs {
-  /** 表单字段名（必填） */
-  prop: string
-  /** 组件类型（必填） */
-  comp: FormItemComp
-  /** 组件属性配置，根据组件类型自动推断 */
-  compAttrs?: FormItemCompAttrs<C>
-  /** 条件渲染（v-if），支持布尔值或接收表单数据的函数，依赖表单内部值 */
-  vIf?: boolean | ((data: Record<string, any>) => boolean)
-  /** 显示/隐藏（v-show），支持布尔值或接收表单数据的函数，可以依赖外部值 */
-  vShow?: boolean | ((data: Record<string, any>) => boolean)
-  /** 列布局属性（ElCol 属性） */
-  colAttrs?: ColAttrs
-  /** 验证规则 */
-  rules?: FormRules
-  // ... 其他 ElFormItem 属性（如 label、required、error 等）
-}
-```
+支持 [`ElFormItem`](https://element-plus.org/zh-CN/component/form#formitem-api) 所有的属性。
+
+**拓展属性**：
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| prop | 表单字段名（必填） | `string` | - |
+| comp | 组件类型（必填） | `FormItemComp` | - |
+| compAttrs | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compAttrs.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>详见 [Options 配置](#options-配置) | `FormItemCompAttrs<C>` | - |
+| vIf | 条件渲染（v-if），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
+| vShow | 显示/隐藏（v-show），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
+| colAttrs | 列布局属性，详见 [`ElCol`](https://element-plus.org/zh-CN/component/layout#col-attributes) 组件属性 | `ColAttrs` | - |
 
 ##### 支持的组件类型
 
 `comp` 字段支持以下组件类型：
 
-- [`input`](https://element-plus.org/zh-CN/component/input.html) - 输入框（支持 `type: 'textarea'` 实现文本域）
-- [`input-number`](https://element-plus.org/zh-CN/component/input-number.html) - 数字输入框
-- [`input-tag`](https://element-plus.org/zh-CN/component/input-tag.html) - 标签输入
-- [`select`](https://element-plus.org/zh-CN/component/select.html) - 选择器
-- [`select-v2`](https://element-plus.org/zh-CN/component/select-v2.html) - 虚拟列表选择器
-- [`autocomplete`](https://element-plus.org/zh-CN/component/autocomplete.html) - 自动完成
-- [`cascader`](https://element-plus.org/zh-CN/component/cascader.html) - 级联选择器
-- [`tree-select`](https://element-plus.org/zh-CN/component/tree-select.html) - 树形选择器
-- [`date-picker`](https://element-plus.org/zh-CN/component/date-picker.html) - 日期选择器
-- [`date-picker-panel`](https://element-plus.org/zh-CN/component/date-picker.html#date-picker-panel-%E6%97%A5%E6%9C%9F%E9%80%89%E6%8B%A9%E9%9D%A2%E6%9D%BF) - 日期选择面板
-- [`time-picker`](https://element-plus.org/zh-CN/component/time-picker.html) - 时间选择器
-- [`time-select`](https://element-plus.org/zh-CN/component/time-select.html) - 时间选择
-- [`switch`](https://element-plus.org/zh-CN/component/switch.html) - 开关
-- [`radio`](https://element-plus.org/zh-CN/component/radio.html) - 单选框（配合 `options` 属性）
-- [`checkbox`](https://element-plus.org/zh-CN/component/checkbox.html) - 复选框（配合 `options` 属性）
-- [`rate`](https://element-plus.org/zh-CN/component/rate.html) - 评分
-- [`slider`](https://element-plus.org/zh-CN/component/slider.html) - 滑块
-- [`color-picker`](https://element-plus.org/zh-CN/component/color-picker.html) - 颜色选择器
-- [`color-picker-panel`](https://element-plus.org/zh-CN/component/color-picker.html#color-picker-panel-%E9%A2%9C%E8%89%B2%E9%80%89%E6%8B%A9%E9%9D%A2%E6%9D%BF) - 颜色选择面板
-- [`transfer`](https://element-plus.org/zh-CN/component/transfer.html) - 穿梭框
-- [`mention`](https://element-plus.org/zh-CN/component/mention.html) - 提及
-- `custom` - 自定义组件（通过插槽实现）
+| 组件类型 | 说明 | 默认值 | 文档链接 |
+| --- | --- | --- | --- |
+| `input` | 输入框（支持 `type: 'textarea'` 实现文本域） | `{ placeholder: '请输入${label}'（动态），clearable: true }` | [Element Plus Input](https://element-plus.org/zh-CN/component/input.html) |
+| `input-number` | 数字输入框 | `{ placeholder: '请输入', clearable: true }` | [Element Plus InputNumber](https://element-plus.org/zh-CN/component/input-number.html) |
+| `input-tag` | 标签输入 | `{ placeholder: '请输入${label}'（动态），clearable: true }` | [Element Plus InputTag](https://element-plus.org/zh-CN/component/input-tag.html) |
+| `select` | 选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true, filterable: true }` | [Element Plus Select](https://element-plus.org/zh-CN/component/select.html) |
+| `select-v2` | 虚拟列表选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true, filterable: true }` | [Element Plus SelectV2](https://element-plus.org/zh-CN/component/select-v2.html) |
+| `autocomplete` | 自动完成 | `{ placeholder: '请输入${label}'（动态），clearable: true }` | [Element Plus Autocomplete](https://element-plus.org/zh-CN/component/autocomplete.html) |
+| `cascader` | 级联选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true, filterable: true }` | [Element Plus Cascader](https://element-plus.org/zh-CN/component/cascader.html) |
+| `tree-select` | 树形选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true, filterable: true }` | [Element Plus TreeSelect](https://element-plus.org/zh-CN/component/tree-select.html) |
+| `date-picker` | 日期选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true }` | [Element Plus DatePicker](https://element-plus.org/zh-CN/component/date-picker.html) |
+| `date-picker-panel` | 日期选择面板 | - | [Element Plus DatePickerPanel](https://element-plus.org/zh-CN/component/date-picker.html#date-picker-panel-%E6%97%A5%E6%9C%9F%E9%80%89%E6%8B%A9%E9%9D%A2%E6%9D%BF) |
+| `time-picker` | 时间选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true }` | [Element Plus TimePicker](https://element-plus.org/zh-CN/component/time-picker.html) |
+| `time-select` | 时间选择 | `{ placeholder: '请选择${label}'（动态），clearable: true }` | [Element Plus TimeSelect](https://element-plus.org/zh-CN/component/time-select.html) |
+| `switch` | 开关 | - | [Element Plus Switch](https://element-plus.org/zh-CN/component/switch.html) |
+| `radio` | 单选框（配合 `options` 属性，实际渲染 [`ElRadioGroup`](https://element-plus.org/zh-CN/component/radio#options-%E5%B1%9E%E6%80%A7)） | - | [Element Plus Radio](https://element-plus.org/zh-CN/component/radio.html) |
+| `checkbox` | 复选框（配合 `options` 属性，实际渲染 [`ElCheckboxGroup`](https://element-plus.org/zh-CN/component/checkbox#options-%E5%B1%9E%E6%80%A7)） | - | [Element Plus Checkbox](https://element-plus.org/zh-CN/component/checkbox.html) |
+| `rate` | 评分 | - | [Element Plus Rate](https://element-plus.org/zh-CN/component/rate.html) |
+| `slider` | 滑块 | - | [Element Plus Slider](https://element-plus.org/zh-CN/component/slider.html) |
+| `color-picker` | 颜色选择器 | - | [Element Plus ColorPicker](https://element-plus.org/zh-CN/component/color-picker.html) |
+| `color-picker-panel` | 颜色选择面板 | - | [Element Plus ColorPickerPanel](https://element-plus.org/zh-CN/component/color-picker.html#color-picker-panel-%E9%A2%9C%E8%89%B2%E9%80%89%E6%8B%A9%E9%9D%A2%E6%9D%BF) |
+| `transfer` | 穿梭框 | - | [Element Plus Transfer](https://element-plus.org/zh-CN/component/transfer.html) |
+| `mention` | 提及 | `{ placeholder: '请输入${label}'（动态），clearable: true }` | [Element Plus Mention](https://element-plus.org/zh-CN/component/mention.html) |
+| `custom` | 自定义组件（通过插槽实现） | - | - |
 
 ##### Options 配置
 
 `compAttrs.options` 支持三种配置模式，适用于不同的使用场景。
 
-| 模式 | 配置方式 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| **静态模式** | 数组 | `any[]` | 直接使用数组配置选项，适用于选项固定的场景 |
-| **函数模式** | 函数 | `Function` | 支持同步和异步函数，通过闭包访问外部依赖（包括 `form` ref），执行时机为**初始化**和**依赖变更** |
-| **对象模式** | 对象 | `Object` | 通过 `loader`、`immediate`、`deps` 配置选项加载行为 |
+| 模式 | 类型 | 说明 |
+| --- | --- | --- |
+| **静态** | `any[]` | 直接使用数组配置选项，适用于选项固定的场景 |
+| **函数** | `(formData: Record<string, any>) => any[] \| Promise<any[]>` | 支持同步和异步函数，通过闭包访问外部依赖（包括 `form` ref），执行时机为**初始化**和**依赖变更** |
+| **对象** | `OptionsConfig` | 通过 `loader`、`immediate`、`deps` 配置选项加载行为 |
 
 **对象模式配置项**：
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `loader` | 选项加载器函数，支持同步和异步 | `Function` | - |
+| `loader` | 选项加载器函数，支持同步和异步 | `(formData: Record<string, any>) => any[] \| Promise<any[]>` | - |
 | `immediate` | 是否立即加载 | `boolean` | `false` |
 | `deps` | 表单字段依赖列表 | `string[]` | `[]` |
 
-**函数模式说明**：
-- 支持同步和异步函数，函数签名：`(formData?: Record<string, any>) => any[] | Promise<any[]>`
-- 通过闭包访问外部依赖（包括 `form` ref），`watchEffect` 会自动追踪依赖变化
-- 可以将 `form` 看作外部依赖，通过 `form.value.xxx` 访问表单字段
-- 执行时机：**初始化**（`watchEffect` 首次执行）和**依赖变更**（函数内部访问的响应式数据变化时）
-
-**对象模式说明**：
-- `loader`：选项加载器函数，支持同步和异步，函数签名：`(formData: Record<string, any>) => any[] | Promise<any[]>`
-- `immediate`：控制是否立即加载，默认值为 `false`（不立即加载）
-- `deps`：声明表单字段依赖，当依赖字段变化时自动重新加载选项
-- `loader` 执行时机受 `immediate` 和 `deps` 控制：
-  - 如果配置了 `deps`：通过 `watch` 监听依赖变化，`immediate` 控制是否立即执行
-  - 如果没有 `deps`：通过 `watchEffect` 追踪外部依赖（闭包访问），`immediate` 控制是否立即执行
+<a id="依赖变更特别注意"></a>
 
 **依赖变更特别注意**：
-- 当依赖字段变化导致选项更新时，组件会**智能检查**当前值是否在新的选项中
-- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**（支持用户在 `change` 事件中设置的默认值）
+- 当依赖字段变化导致选项更新时，组件会**检查**当前值是否在新的选项中
+- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**
 - **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
-- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理（如 `form.value.tags = undefined`）
+- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理。可以在 `change` 事件中根据业务逻辑进行清理（如 `form.value.tags = undefined`）
 
-**三种模式说明**：
+#### rowAttrs 配置
 
-1. **静态模式（数组）**
-   - 直接使用数组配置选项
-   - 适用于选项固定的场景
-   - 示例：`options: [{ label: '选项1', value: '1' }]`
+支持 [`ElRow`](https://element-plus.org/zh-CN/component/layout#row-attributes) 所有的属性。
 
-:::demo 静态模式示例
+**拓展属性**：
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| span | 默认列数（用于 `colAttrs.span` 的默认值） | `number` | - |
 
-const form = ref({})
+#### actionConfig 配置
 
-const formItems: FormItems = [
-  {
-    prop: 'priority',
-    label: '优先级',
-    comp: 'select',
-    compAttrs: {
-      // 静态模式：直接使用数组配置选项
-      options: [
-        { label: '高', value: 'high' },
-        { label: '中', value: 'medium' },
-        { label: '低', value: 'low' },
-      ],
-    },
-  },
-  {
-    prop: 'status',
-    label: '状态',
-    comp: 'select',
-    compAttrs: {
-      // 静态模式：选项固定的场景
-      options: [
-        { label: '待处理', value: 'pending' },
-        { label: '进行中', value: 'processing' },
-        { label: '已完成', value: 'completed' },
-      ],
-    },
-  },
-]
-</script>
+`actionConfig` 用于自定义表单底部的操作按钮。
 
-<template>
-  <WForm :model="form" :form-items="formItems" />
-  <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
-    <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
-    <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
-  </div>
-</template>
-```
+**拓展属性**：
 
-:::
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| vIf | 是否显示操作区域（支持函数动态判断） | `boolean \| ((data?: Record<string, any>) => boolean)` | `inline` 为 `true` 时默认为 `true`，`inline` 为 `false` 时默认为 `false` |
+| vShow | 显示/隐藏操作区域（支持函数动态判断，使用 v-show） | `boolean \| ((data?: Record<string, any>) => boolean)` | `true` |
+| buttons | 按钮列表，详见 [buttons 配置](#buttons-配置) | `ActionConfigButtons[]` | `inline` 为 `true` 时默认为 `['search', 'reset']`，`inline` 为 `false` 时默认为 `['submit', 'cancel']` |
+| expand | 默认展开规则（仅在 `buttons` 包含 `'expand'` 时生效），详见 [expand 配置](#expand-配置) | `ExpandRule` | - |
 
-2. **函数模式**
-   - 支持同步和异步函数
-   - 通过闭包访问外部依赖（包括 `form` ref），`watchEffect` 会自动追踪依赖变化
-   - 可以将 `form` 看作外部依赖，通过 `form.value.xxx` 访问表单字段
-   - 执行时机：**初始化**（`watchEffect` 首次执行）和**依赖变更**（函数内部访问的响应式数据变化时）
-   - **等价于对象模式**：`{ loader: () => [], immediate: true }`（注意：对象模式默认 `immediate: false`，需要显式设置 `immediate: true` 才能达到函数模式的立即加载效果）
-   - 示例：
-     ```typescript
-     options: () => {
-       // 通过闭包访问外部 ref，watchEffect 会自动追踪
-       return userType.value === 'admin' ? adminOptions : userOptions
-     }
-     ```
+##### buttons 配置
 
-:::demo 函数模式示例（外部依赖）
+`buttons` 支持预设按钮字符串或自定义按钮对象。
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+**预设按钮**：
 
-// 外部状态：用户类型
-const userType = ref<'admin' | 'user' | 'guest'>('user')
+| 按钮类型 | 说明 | 默认样式 |
+| --- | --- | --- |
+| `'submit'` | 确认按钮 | 主要按钮（`type: 'primary'`） |
+| `'reset'` | 重置按钮 | 默认按钮（带刷新图标） |
+| `'search'` | 搜索按钮 | 主要按钮（`type: 'primary'`，带搜索图标） |
+| `'cancel'` | 取消按钮 | 默认按钮 |
+| `'expand'` | 展开/折叠按钮 | 文本按钮（`type: 'text'`，仅在 `inline` 模式下可用） |
 
-const adminOptions = [
-  { label: '系统管理', value: 'system' },
-  { label: '用户管理', value: 'user' },
-  { label: '权限管理', value: 'permission' },
-]
+**自定义按钮**：
 
-const userOptions = [
-  { label: '个人信息', value: 'profile' },
-  { label: '我的订单', value: 'orders' },
-  { label: '我的收藏', value: 'favorites' },
-]
+支持 [`ElButton`](https://element-plus.org/zh-CN/component/button.html#button-attributes) 所有的属性。
 
-const guestOptions = [
-  { label: '登录', value: 'login' },
-  { label: '注册', value: 'register' },
-]
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `eventName` | 事件名称（必填） | `string` | - |
+| `label` | 按钮文字 | `string` | - |
 
-const form = ref({})
+##### expand 配置
 
-const formItems: FormItems = [
-  {
-    prop: 'userType',
-    label: '用户类型',
-    comp: 'select',
-    compAttrs: {
-      options: [
-        { label: '管理员', value: 'admin' },
-        { label: '普通用户', value: 'user' },
-        { label: '游客', value: 'guest' },
-      ],
-    },
-  },
-  {
-    prop: 'menu',
-    label: '菜单选项',
-    comp: 'select',
-    compAttrs: {
-      // 函数模式：通过闭包访问外部 ref（外部依赖）
-      // watchEffect 会自动追踪 userType 的变化
-      options: () => {
-        if (userType.value === 'admin')
-          return adminOptions
-        if (userType.value === 'user')
-          return userOptions
-        return guestOptions
-      },
-    },
-  },
-]
+`expand` 用于配置展开/折叠规则，支持三种配置方式：
 
-// 当用户类型字段变化时，同步更新外部状态
-const onChange = (extendedParams: any, value: any) => {
-  if (extendedParams.prop === 'userType')
-    userType.value = value as 'admin' | 'user' | 'guest'
-}
-</script>
-
-<template>
-  <div>
-    <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded flex items-center gap-3">
-      <strong>外部状态：</strong>
-      <el-tag :type="userType === 'admin' ? 'danger' : userType === 'user' ? 'success' : 'info'">
-        {{ userType === 'admin' ? '管理员' : userType === 'user' ? '普通用户' : '游客' }}
-      </el-tag>
-      <el-button size="small" @click="userType = userType === 'admin' ? 'user' : userType === 'user' ? 'guest' : 'admin'">
-        切换用户类型
-      </el-button>
-      <span class="text-xs text-gray-600 dark:text-gray-400">切换后，菜单选项会自动更新</span>
-    </div>
-    <WForm :model="form" :form-items="formItems" @change="onChange" />
-    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
-      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
-      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
-    </div>
-  </div>
-</template>
-```
-
-:::
-
-3. **对象模式**
-   - `loader`：选项加载器函数，支持同步和异步
-   - `immediate`：控制是否立即加载，默认值为 `false`（不立即加载）
-   - `deps`：声明表单字段依赖，当依赖字段变化时自动重新加载选项，默认值为 `[]`（空数组，不依赖表单字段）
-   - `loader` 执行时机受 `immediate` 和 `deps` 控制：
-     - 如果配置了 `deps`：通过 `watch` 监听依赖变化，`immediate` 控制是否立即执行
-     - 如果没有 `deps`：通过 `watchEffect` 追踪外部依赖（闭包访问），`immediate` 控制是否立即执行
-   - 适用于需要声明表单字段依赖的场景
-   - 示例：
-     ```typescript
-     options: {
-       loader: (formData) => {
-         // 可以通过 formData 访问表单字段（内部依赖）
-         // 可以通过闭包访问外部 ref（外部依赖，watchEffect 会自动追踪）
-         return getOptionsByFormData(formData)
-       },
-       deps: ['field1', 'field2'],  // 表单字段依赖（可选）
-       immediate: true,              // 立即加载（可选，默认 false，需显式设置）
-     }
-     ```
-
-:::demo 对象模式示例（基础用法）
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
-
-const form = ref({})
-
-const formItems: FormItems = [
-  {
-    prop: 'priority',
-    label: '优先级',
-    comp: 'select',
-    compAttrs: {
-      // 对象模式：基础用法
-      options: {
-        loader: () => {
-          // 可以在这里进行异步操作
-          return [
-            { label: '高', value: 'high' },
-            { label: '中', value: 'medium' },
-            { label: '低', value: 'low' },
-          ]
-        },
-        immediate: true, // 立即加载（需显式设置，默认 false）
-      },
-    },
-  },
-]
-</script>
-
-<template>
-  <WForm :model="form" :form-items="formItems" />
-  <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
-    <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
-    <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
-  </div>
-</template>
-```
-
-:::
-
-**依赖说明**：
-
-- **表单字段依赖**：通过 `deps` 配置声明，当依赖字段变化时自动重新加载选项
-- **外部状态依赖**：通过闭包访问外部 ref，`watchEffect` 会自动追踪外部状态变化
-- **组合依赖**：可以同时使用表单字段依赖和外部状态依赖
-
-:::demo 对象模式示例（内部依赖 - deps 配置）
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
-
-// 模拟数据
-const provinces = [
-  { label: '北京市', value: '1' },
-  { label: '上海市', value: '2' },
-  { label: '广东省', value: '3' },
-  { label: '浙江省', value: '4' },
-]
-
-const cities = [
-  { label: '北京市', value: '1-1' },
-  { label: '上海市', value: '2-1' },
-  { label: '广州市', value: '3-1' },
-  { label: '深圳市', value: '3-2' },
-  { label: '珠海市', value: '3-3' },
-  { label: '杭州市', value: '4-1' },
-  { label: '宁波市', value: '4-2' },
-  { label: '温州市', value: '4-3' },
-]
-
-const districts = [
-  { label: '东城区', value: '1-1-1' },
-  { label: '西城区', value: '1-1-2' },
-  { label: '黄浦区', value: '2-1-1' },
-  { label: '徐汇区', value: '2-1-2' },
-  { label: '荔湾区', value: '3-1-1' },
-  { label: '越秀区', value: '3-1-2' },
-  { label: '罗湖区', value: '3-2-1' },
-  { label: '福田区', value: '3-2-2' },
-  { label: '香洲区', value: '3-3-1' },
-  { label: '斗门区', value: '3-3-2' },
-  { label: '上城区', value: '4-1-1' },
-  { label: '下城区', value: '4-1-2' },
-  { label: '海曙区', value: '4-2-1' },
-  { label: '江北区', value: '4-2-2' },
-  { label: '鹿城区', value: '4-3-1' },
-  { label: '龙湾区', value: '4-3-2' },
-]
-
-const form = ref({})
-
-const formItems: FormItems = [
-  {
-    prop: 'province',
-    label: '省份',
-    comp: 'select',
-    compAttrs: {
-      // 静态模式：数组
-      options: provinces,
-    },
-  },
-  {
-    prop: 'city',
-    label: '城市',
-    comp: 'select',
-    compAttrs: {
-      // 对象模式：使用 deps 配置内部依赖
-      options: {
-        loader: (formData) => {
-          const province = formData.province as string | undefined
-          if (!province)
-            return []
-          // value 格式：省份-城市，通过 value 前缀匹配
-          return cities.filter(city => city.value.startsWith(`${province}-`))
-        },
-        deps: ['province'], // 内部依赖：依赖省份字段
-        immediate: true,
-      },
-    },
-  },
-  {
-    prop: 'district',
-    label: '区县',
-    comp: 'select',
-    compAttrs: {
-      // 对象模式：依赖省市，使用 deps 配置内部依赖
-      options: {
-        loader: (formData) => {
-          const city = formData.city as string | undefined
-          if (!city)
-            return []
-          // value 格式：省份-城市-区县，通过 value 前缀匹配
-          return districts.filter(district => district.value.startsWith(`${city}-`))
-        },
-        immediate: true,
-        deps: ['province', 'city'], // 内部依赖：依赖省市字段
-      },
-    },
-  },
-]
-</script>
-
-<template>
-  <div>
-    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-      省份：静态模式（数组） | 城市：对象模式（deps: ['province']） | 区县：对象模式（deps: ['province', 'city']）
-    </p>
-    <WForm :model="form" :form-items="formItems" />
-    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
-      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
-      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
-    </div>
-  </div>
-</template>
-```
-
-:::
-
-:::demo 对象模式示例（混合依赖 - 内部 + 外部）
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
-
-// 外部状态：用户权限级别
-const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
-
-const departments = [
-  { label: '技术部', value: 'tech' },
-  { label: '产品部', value: 'product' },
-  { label: '运营部', value: 'operation' },
-  { label: '市场部', value: 'marketing' },
-]
-
-const techRoles = [
-  { label: '前端开发', value: 'frontend' },
-  { label: '后端开发', value: 'backend' },
-  { label: '全栈开发', value: 'fullstack' },
-  { label: '架构师', value: 'architect' },
-]
-
-const productRoles = [
-  { label: '产品经理', value: 'pm' },
-  { label: '产品助理', value: 'pa' },
-  { label: '产品设计师', value: 'designer' },
-]
-
-// 根据权限级别和部门返回不同的功能选项
-function getFeaturesByPermissionAndDept(permission: string, dept: string) {
-  const features: Record<string, Record<string, any[]>> = {
-    admin: {
-      tech: [
-        { label: '系统配置', value: 'system-config' },
-        { label: '用户管理', value: 'user-management' },
-        { label: '代码审查', value: 'code-review' },
-      ],
-      product: [
-        { label: '产品规划', value: 'planning' },
-        { label: '需求管理', value: 'requirements' },
-        { label: '数据分析', value: 'analytics' },
-      ],
-    },
-    manager: {
-      tech: [
-        { label: '代码审查', value: 'code-review' },
-        { label: '任务分配', value: 'task-assign' },
-      ],
-      product: [
-        { label: '需求管理', value: 'requirements' },
-        { label: '数据分析', value: 'analytics' },
-      ],
-    },
-    user: {
-      tech: [
-        { label: '代码提交', value: 'commit' },
-        { label: '任务查看', value: 'view-tasks' },
-      ],
-      product: [
-        { label: '需求查看', value: 'view-requirements' },
-        { label: '反馈提交', value: 'submit-feedback' },
-      ],
-    },
-  }
-  return features[permission]?.[dept] || []
-}
-
-const form = ref({})
-
-const formItems: FormItems = [
-  {
-    prop: 'department',
-    label: '部门',
-    comp: 'select',
-    compAttrs: {
-      options: departments,
-    },
-  },
-  {
-    prop: 'role',
-    label: '角色',
-    comp: 'select',
-    compAttrs: {
-      // 对象模式：依赖部门字段（内部依赖）
-      options: {
-        loader: (formData) => {
-          const dept = formData.department as string | undefined
-          if (!dept)
-            return []
-          if (dept === 'tech')
-            return techRoles
-          if (dept === 'product')
-            return productRoles
-          return []
-        },
-        deps: ['department'], // 内部依赖：依赖部门字段
-        immediate: true,
-      },
-    },
-  },
-  {
-    prop: 'features',
-    label: '功能权限',
-    comp: 'select',
-    compAttrs: {
-      // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
-      // 注意：配置了 deps 后，内部依赖通过 watch 监听，外部依赖通过 watchEffect 追踪（在 loader 中访问）
-      options: {
-        loader: (formData) => {
-          const dept = formData.department as string | undefined
-          const role = formData.role as string | undefined
-          if (!dept || !role)
-            return []
-          // 通过闭包访问外部 ref：permissionLevel（外部依赖，watchEffect 会自动追踪）
-          // 通过 formData 访问表单字段：department, role（内部依赖，通过 deps 配置）
-          return getFeaturesByPermissionAndDept(permissionLevel.value, dept)
-        },
-        // 配置内部依赖：依赖部门和角色字段（内部依赖变化时触发）
-        // 外部依赖（permissionLevel）通过闭包访问，watchEffect 会自动追踪
-        deps: ['department', 'role'],
-        immediate: true,
-      },
-    },
-  },
-]
-</script>
-
-<template>
-  <div>
-    <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded flex items-center gap-3 flex-wrap">
-      <strong>外部状态（权限级别）：</strong>
-      <el-tag :type="permissionLevel === 'admin' ? 'danger' : permissionLevel === 'manager' ? 'warning' : 'success'">
-        {{ permissionLevel === 'admin' ? '管理员' : permissionLevel === 'manager' ? '经理' : '普通用户' }}
-      </el-tag>
-      <el-button size="small" @click="permissionLevel = permissionLevel === 'admin' ? 'manager' : permissionLevel === 'manager' ? 'user' : 'admin'">
-        切换权限级别
-      </el-button>
-      <span class="text-xs text-gray-600 dark:text-gray-400">切换后，功能权限选项会根据权限级别、部门和角色动态更新</span>
-    </div>
-    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-      部门：静态模式 | 角色：对象模式（deps: ['department']，内部依赖） | 功能权限：对象模式（deps: ['department', 'role']，内部依赖 + 闭包访问 permissionLevel，外部依赖）
-    </p>
-    <WForm :model="form" :form-items="formItems" />
-    <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded">
-      <h3 class="text-sm font-semibold mb-2">表单数据：</h3>
-      <pre class="text-xs">{{ JSON.stringify(form, null, 2) }}</pre>
-    </div>
-  </div>
-</template>
-```
-
-:::
-
-**模式等价关系**：
-
-```typescript
-// 函数模式
-options: () => [{ label: '选项1', value: '1' }]
-
-// 等价于对象模式（显式指定默认值）
-options: {
-  loader: () => [{ label: '选项1', value: '1' }],
-  immediate: true,  // 显式设置为 true（立即加载，默认 false）
-  deps: [],          // 默认值：[]（不依赖表单字段）
-}
-
-// 等价于对象模式（省略默认值）
-options: {
-  loader: () => [{ label: '选项1', value: '1' }],
-  // immediate 默认为 false（不立即加载），deps 默认为 []（不依赖表单字段）
-}
-```
-
-**注意**：函数模式和对象模式都会通过 `watchEffect` 自动追踪外部状态依赖（通过闭包访问的外部 ref）。
-
-##### 使用示例
-
-```typescript
-const formItems: FormItems = [
-  {
-    prop: 'username',
-    label: '用户名',
-    comp: 'input',
-    compAttrs: {
-      clearable: true,
-    },
-    rules: [
-      { required: true, message: '请输入用户名', trigger: 'blur' },
-    ],
-    // 条件渲染：只有当其他字段存在时才显示
-    vIf: (data) => !!data?.otherField,
-    // 列布局：设置占用的列数
-    colAttrs: {
-      span: 12,
-    },
-  },
-  {
-    prop: 'age',
-    label: '年龄',
-    comp: 'input-number',
-    compAttrs: {
-      min: 0,
-      max: 120,
-      step: 1,
-    },
-    colAttrs: {
-      span: 12,
-    },
-  },
-  {
-    prop: 'customField',
-    label: '自定义字段',
-    comp: 'custom', // 使用 custom 类型，通过插槽自定义
-  },
-]
-```
-
-**自定义组件示例**：
-
-```vue
-<template>
-  <WForm :model="form" :form-items="formItems">
-    <!-- 通过 prop 名称自定义组件 -->
-    <template #customField="{ value, form, formItem }">
-      <el-input v-model="form.customField" placeholder="自定义输入框">
-        <template #prefix>
-          <el-icon><User /></el-icon>
-        </template>
-      </el-input>
-    </template>
-  </WForm>
-</template>
-```
-
-#### ActionConfig 配置
-
-`actionConfig` 的配置类型，用于自定义表单底部的操作按钮。
-
-```typescript
-interface ActionConfig {
-  /** 是否显示操作区域（v-if），默认值：`inline`（当 inline 为 true 时，默认显示；当 inline 为 false 时，默认不显示） */
-  vIf?: boolean | ((data: Record<string, any>) => boolean)
-  /** 显示/隐藏操作区域（v-show），默认值：`true` */
-  vShow?: boolean | ((data: Record<string, any>) => boolean)
-  /** 按钮列表，默认值：`inline` 为 `true` 时 `['search', 'reset']`，`inline` 为 `false` 时 `['submit', 'cancel']` */
-  buttons?: ActionConfigButtons[]
-  /** 默认展开规则（仅在 buttons 包含 'expand' 时生效） */
-  expand?: ExpandRule
-}
-```
-
-##### 预设按钮
-
-支持以下预设按钮：
-
-- `'submit'` - 确认按钮（默认：主要按钮）
-- `'reset'` - 重置按钮
-- `'search'` - 搜索按钮（默认：主要按钮，带搜索图标）
-- `'cancel'` - 取消按钮
-- `'expand'` - 展开/折叠按钮（仅在 `inline` 模式下可用）
-
-##### 自定义按钮
-
-```typescript
-interface ActionConfigButtonItem extends Partial<ButtonProps> {
-  /** 按钮文字 */
-  label?: string
-  /** 事件名称（必填） */
-  eventName: string
-}
-```
-
-##### 使用示例
-
-```typescript
-const actionConfig: ActionConfig = {
-  vIf: true, // 必须设置为 true，按钮才会显示
-  buttons: [
-    'submit',
-    'reset',
-    {
-      label: '自定义按钮',
-      eventName: 'custom',
-      type: 'primary',
-    },
-  ],
-}
-```
-
-**注意**：当表单 `inline` 为 `true` 时，默认按钮为 `['search', 'reset']`；当 `inline` 为 `false` 时，默认按钮为 `['submit', 'cancel']`。如果设置了 `actionConfig.buttons`，则使用自定义配置。
-
-##### 展开/折叠功能
-
-展开/折叠功能仅在 `inline` 模式下可用（`inline: true`），通过 `actionConfig.buttons` 包含 `'expand'` 来启用。
-
-**展开规则配置**：
-
-```typescript
-interface ExpandRule {
-  /** 按字段数量展开（从第一个开始） */
-  count?: number
-  /** 指定展示的字段（白名单，字段 prop 数组） */
-  include?: string[]
-  /** 指定折叠的字段（黑名单，字段 prop 数组） */
-  exclude?: string[]
-  /** 是否启用鼠标悬停自动展开功能 */
-  autoExpandOnHover?: boolean
-  /** 是否在展开/收起后自动滚动到表单中心 */
-  scrollOnToggle?: boolean
-  /** 自定义滚动选项（仅在 scrollOnToggle 为 true 时生效） */
-  scrollIntoViewOptions?: ScrollIntoViewOptions
-}
-```
+| 配置方式 | 说明 | 类型 | 示例 |
+| --- | --- | --- | --- |
+| count | 按字段数量展开（从第一个开始） | `{ count: number } & ExpandRuleBase` | `{ count: 3 }` |
+| include | 指定展示的字段（白名单，字段 prop 数组） | `{ include: string[] } & ExpandRuleBase` | `{ include: ['field1', 'field2'] }` |
+| exclude | 指定折叠的字段（黑名单，字段 prop 数组） | `{ exclude: string[] } & ExpandRuleBase` | `{ exclude: ['field3', 'field4'] }` |
 
 **配置优先级**：`exclude` > `include` > `count`
 
-**使用示例**：
+**ExpandRuleBase 基础配置**：
 
-```typescript
-const actionConfig: ActionConfig = {
-  buttons: ['expand', 'search', 'reset'],
-  expand: {
-    count: 3, // 默认展开前 3 个字段
-    autoExpandOnHover: true, // 鼠标悬停时自动展开
-    scrollOnToggle: true, // 展开/收起后自动滚动
-  },
-}
-```
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoExpandOnHover | 是否启用鼠标悬停自动展开功能 | `boolean` | `false` |
+| scrollOnToggle | 是否在展开/收起后自动滚动到表单中心 | `boolean` | `false` |
+| scrollIntoViewOptions | 自定义滚动选项（仅在 `scrollOnToggle` 为 `true` 时生效），详见 [`scrollIntoViewOptions`](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView) 文档 | `ScrollIntoViewOptions` | `{ behavior: 'smooth', block: 'center', inline: 'nearest' }` |
 
 ### Events
 
-**继承 Element Plus Form 事件**：组件继承所有 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-events) 的事件。
+支持 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-events) 所有的事件。
 
-| 事件名 | 说明 | 参数 |
+**拓展事件**：
+
+| 事件名 | 说明 | 类型 |
 | --- | --- | --- |
-| change | 表单项值变化事件 | `(extendedParams: EventExtendedParams, value: any)` |
-| action | 操作按钮点击事件 | `(eventName: string)` |
-| expand | 展开状态变化事件 | `(value: boolean)` |
+| change | 表单项值变化事件 | `<T extends Record<string, any>, K extends keyof T>(extendedParams: EventExtendedParams, value: T[K]) => void` |
+| action | 操作按钮点击事件 | `(eventName: string, data?: unknown) => void` |
+| search | 搜索按钮点击事件 | `() => void` |
+| reset | 重置按钮点击事件 | `(resetData: Record<string, unknown>) => void` |
+| submit | 提交按钮点击事件 | `() => void` |
+| cancel | 取消按钮点击事件 | `() => void` |
+| expand | 展开状态变化事件 | `(value: boolean) => void` |
+| `@{EventName}` | 动态组件事件（如 `@input`、`@focus`、`@blur` 等） | `(extendedParams: EventExtendedParams, ...args: any[]) => void` |
 
 **注意**：
-- `change` 事件的第一个参数固定为 `extendedParams`（包含 `prop`、`index`、`formItem`），第二个参数为变化后的值
-- 动态组件的事件（如 `@input`、`@focus`、`@blur` 等）的第一个参数固定为 `extendedParams`，后续参数为原始事件参数
-- `action` 事件和 `submit`、`cancel`、`search`、`reset` 事件不能同时使用，因为所有按钮点击都会统一触发一次 `action` 事件
+- 动态组件的事件（例如 `change`、`input`、`focus`、`blur` 等）的第一个参数固定为 `extendedParams`（包含 `prop`、`index`、`formItem`），后续参数为原始事件参数
+- 预设事件（`@submit`、`@cancel`、`@search`、`@reset`、`@expand`）是为了方便使用而提供的。当点击这些预设按钮时，组件会先触发对应的事件，然后还会统一触发一次 `@action` 事件
+- **不建议同时监听 `@action` 和预设事件**，因为会导致重复处理。如果必须混用，则不能在 `@action` 事件中处理 `eventName` 为这 5 个预设按钮名称（`submit`、`cancel`、`search`、`reset`、`expand`）的逻辑
 
 ### Slots
 
@@ -2087,15 +1759,22 @@ const actionConfig: ActionConfig = {
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `action` | 自定义操作按钮区域 | - |
-| `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
 
 **插槽作用域参数 `FormItemSlotScope`**：
-- `value`: 当前表单项组件的值
-- `form`: 表单数据对象
-- `formItem`: 表单项配置对象
 
-**插槽使用说明**：
-- **自定义组件插槽**：当 `formItem.comp` 为 `custom` 时，可以通过 `{prop}` 插槽名称自定义整个表单项的内容
-- **表单项插槽**：通过 `form-item-{prop}` 可以自定义 `el-form-item` 的插槽（如 `label`、`error` 等）
-- **动态组件插槽**：通过 `{prop}-{slotName}` 可以自定义组件内部的插槽（如 `prefix`、`suffix`、`prepend`、`append` 等）
-- **展开/折叠按钮插槽**：通过 `expand-toggle` 可以自定义展开/折叠按钮的样式和内容
+| 参数 | 说明 | 类型 |
+| --- | --- | --- |
+| `value` | 当前表单项组件的值 | `any` |
+| `form` | 表单数据对象 | `Record<string, any>` |
+| `formItem` | 表单项配置对象 | `FormItem` |
+
+### Methods
+
+支持 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-methods) 所有的方法。
+
+**拓展方法**：
+
+| 方法名 | 说明 | 参数 | 返回值 |
+| --- | --- | --- | --- |
+| `expanded` | 获取当前展开状态（getter） | - | `boolean` |
+| `toggleExpand` | 切换或设置展开/折叠状态 | `(value?: boolean)` | - |

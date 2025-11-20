@@ -113,6 +113,25 @@
   --el-mask-color-extra-light: rgba(0, 0, 0, 0.3);
 }
 
+/* ========== VitePress 内容容器宽度调整 ========== */
+
+:root {
+  --vp-layout-max-width: 100%;
+}
+
+// 调整内容容器的宽度，让中间主体内容区域更宽
+.content-container {
+  // 增大内容容器的最大宽度
+  // 可以根据需要调整，建议值：1200px - 1600px
+  max-width: 100% !important;
+}
+
+/* ========== Element Plus Kit Form 组件样式修复 ========== */
+
+.form-items-transition {
+  display: contents;
+}
+
 /* ========== 社交链接图标颜色优化 ========== */
 
 // 品牌色变量（Sass 变量）

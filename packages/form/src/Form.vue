@@ -51,13 +51,7 @@ interface Slots {
    * 自定义组件插槽
    * @example #custom-field
    */
-  [key: string]: ((props: FormItemSlotScope) => any) | ((props: { expanded: boolean, toggle: (value?: boolean) => void }) => any)
-  /**
-   * 展开/折叠按钮插槽
-   * @example #expand-toggle="{ expanded, toggle }"
-   */
-  // @ts-expect-error - expand-toggle 插槽类型与索引签名不兼容，但运行时正常
-  'expand-toggle'?: (props: { expanded: boolean, toggle: (value?: boolean) => void }) => any
+  [key: string]: (props: FormItemSlotScope) => any
 }
 
 defineOptions({ name: 'WForm' })
@@ -139,7 +133,7 @@ const autoExpandOnHover = computed((): boolean => {
 })
 
 // 鼠标悬停自动展开功能
-const autoExpandHover = useAutoExpandOnHover(
+const { onMouseEnter, onMouseLeave, recordManualToggle } = useAutoExpandOnHover(
   isExpanded,
   autoExpandOnHover,
   (value) => {
@@ -157,7 +151,7 @@ const formRef = ref<FormInstance>()
 function toggleExpand(value?: boolean) {
   const newValue = value ?? !isExpanded.value
   isExpanded.value = newValue
-  autoExpandHover.recordManualToggle(newValue)
+  recordManualToggle()
 
   // 如果启用了自动滚动，在动画完成后滚动到表单中心
   const expandRule = props.actionConfig?.expand
@@ -501,8 +495,8 @@ watch(
         :config="actionConfig"
         :expanded="isExpanded"
         :auto-expand-on-hover="autoExpandOnHover"
-        :on-mouse-enter="autoExpandHover.onMouseEnter"
-        :on-mouse-leave="autoExpandHover.onMouseLeave"
+        :on-mouse-enter="onMouseEnter"
+        :on-mouse-leave="onMouseLeave"
         @action="onAction"
       />
     </component>
