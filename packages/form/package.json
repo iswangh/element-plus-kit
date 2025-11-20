@@ -1,7 +1,7 @@
 {
   "name": "@iswangh/element-plus-kit-form",
   "type": "module",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Element Plus Kit 表单组件包",
   "license": "Apache-2.0",
   "sideEffects": [
