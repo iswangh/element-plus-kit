@@ -95,7 +95,7 @@ const formItems: FormItems = [
 
 const form = ref({})
 
-const onChange = (extendedParams: EventExtendedParams, value: any) => {
+function onChange(extendedParams: EventExtendedParams, value: any) {
   console.log('onChange', extendedParams, value)
   // 当用户类型字段变化时，同步更新外部状态
   if (extendedParams.prop === 'userType')

@@ -52,7 +52,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+function onChange(extendedParams: any, value: any) {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>

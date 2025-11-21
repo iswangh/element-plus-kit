@@ -77,7 +77,7 @@ const formItems: FormItems = [
 
 const form = ref<{ cityCustom?: string }>({})
 
-const onChange = ({ prop }: EventExtendedParams, value: any) => {
+function onChange({ prop }: EventExtendedParams, value: any) {
   console.log('onChange', prop, value)
 
   if (prop === 'province') {
