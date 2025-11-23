@@ -147,7 +147,16 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
   const menuMap = new Map<string, MenuItemType>()
   const rootMenus: MenuItemType[] = []
 
-  // 按路径深度排序（浅层在前），首页始终在第一位
+  // Form 菜单排序优先级
+  const formMenuOrder: Record<string, number> = {
+    basic: 1,
+    layout: 2,
+    actions: 3,
+    options: 4,
+    deps: 5,
+  }
+
+  // 按路径深度排序（浅层在前），首页始终在第一位，form 菜单按自定义顺序排序
   const sortedRoutes = [...routes].sort((a, b) => {
     const fullPathA = getFullPath(a)
     const fullPathB = getFullPath(b)
@@ -158,6 +167,35 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
     if (fullPathB === '/')
       return 1
 
+    // Form 菜单自定义排序
+    const isFormA = fullPathA.startsWith('/form/')
+    const isFormB = fullPathB.startsWith('/form/')
+
+    if (isFormA && isFormB) {
+      const pathPartsA = fullPathA.split('/').filter(Boolean)
+      const pathPartsB = fullPathB.split('/').filter(Boolean)
+
+      // 提取第二级路径（如 basic、layout 等）
+      const secondLevelA = pathPartsA[1]
+      const secondLevelB = pathPartsB[1]
+
+      const orderA = formMenuOrder[secondLevelA] ?? 999
+      const orderB = formMenuOrder[secondLevelB] ?? 999
+
+      // 如果优先级相同，按路径深度排序
+      if (orderA !== orderB)
+        return orderA - orderB
+
+      // 如果深度相同，按路径字符串排序
+      const depthA = pathPartsA.length
+      const depthB = pathPartsB.length
+      if (depthA !== depthB)
+        return depthA - depthB
+
+      return fullPathA.localeCompare(fullPathB)
+    }
+
+    // 非 form 菜单保持原有排序逻辑
     const depthA = fullPathA.split('/').filter(Boolean).length
     const depthB = fullPathB.split('/').filter(Boolean).length
     return depthA - depthB

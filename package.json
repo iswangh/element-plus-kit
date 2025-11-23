@@ -29,7 +29,7 @@
     "@changesets/cli": "^2.29.7",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@eslint/config-inspector": "^1.4.1",
+    "@eslint/config-inspector": "^1.4.2",
     "@iswangh/commitlint-config": "^0.2.0",
     "@iswangh/eslint-config": "^0.2.3",
     "@tsconfig/node22": "^22.0.5",
@@ -47,8 +47,8 @@
     "vite": "^7.2.4",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vitepress": "^1.6.4",
-    "vitest": "^4.0.12",
-    "vue-tsc": "^3.1.4"
+    "vitest": "^4.0.13",
+    "vue-tsc": "^3.1.5"
   },
   "volta": {
     "node": "25.1.0"

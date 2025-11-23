@@ -2,16 +2,20 @@
 description: Element Plus Kit 项目特定开发规范
 globs: 
 alwaysApply: true
+priority: 3  # 优先级，确保规则被正确执行
+tags:
+  - project  # 标记为项目特定
+  - element-plus-kit  # 标记为 Element Plus Kit 相关
 ---
 
 # Element Plus Kit 项目开发规范
 
-> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与通用前端开发规范（000 规范）和 Monorepo 开发规范（001 规范）结合使用。
+> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与通用前端开发规范（000 规范）和 Monorepo 开发规范（002 规范）结合使用。
 
 ## 项目架构概述
 
 ### Monorepo 结构
-- **包管理工具**：pnpm workspace（详细规范请参考 001 规范）
+- **包管理工具**：pnpm workspace（详细规范请参考 002 规范）
 - **包结构说明**：
   - `packages/core`：核心工具函数包，提供基础工具函数和类型定义（无 Vue 组件）
   - `packages/form`：表单组件包，提供表单相关组件和功能（依赖 core）
@@ -45,11 +49,11 @@ kit (依赖 form 和 core)
 - **版本要求**：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines` 字段）
 
 ### 包管理器
-- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（请参考 001 规范）
+- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（请参考 002 规范）
 - **工作区配置**：`pnpm-workspace.yaml` 文件定义工作区包（`packages/*`、`playground`、`docs`）
 
 ### 开发工具
-- **代码规范**：ESLint（基于 @antfu/eslint-config，请参考 000 规范）
+- **代码规范**：ESLint（基于 @iswangh/eslint-config，请参考 000 规范）
 - **构建工具**：Vite（库模式）
 - **Git Hooks**：Husky + lint-staged（请参考 000 规范）
 - **提交规范**：Commitlint（遵循 Conventional Commits 规范，请参考 000 规范）
@@ -92,7 +96,7 @@ kit (依赖 form 和 core)
 ## 包依赖管理
 
 ### 内部依赖
-- **使用 `workspace:*` 协议**（请参考 001 规范）：
+- **使用 `workspace:*` 协议**（请参考 002 规范）：
   ```json
   {
     "dependencies": {
@@ -102,14 +106,14 @@ kit (依赖 form 和 core)
   ```
 
 ### 外部依赖
-- **使用 `peerDependencies` 声明**（请参考 001 规范）
+- **使用 `peerDependencies` 声明**（请参考 002 规范）
 - **版本要求**：
   - Vue: `^3.5.23`
   - Element Plus: `^2.11.7`
 - **重要提示**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
 
 ### 开发依赖
-- **统一放在根目录的 `devDependencies`**（请参考 001 规范）
+- **统一放在根目录的 `devDependencies`**（请参考 002 规范）
 
 ---
 
@@ -144,7 +148,7 @@ kit (依赖 form 和 core)
   - **样式组织**：保持样式文件结构清晰，便于维护和扩展
 
 ### 构建产物
-- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，请参考 001 规范）
+- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，请参考 002 规范）
 - **包含文件**：`.js`、`.d.ts`、`.d.ts.map`
 - **样式文件**：`packages/form/dist/style.css`
 - **多入口支持**：kit 包支持多入口导出（`index` 和 `resolver`）
@@ -157,17 +161,27 @@ kit (依赖 form 和 core)
 ## TypeScript 配置规范
 
 ### 项目引用
-- **使用 TypeScript Project References** 管理包之间的类型依赖（请参考 001 规范）
-- **配置继承**：
-  - **根目录**：`tsconfig.app.json`（基础配置，包含路径别名）
-  - **各包**：继承 `tsconfig.app.json`，启用 `composite: true`
-  - **Playground**：继承 `tsconfig.app.json`，不启用 `composite`
+- **使用 TypeScript Project References** 管理包之间的类型依赖（请参考 002 规范）
+- **配置文件结构**：
+  - **根目录**：
+    - `tsconfig.app.json`：基础配置，包含共享编译器选项和路径别名（用于类型解析）
+    - `tsconfig.json`：Project References 配置，仅包含 `references` 字段，引用所有包
+  - **各包**：
+    - 继承 `tsconfig.app.json`，启用 `composite: true`
+    - 清空继承的 `paths`（包内部不使用路径别名，必须使用包名导入）
+    - 通过 `references` 字段声明依赖关系（如 form 包引用 core 包）
+  - **Playground**：
+    - 继承 `tsconfig.app.json`，不启用 `composite`
+    - 配置自己的 `paths`，用于开发时直接引用包源码（支持 HMR）
 
 ### 类型定义
-- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（请参考 001 规范）
+- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（请参考 002 规范）
 - **类型生成**：构建时自动生成（使用 `vite-plugin-dts` 插件）
 - **类型文件位置**：`dist/` 目录
-- **路径别名**：仅在根目录 `tsconfig.app.json` 中配置，用于类型解析
+- **路径别名**：
+  - **根目录**：`tsconfig.app.json` 中配置，用于类型解析
+  - **Playground**：`playground/tsconfig.json` 中配置，用于开发时直接引用包源码
+  - **各包**：不使用路径别名，必须使用包名导入其他包
 
 ---
 
@@ -185,7 +199,7 @@ kit (依赖 form 和 core)
 - **接口优先**：优先使用 `interface` 定义对象类型（请参考 000 规范）
 
 ### 文件组织规范
-- **包目录结构**：遵循 Monorepo 通用规范（请参考 001 规范）
+- **包目录结构**：遵循 Monorepo 通用规范（请参考 002 规范）
 - **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（请参考 000 规范）
 - **文件命名**：
   - **TypeScript 文件**：`camelCase.ts`
@@ -226,46 +240,23 @@ kit (依赖 form 和 core)
 ### 发布流程
 - **发布顺序**（强制要求）：
   - **顺序规则**：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布
-  - **详细规范**：发布顺序的详细要求请参考 001 规范中的"发布顺序"章节
-  - **自动化**：使用发布工具自动处理依赖顺序，避免手动发布导致的顺序错误
-- **发布命令**：
-  - **单个包发布**：
-    - `pnpm publish:core`：发布 core 包
-    - `pnpm publish:form`：发布 form 包
-    - `pnpm publish:kit`：发布 kit 包
-    - **使用场景**：单独发布某个包，用于快速发布或修复问题
-  - **批量发布**：
-    - **命令**：`pnpm publish:all`（在根目录执行）
-    - **实现方式**：使用 `run-s` 串行执行所有包的发布，确保发布顺序正确
-    - **使用场景**：发布所有包，用于版本更新或功能发布
-  - **分支检查**：
-    - **命令**：`pnpm check:branch`（在根目录执行）
-    - **功能**：单独检查当前分支，验证是否在允许发布的分支上
-    - **使用场景**：发布前手动检查分支，避免在错误分支上发布
-- **发布前检查**（自动执行）：
-  - **分支检查**：
-    - **检查机制**：自动检查当前 Git 分支，只能在 `main` 或 `master` 分支上发布
-    - **实现方式**：通过 `scripts/check-branch.js` 脚本自动检查
-    - **错误处理**：如果当前分支不是允许的分支，发布会被阻止并提示错误信息
-  - **自动构建**：
-    - **执行时机**：自动执行 `prepublishOnly` 钩子
-    - **执行内容**：构建 + 类型检查，确保代码质量和构建产物正确性
-  - **版本检查**：
-    - **检查内容**：确保版本号已更新，符合语义化版本规范
-    - **版本格式**：版本号必须符合 SemVer 规范（详细要求请参考 000 规范）
-  - **依赖检查**：
-    - **检查内容**：确保依赖版本已更新（如果被依赖包版本变化）
-    - **版本匹配**：确保内部依赖版本与工作区包版本一致
-- **分支检查机制**（详细说明）：
-  - **检查范围**：每个发布命令（`publish:core`、`publish:form`、`publish:kit`）都会在执行前自动检查分支
-  - **允许分支**：只能在 `main` 或 `master` 分支上发布，其他分支会被阻止
-  - **错误提示**：如果当前分支不是允许的分支，发布会被阻止并提示清晰的错误信息
-  - **脚本位置**：分支检查脚本位于 `scripts/check-branch.js`
+  - **详细规范**：发布顺序的详细要求请参考 002 规范中的"发布顺序"和"Changesets 发布流程"章节
+  - **自动化**：使用 Changesets 自动处理依赖顺序，避免手动发布导致的顺序错误
+- **发布命令**（使用 Changesets）：
+  - **创建变更集**：`pnpm changeset` - 创建变更集，选择要更新的包和版本类型
+  - **更新版本**：`pnpm version` - 根据变更集自动更新版本号（会自动执行构建）
+  - **发布包**：`pnpm release` - 发布所有包到 npm（会自动检查分支）
+  - **详细说明**：Changesets 的使用方法和工作流请参考 002 规范中的"Changesets 发布流程"章节
 
 ### 版本管理
-- **版本策略**：独立版本（每个包独立管理版本号）（请参考 001 规范）
+- **版本策略**：独立版本（每个包独立管理版本号）（请参考 002 规范）
 - **版本格式**：遵循语义化版本（SemVer）（请参考 000 规范）
-- **版本更新**：使用 `npm version patch/minor/major` 或 `pnpm version patch/minor/major` 更新版本
+- **版本管理工具**：使用 Changesets 管理版本和发布流程
+  - **创建变更集**：`pnpm changeset` - 创建变更集，记录包版本变更
+  - **更新版本**：`pnpm version` - 根据变更集自动更新版本号（会自动执行构建）
+  - **发布包**：`pnpm release` - 发布所有包到 npm（会自动检查分支）
+  - **分支检查**：发布前自动检查当前分支，只能在 `main` 或 `master` 分支上发布
+  - **自动化流程**：Changesets 会自动处理依赖顺序和版本更新
 
 ---
 
@@ -315,8 +306,8 @@ kit (依赖 form 和 core)
 
 ### 构建优化
 - **代码分割**：按需导入，避免全量导入（请参考 000 规范）
-- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（请参考 001 规范）
-- **外部依赖**：使用 `external` 配置，避免打包外部依赖（请参考 001 规范）
+- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（请参考 002 规范）
+- **外部依赖**：使用 `external` 配置，避免打包外部依赖（请参考 002 规范）
 
 ### 运行时优化
 - **按需导入**：组件库支持按需导入
@@ -327,8 +318,8 @@ kit (依赖 form 和 core)
 ## 开发工作流规范
 
 ### 根目录脚本配置
-- **多包脚本管理**：在项目根目录的 `package.json` 中添加运行或打包多个包的脚本（请参考 001 规范）
-- **脚本工具**：使用 `npm-run-all` 和 pnpm filter 功能混用（请参考 001 规范）
+- **多包脚本管理**：在项目根目录的 `package.json` 中添加运行或打包多个包的脚本（请参考 002 规范）
+- **脚本工具**：使用 `npm-run-all2` 和 pnpm filter 功能混用（请参考 002 规范）
 - **脚本示例**：
   ```json
   {

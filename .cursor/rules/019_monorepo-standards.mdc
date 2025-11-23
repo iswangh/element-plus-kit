@@ -2,6 +2,10 @@
 description: Monorepo 开发通用规范
 globs: 
 alwaysApply: true
+priority: 2  # 优先级，确保规则被正确执行
+tags:
+  - monorepo  # 标记为 Monorepo 相关
+  - development  # 标记为开发相关
 ---
 
 # Monorepo 开发通用规范
@@ -48,8 +52,6 @@ alwaysApply: true
   ```yaml
   packages:
     - 'packages/*'
-    - 'apps/*'
-    - 'tools/*'
     - 'playground'
     - 'docs'
   ```
@@ -166,11 +168,18 @@ packages/[package-name]/
 ### 项目引用（Project References）
 - **使用 TypeScript Project References** 管理包之间的类型依赖
 - **配置原则**：
-  - 根目录配置基础 `tsconfig.json`，定义共享配置
-  - 各包继承基础配置，启用 `composite: true`
-  - 通过 `references` 字段声明依赖关系
-  - 使用 `tsBuildInfoFile` 指定增量编译信息文件路径
-  - 确保类型检查时能正确解析跨包类型引用
+  - **根目录配置**：
+    - `tsconfig.app.json`：基础配置，定义共享配置（编译器选项、路径别名等）
+    - `tsconfig.json`：Project References 配置，仅包含 `references` 字段，用于管理包之间的类型依赖关系
+  - **各包配置**：
+    - 继承 `tsconfig.app.json`，启用 `composite: true`
+    - 清空继承的 `paths`（包内部不使用路径别名）
+    - 通过 `references` 字段声明依赖关系
+    - 使用 `tsBuildInfoFile` 指定增量编译信息文件路径（通常放在 `node_modules/.tmp/` 目录）
+  - **Playground 配置**：
+    - 继承 `tsconfig.app.json`，不启用 `composite`
+    - 配置自己的 `paths`，用于开发时直接引用包源码（支持 HMR）
+  - **类型检查**：使用 `vue-tsc --build` 命令，利用 TypeScript Project References 进行类型检查
 
 ### 类型定义导出
 - **导出方式**：
@@ -228,11 +237,31 @@ packages/[package-name]/
     - **独立版本**：每个包独立管理版本号，适用于包之间相对独立的场景
     - **统一版本**：所有包共享版本号，适用于包之间紧密耦合的场景
     - **选择原则**：根据项目实际情况和包之间的耦合程度选择合适的版本策略
+  - **版本管理工具**：
+    - **推荐工具**：Changesets（现代化、易用）、Lerna（成熟稳定）、Rush（企业级）
+    - **Changesets 工作流**（推荐使用）：
+      - **安装**：`pnpm add -D @changesets/cli`
+      - **初始化**：`pnpm changeset init`
+      - **创建变更集**：`pnpm changeset` - 交互式创建变更集
+      - **更新版本**：`pnpm changeset version` - 根据变更集自动更新版本号
+      - **发布包**：`pnpm changeset publish` - 发布所有包到 npm
+      - **配置脚本**：在 `package.json` 中配置 `changeset`、`version`、`release` 脚本
+      - **分支检查**：在 `.changeset/config.json` 中配置 `pre` 钩子，自动检查分支
+      - **优势**：自动处理依赖顺序和版本更新，支持独立版本和统一版本策略
 - **发布顺序**（关键原则）：
   - **依赖顺序**：必须按照依赖顺序发布（从底层到上层），确保依赖包先发布
   - **版本验证**：发布后验证依赖包版本是否正确更新，确保版本号匹配
   - **自动化工具**：使用发布工具（如 changesets、Lerna、Rush）自动处理依赖顺序和版本更新
   - **发布日志**：记录发布日志，包括发布版本、变更内容、发布时间等信息
+- **Changesets 发布流程**（推荐使用）：
+  - **创建变更集**：`pnpm changeset` - 交互式创建变更集，选择要更新的包和版本类型
+  - **更新版本**：`pnpm version` - 根据变更集自动更新版本号（通常配置为 `pnpm build && changeset version`）
+  - **发布包**：`pnpm release` - 发布所有包到 npm（通常配置为 `changeset publish`）
+  - **发布前检查**（自动执行）：
+    - **分支检查**：通过 `.changeset/config.json` 的 `pre` 钩子自动检查分支（只能在 `main` 或 `master` 分支上发布）
+    - **自动构建**：`pnpm version` 会自动执行构建和类型检查
+    - **版本检查**：Changesets 确保版本号符合语义化版本规范
+    - **依赖检查**：Changesets 自动处理依赖版本更新
 
 ---
 
@@ -252,14 +281,14 @@ packages/[package-name]/
   }
   ```
 - **脚本工具**：
-  - **推荐混用**：`npm-run-all` 和 filter 功能配合使用是最佳实践
+  - **推荐混用**：`npm-run-all2`（或 `npm-run-all`）和 filter 功能配合使用是最佳实践
     - **filter 功能**：用于选择要操作的包（批量或单个包）
-    - **npm-run-all**：用于控制多个任务的执行顺序（并行 `run-p` 或串行 `run-s`）
+    - **npm-run-all2**：用于控制多个任务的执行顺序（并行 `run-p` 或串行 `run-s`）
     - **配合示例**：
       - `run-p "dev:packages" "dev:playground"` - 并行执行多个 filter 任务
       - `run-s publish:package-a publish:package-b` - 串行执行多个 filter 任务
       - `pnpm --filter "./packages/*" dev` - 使用 filter 批量操作所有包
-  - **备选方案**：`concurrently` 等工具也可用于并行执行，但 `npm-run-all` 更轻量且功能完善
+  - **备选方案**：`concurrently` 等工具也可用于并行执行，但 `npm-run-all2` 更轻量且功能完善
 - **脚本命名规范**：
   - 使用统一的命名前缀（如 `dev:`、`build:`、`publish:`）
   - 明确区分单个包操作和批量操作
@@ -320,3 +349,74 @@ packages/[package-name]/
 - **发布流程**：自动化版本管理和发布流程，使用发布工具（如 changesets）管理版本变更
 
 ---
+
+## 文档站点规范
+
+### VitePress 文档站点
+- **推荐使用 VitePress**：基于 Vite 的静态站点生成器，提供快速的开发体验和现代化的文档站点
+- **目录结构**：
+  - `docs/` - 文档站点目录
+  - `docs/.vitepress/` - VitePress 配置和主题目录
+  - `docs/.vitepress/config.ts` - VitePress 配置文件
+  - `docs/.vitepress/theme/` - 自定义主题目录
+  - `docs/public/` - 静态资源目录
+- **包配置**：
+  - 在 `docs/package.json` 中配置 VitePress 相关依赖和脚本
+  - 使用 `workspace:*` 协议引用工作区内的包，便于在文档中使用组件
+- **根目录脚本**：
+  - `pnpm docs:dev` - 启动文档开发服务器
+  - `pnpm docs:build` - 构建文档站点
+  - `pnpm docs:preview` - 预览构建后的文档站点
+
+### 可交互式文档
+- **使用 vitepress-theme-demoblock**：提供可交互的组件演示功能
+- **安装依赖**：`pnpm add -D vitepress-theme-demoblock@^3.1.3`
+- **配置插件**：在 VitePress 配置中引入 `demoblockPlugin` 和 `demoblockVitePlugin`
+- **使用方式**：在 Markdown 文件中使用 `:::demo` 语法包裹 Vue 组件代码
+- **优势**：支持实时预览、代码高亮、可编辑运行，提供更好的文档体验
+
+### 文档站点配置
+- **基础配置**：
+  - **Base 路径**：通过环境变量 `VITE_BASE` 控制（本地开发使用 `/`，部署到子目录时使用 `/repo-name/`）
+  - **语言设置**：`lang: 'zh-CN'` 设置文档语言
+  - **排除文件**：使用 `srcExclude` 排除不需要构建的文件（如 `development` 目录）
+- **主题配置**：
+  - **导航栏**：配置 `nav` 数组，定义顶部导航菜单
+  - **侧边栏**：配置 `sidebar` 对象，按路径定义侧边栏菜单结构
+  - **搜索功能**：使用 `provider: 'local'` 启用本地搜索
+  - **社交链接**：配置 `socialLinks` 数组，添加 GitHub、Gitee、npm 等链接
+  - **编辑链接**：配置 `editLink` 对象，提供文档编辑入口
+  - **页脚**：配置 `footer` 对象，显示版权信息
+- **自定义主题**：
+  - **主题文件**：在 `docs/.vitepress/theme/index.ts` 中扩展默认主题
+  - **组件注册**：在 `enhanceApp` 中注册 UI 框架和组件库
+  - **主题同步**：同步 VitePress 暗色模式与 UI 框架主题
+  - **样式定制**：在 `docs/.vitepress/theme/style.scss` 中自定义样式
+- **Vite 配置**：
+  - **路径别名**：配置 `resolve.alias`，便于在文档中引用包源码
+  - **文件系统访问**：配置 `server.fs.allow`，允许访问父目录
+  - **预构建依赖**：配置 `optimizeDeps.include`，提升开发体验
+  - **CSS 预处理器**：支持 Sass/SCSS，配置 `css.preprocessorOptions`
+  - **UnoCSS 集成**：集成 UnoCSS 进行原子化 CSS 处理
+
+### 文档站点构建和部署
+- **构建命令**：
+  - **开发模式**：`pnpm docs:dev` - 启动开发服务器，支持热更新
+  - **生产构建**：`pnpm docs:build` - 构建静态站点，输出到 `.vitepress/dist/`
+  - **预览构建**：`pnpm docs:preview` - 预览构建后的站点
+- **部署配置**：
+  - **GitHub Pages**：使用 GitHub Actions 自动部署
+  - **Base 路径**：部署到子目录时，设置 `VITE_BASE=/repo-name/`
+  - **构建产物**：输出目录为 `docs/.vitepress/dist/`
+  - **环境变量**：通过环境变量控制 base 路径和资源路径
+- **组件注册**（可选）：
+  - **自动注册**：使用 `vitepress-rc` 或自定义脚本自动注册组件
+  - **手动注册**：在 `docs/.vitepress/theme/index.ts` 的 `enhanceApp` 中手动注册组件
+
+### 文档组织规范
+- **目录结构**：
+  - `guide/` - 使用指南（快速开始、安装等）
+  - `components/` - 组件文档（按组件分类）
+  - `development/` - 开发文档（内部文档，可选）
+- **文件命名**：使用 kebab-case，如 `getting-started.md`、`form/index.md`
+- **文档格式**：使用 Markdown 格式，支持 Vue 组件和可交互式演示
