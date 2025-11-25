@@ -26,6 +26,13 @@ export default defineConfig({
       logLevel: 'silent',
     }),
   ],
+  // esbuild 配置：开发时转换和生产构建压缩
+  esbuild: {
+    // 移除所有注释（包括 JSDoc 注释）
+    legalComments: 'none',
+    // 移除 console 和 debugger
+    drop: ['console', 'debugger'],
+  },
   build: {
     // 库模式配置
     lib: {
@@ -48,5 +55,7 @@ export default defineConfig({
         },
       },
     },
+    // 使用 esbuild 进行代码压缩和优化
+    minify: 'esbuild',
   },
 })
