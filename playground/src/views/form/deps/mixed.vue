@@ -2,7 +2,7 @@
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
-import type { EventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit-form'
 
 // 外部状态：用户权限级别
 const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
@@ -182,7 +182,7 @@ const formItems: FormItems = [
 
 const form = ref({})
 
-function onChange(extendedParams: EventExtendedParams, value: any) {
+function onChange(extendedParams: FormItemExtendedEventParams, value: any) {
   console.log('onChange', extendedParams, value)
 }
 </script>

@@ -5,7 +5,7 @@
  * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
  */
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
+import type { ActionConfig, Arrayable, ElFormAttrs, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
@@ -23,7 +23,7 @@ interface Props extends ElFormAttrs {
 
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: EventExtendedParams, value: T[K]): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: FormItemExtendedEventParams, value: T[K]): void
   (e: 'action', eventName: string, data?: unknown): void
   (e: 'search'): void
   (e: 'reset', resetData: Record<string, unknown>): void
@@ -466,7 +466,7 @@ watch(
             :dynamic-comp-events="dynamicCompEvents"
             :form-slots="slotsCache"
             :index="v._originalIndex ?? i"
-            @change="(extendedParams: EventExtendedParams, value: unknown) => emit('change', extendedParams, value)"
+            @change="(extendedParams: FormItemExtendedEventParams, value: unknown) => emit('change', extendedParams, value)"
           />
         </component>
       </TransitionGroup>
@@ -485,7 +485,7 @@ watch(
             :dynamic-comp-events="dynamicCompEvents"
             :form-slots="slotsCache"
             :index="v._originalIndex ?? i"
-            @change="(extendedParams: EventExtendedParams, value: unknown) => emit('change', extendedParams, value)"
+            @change="(extendedParams: FormItemExtendedEventParams, value: unknown) => emit('change', extendedParams, value)"
           />
         </component>
       </template>

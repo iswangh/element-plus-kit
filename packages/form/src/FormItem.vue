@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { Slot } from 'vue'
-import type { EventExtendedParams, FormItem, OptionsConfig, OptionsLoader } from './types'
+import type { FormItem, FormItemExtendedEventParams, OptionsConfig, OptionsLoader } from './types'
 import { ElFormItem } from 'element-plus'
 import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useChangeEventState } from './composables'
@@ -28,7 +28,7 @@ interface Props {
 }
 
 interface Emits {
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: Omit<EventExtendedParams, 'index'>, value: T[K]): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: Omit<FormItemExtendedEventParams, 'index'>, value: T[K]): void
 }
 
 defineOptions({ name: 'ElementPlusKitFormItem' })

@@ -1,13 +1,8 @@
 /* eslint-disable ts/no-explicit-any */
 import type { FormCompConfig } from './common'
-import type { ElColAttrs, ElFormItemAttrs, ElRowAttrs } from './el'
+import type { ElFormItemAttrs } from './el'
+import type { ColAttrs } from './layout'
 import type { GetComponentOptionsType, InferOptionsType, IsOptionsSupported } from './options'
-
-/** Row 布局属性（扩展自 Element Plus Row 组件属性） */
-export type RowAttrs = ElRowAttrs & { span?: number }
-
-/** Col 布局属性（Element Plus Col 组件属性） */
-export type ColAttrs = ElColAttrs
 
 /**
  * 支持的表单组件枚举
@@ -85,27 +80,3 @@ export interface FormItem<
 
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
 export type FormItems = { [K in FormItemComp]: FormItem<K> }[FormItemComp][]
-
-/**
- * 事件拓展参数
- * @template K 属性名类型
- */
-export interface EventExtendedParams<K = string> {
-  prop: K
-  index: number
-  formItem: FormItem
-}
-
-/**
- * 表单项插槽作用域参数
- *
- * @property {any} value 当前表单项组件的值
- * @property {Record<string, any>} form 表单数据
- * @property {FormItem} formItem 表单项配置
- */
-export interface FormItemSlotScope {
-  value: any
-  form: Record<string, any>
-  formItem: FormItem
-  [key: string]: any // 允许 el-form-item 的其他作用域参数
-}

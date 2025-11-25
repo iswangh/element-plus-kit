@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
-import type { EventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit-form'
 
 // 模拟数据
 const provinces = [
@@ -77,7 +77,7 @@ const formItems: FormItems = [
 
 const form = ref<{ cityCustom?: string }>({})
 
-function onChange({ prop }: EventExtendedParams, value: any) {
+function onChange({ prop }: FormItemExtendedEventParams, value: any) {
   console.log('onChange', prop, value)
 
   if (prop === 'province') {
