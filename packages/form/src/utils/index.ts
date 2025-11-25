@@ -1,4 +1,4 @@
 export * from './action'
-export * from './debounce'
+export * from './lodash'
 export * from './options'
 export * from './value'

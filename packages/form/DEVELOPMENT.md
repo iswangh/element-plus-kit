@@ -120,21 +120,27 @@
   
   // 运行时依赖：会被打包进库中
   // workspace:*：Monorepo 工作区协议，表示使用工作区内的 core 包
-  // 此依赖会被打包进最终的库文件中，用户安装 form 包时，core 包也会被安装
+  // lodash-es：工具函数库，提供 cloneDeep、debounce、isEmpty 等方法，替代自定义工具方法实现
+  // 此依赖会被打包进最终的库文件中，用户安装 form 包时，core 包和 lodash-es 也会被安装
   // 为什么使用 workspace 协议：
   //   - 开发时使用源码：开发时直接使用工作区内的源码
   //   - 发布时自动解析：发布到 npm 时，pnpm 会自动解析为正确的版本号
   //   - 避免版本冲突：确保使用工作区内的版本
   // 注意：form 包依赖 core 包，core 包提供工具函数
   // 配置一致性：core 包在 vite.config.ts 的 rollupOptions.external 中也被标记为外部依赖，不会被打包进库中
+  // lodash-es 会被打包进库中，用户无需额外安装
   "dependencies": {
-    "@iswangh/element-plus-kit-core": "workspace:*"
+    "@iswangh/element-plus-kit-core": "workspace:*",
+    "lodash-es": "^4.17.21"
   },
   
   // 开发时依赖：只在开发、构建、测试时需要，不会被打包发布
   "devDependencies": {
     // Element Plus 图标库：用于表单操作按钮的图标，开发时需要，用于类型定义和测试
     "@element-plus/icons-vue": "^2.3.2",
+    
+    // lodash-es 类型声明：为 lodash-es 提供 TypeScript 类型支持，开发时必需
+    "@types/lodash-es": "^4.17.12",
     
     // Vite 的 Vue 插件：用于处理 .vue 文件，构建时必需
     "@vitejs/plugin-vue": "^6.0.1",
@@ -283,6 +289,7 @@ export default defineConfig({
       // 配置一致性：与 package.json 的 peerDependencies 和 dependencies 保持一致
       //   - vue 和 element-plus：在 peerDependencies 中声明，由使用者提供
       //   - @iswangh/element-plus-kit-core：在 dependencies 中声明，但标记为外部依赖，运行时通过包管理器解析
+      //   - lodash-es：在 dependencies 中声明，会被打包进库中，用户无需额外安装（不在 external 中）
       external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
       output: {
         // 全局变量映射（用于 UMD 格式，当前未使用）

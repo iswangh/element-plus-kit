@@ -14,7 +14,7 @@ import { DEFAULT_FORM_PROPS } from './config'
 import { DEFAULT_SCROLL_OPTIONS } from './config/scroll'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
-import { debounce, deepCloneValue, hasButtonEvent } from './utils'
+import { cloneDeep, debounce, hasButtonEvent } from './utils'
 
 interface Props extends ElFormProps {
   formItems: FormItems
@@ -317,7 +317,7 @@ function recordInitialValues() {
   collapsedFieldsInitialValues.value = {}
   for (const prop of collapsedFieldProps.value) {
     const value = props.model[prop]
-    collapsedFieldsInitialValues.value[prop] = deepCloneValue(value)
+    collapsedFieldsInitialValues.value[prop] = cloneDeep(value)
   }
 }
 
@@ -330,7 +330,7 @@ function getResetData(): Record<string, unknown> {
   const resetData: Record<string, unknown> = {}
   for (const prop of collapsedFieldProps.value) {
     const initialValue = collapsedFieldsInitialValues.value[prop]
-    resetData[prop] = initialValue != null ? deepCloneValue(initialValue) : undefined
+    resetData[prop] = initialValue != null ? cloneDeep(initialValue) : undefined
   }
   return resetData
 }

@@ -1,11 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
-
-/**
- * 检查值是否为空
- */
-export function isEmpty(val: any): boolean {
-  return val == null || val === ''
-}
+import { isEmpty } from './lodash'
 
 /**
  * 检查当前值是否在新的选项中
@@ -27,25 +21,4 @@ export function checkValueInOptions(currentValue: any, options: any[]): boolean 
     const optionValue = typeof option === 'object' && option !== null ? option.value : option
     return optionValue === currentValue
   })
-}
-
-/**
- * 深拷贝值（仅对对象和数组）
- *
- * @param value - 要深拷贝的值
- * @returns 深拷贝后的值
- *
- * @example
- * ```typescript
- * const obj = { a: 1, b: { c: 2 } }
- * const cloned = deepCloneValue(obj)
- * cloned.b.c = 3 // 不会影响原对象
- * ```
- */
-export function deepCloneValue<T = Record<string, unknown>>(value: T): T {
-  if (value == null)
-    return value
-  if (typeof value === 'object')
-    return JSON.parse(JSON.stringify(value)) as T
-  return value
 }
