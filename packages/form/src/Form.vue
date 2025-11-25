@@ -322,12 +322,6 @@ function recordInitialValues() {
 }
 
 /**
- * 防抖版本的 recordInitialValues
- * 用于配置变化时的频繁调用优化（延迟 100ms）
- */
-const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
-
-/**
  * 获取重置数据（可折叠字段的初始值）
  *
  * @returns 可折叠字段的重置数据对象
@@ -421,16 +415,12 @@ defineExpose({
 })
 
 // 组件挂载时记录初始值
-onMounted(() => {
-  recordInitialValues()
-})
+onMounted(() => recordInitialValues())
 
 // 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
 watch(
   [() => props.formItems, () => props.actionConfig?.expand],
-  () => {
-    debouncedRecordInitialValues()
-  },
+  debounce(recordInitialValues, 100),
   { deep: true },
 )
 </script>
@@ -448,7 +438,6 @@ watch(
       v-bind="rowProps"
     >
       <TransitionGroup
-        v-if="expandEnabled"
         name="form-item"
         tag="div"
         class="form-items-transition"
@@ -471,25 +460,6 @@ watch(
           />
         </component>
       </TransitionGroup>
-      <template v-else>
-        <component
-          :is="layoutComponents.col"
-          v-for="(v, i) in visibleFormItems"
-          v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
-          :key="`${v.prop}-${v._originalIndex ?? i}`"
-          v-bind="v.colProps"
-        >
-          <FormItemComp
-            v-model="model[v.prop]"
-            :form-item="v"
-            :form-data="model"
-            :dynamic-comp-events="dynamicCompEvents"
-            :form-slots="slotsCache"
-            :index="v._originalIndex ?? i"
-            @change="(extendedParams: FormItemExtendedEventParams, value: unknown) => emit('change', extendedParams, value)"
-          />
-        </component>
-      </template>
       <FormAction
         :inline="mergedAttrs.inline"
         :action-slot="$slots.action"
