@@ -1,5 +1,5 @@
-/* eslint-disable ts/no-explicit-any */
 import type { ButtonProps } from 'element-plus'
+import type { Condition } from './common'
 
 /**
  * 标准化的表单操作按钮配置项
@@ -66,9 +66,9 @@ export type ExpandRule
  */
 export interface ActionConfig {
   /** 是否显示操作区域（支持函数动态判断） */
-  vIf?: boolean | ((data?: any) => boolean)
+  vIf?: Condition
   /** 是否显示操作区域（支持函数动态判断，使用 v-show） */
-  vShow?: boolean | ((data?: any) => boolean)
+  vShow?: Condition
   /** 操作按钮配置数组 */
   buttons?: ActionConfigButtons[]
   /** 默认展开规则（仅在 buttons 包含 'expand' 时生效） */

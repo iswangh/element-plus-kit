@@ -4,27 +4,27 @@ import type { FormItemComp, FormItemCompProps } from './form-item'
 /**
  * 检查组件类型是否包含 options 属性
  * 通过检查组件实例的 $props 中是否包含 'options' 来判断
- * @template C 组件类型
+ * @template T 组件类型
  */
-type HasOptionsProp<C extends FormItemComp> = 'options' extends keyof FormItemCompProps<C>
+type HasOptionsProp<T extends FormItemComp> = 'options' extends keyof FormItemCompProps<T>
   ? true
   : false
 
 /**
  * 判断组件是否支持 options 属性
  * 动态从组件类型定义中判断，不硬编码组件名称
- * @template C 组件类型
+ * @template T 组件类型
  */
-export type IsOptionsSupported<C extends FormItemComp> = HasOptionsProp<C>
+export type IsOptionsSupported<T extends FormItemComp> = HasOptionsProp<T>
 
 /**
  * 支持 options 属性的组件类型
  * 通过类型系统自动提取，不硬编码
  */
-export type OptionsSupportedComp = FormItemComp extends infer C
-  ? C extends FormItemComp
-    ? IsOptionsSupported<C> extends true
-      ? C
+export type OptionsSupportedComp = FormItemComp extends infer T
+  ? T extends FormItemComp
+    ? IsOptionsSupported<T> extends true
+      ? T
       : never
     : never
   : never
@@ -59,26 +59,26 @@ export interface OptionsConfig {
 
 /**
  * 根据组件类型推断 options 类型
- * @template C 组件类型
- * @template T 组件实例类型
+ * @template T 组件类型
+ * @template U 组件实例类型
  */
-export type InferOptionsType<C extends FormItemComp, T = any> = IsOptionsSupported<C> extends true
-  ? T[] | OptionsLoader | OptionsConfig
+export type InferOptionsType<T extends FormItemComp, U = any> = IsOptionsSupported<T> extends true
+  ? U[] | OptionsLoader | OptionsConfig
   : never
 
 /**
  * 获取组件原始的 options 类型
  * 从组件实例的 $props 中提取 options 属性的类型
- * @template C 组件类型
+ * @template T 组件类型
  */
-export type GetComponentOptionsType<C extends FormItemComp> = IsOptionsSupported<C> extends true
-  ? FormItemCompProps<C>['options']
+export type GetComponentOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
+  ? FormItemCompProps<T>['options']
   : never
 
 /**
  * 检查组件类型是否包含 loading 属性
- * @template C 组件类型
+ * @template T 组件类型
  */
-type HasLoadingProp<C extends FormItemComp> = 'loading' extends keyof FormItemCompProps<C>
+type HasLoadingProp<T extends FormItemComp> = 'loading' extends keyof FormItemCompProps<T>
   ? true
   : false
