@@ -44,9 +44,8 @@ const modelValue = defineModel()
 
 /** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
 const formItemProps = computed(() => {
-  const excludedKeysSet = new Set(FORM_ITEM_EXCLUDED_KEYS)
   return Object.fromEntries(
-    Object.entries(props.formItem).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
+    Object.entries(props.formItem).filter(([key]) => !FORM_ITEM_EXCLUDED_KEYS.includes(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
   )
 })
 
@@ -291,11 +290,7 @@ watch(
   () => {
     // 创建一个对象来追踪依赖字段的值，确保 watch 能正确追踪变化
     const deps = optionsDeps.value
-    const result: Record<string, any> = {}
-    for (const dep of deps) {
-      result[dep] = props.formData?.[dep]
-    }
-    return result
+    return Object.fromEntries(deps.map(dep => [dep, props.formData?.[dep]]))
   },
   () => {
     const config = getOptionsConfig()

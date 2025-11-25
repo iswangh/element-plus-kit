@@ -23,11 +23,7 @@ export function processDeps(deps: string[], currentProp?: string): string[] {
  */
 export function getDepsValues(deps: string[], formData: Record<string, any>, currentProp?: string): Record<string, any> {
   const processedDeps = processDeps(deps, currentProp)
-  const result: Record<string, any> = {}
-  for (const dep of processedDeps) {
-    result[dep] = formData[dep]
-  }
-  return result
+  return Object.fromEntries(processedDeps.map(dep => [dep, formData[dep]]))
 }
 
 /**

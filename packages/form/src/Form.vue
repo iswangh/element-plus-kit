@@ -185,16 +185,13 @@ const filteredFormItems = computed(() => {
  * - 保留原始索引信息，用于 shouldCollapseField 等函数
  */
 const visibleFormItems = computed(() => {
-  return filteredFormItems.value
-    .map((v, originalIndex) => ({ ...v, _originalIndex: originalIndex }))
-    .filter((v) => {
-      const originalIndex = v._originalIndex
-      // 如果展开/折叠功能未启用，则显示所有字段
-      if (!expandEnabled.value)
-        return true
-      // 如果功能已启用，则根据展开状态和配置决定是否显示
-      return !shouldCollapseField(v, originalIndex)
-    })
+  const itemsWithIndex = filteredFormItems.value.map((v, originalIndex) => ({ ...v, _originalIndex: originalIndex })) as (FormItems[number] & { _originalIndex: number })[]
+
+  // 如果展开/折叠功能未启用，直接返回所有字段（已添加索引），避免不必要的 filter
+  if (!expandEnabled.value)
+    return itemsWithIndex
+
+  return itemsWithIndex.filter(v => !shouldCollapseField(v, v._originalIndex))
 })
 
 /**
@@ -291,17 +288,8 @@ const collapsedFieldProps = computed(() => {
     return []
 
   return filteredFormItems.value
-    .map((field, index) => ({ field, index }))
-    .filter(({ field, index }) => {
-      if ('exclude' in expandRule && expandRule.exclude.includes(field.prop))
-        return true
-      if ('include' in expandRule && !expandRule.include.includes(field.prop))
-        return true
-      if ('count' in expandRule && index >= expandRule.count)
-        return true
-      return false
-    })
-    .map(({ field }) => field.prop)
+    .filter((field, index) => shouldCollapseField(field, index))
+    .map(field => field.prop)
 })
 
 /**
@@ -314,11 +302,9 @@ const collapsedFieldsInitialValues = ref<Record<string, unknown>>({})
  * 在组件挂载时和配置变化时调用
  */
 function recordInitialValues() {
-  collapsedFieldsInitialValues.value = {}
-  for (const prop of collapsedFieldProps.value) {
-    const value = props.model[prop]
-    collapsedFieldsInitialValues.value[prop] = cloneDeep(value)
-  }
+  collapsedFieldsInitialValues.value = Object.fromEntries(
+    collapsedFieldProps.value.map(prop => [prop, cloneDeep(props.model[prop])]),
+  )
 }
 
 /**
@@ -327,12 +313,12 @@ function recordInitialValues() {
  * @returns 可折叠字段的重置数据对象
  */
 function getResetData(): Record<string, unknown> {
-  const resetData: Record<string, unknown> = {}
-  for (const prop of collapsedFieldProps.value) {
-    const initialValue = collapsedFieldsInitialValues.value[prop]
-    resetData[prop] = initialValue != null ? cloneDeep(initialValue) : undefined
-  }
-  return resetData
+  return Object.fromEntries(
+    collapsedFieldProps.value.map((prop) => {
+      const initialValue = collapsedFieldsInitialValues.value[prop]
+      return [prop, initialValue != null ? cloneDeep(initialValue) : undefined]
+    }),
+  )
 }
 
 /**
@@ -414,13 +400,16 @@ defineExpose({
   toggleExpand,
 })
 
+// 创建稳定的防抖函数引用，避免在 watch 中重复创建
+const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
+
 // 组件挂载时记录初始值
 onMounted(() => recordInitialValues())
 
 // 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
 watch(
   [() => props.formItems, () => props.actionConfig?.expand],
-  debounce(recordInitialValues, 100),
+  debouncedRecordInitialValues,
   { deep: true },
 )
 </script>
