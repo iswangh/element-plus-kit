@@ -17,42 +17,47 @@ tags:
 >
 > **核心要求**：必须根据"目录导航"章节列出的所有规则文件进行输出和遵循，每次回答开始时必须逐行逐字符读取"目录导航"章节中列出的所有规则文件，确保所有规则都被正确遵循，禁止遗漏任何列出的规则文件。
 
+## 强制要求：必须遵循所有规则文件
+
+> **⚠️ 强制要求 - 请勿忽略**
+>
+> 每次回答都必须强制遵循所有规则文件，禁止选择性遵循。
+
+- **禁止选择性遵循**：每次回答必须强制遵循所有规则文件，禁止只查阅一个或几个规则文件，禁止选择性遵循部分规则文件
+- **必须全部读取**：必须逐行逐字符读取"目录导航"章节中列出的所有规则文件，确保所有规则都被正确遵循，禁止遗漏任何规则文件
+- **禁止部分遵循**：不允许只查阅一个或几个规则文件，必须是全部的规则文件，这是确保规则执行一致性的关键要求
+
 ## 目录导航
 
 ### AI 规范
 - [001_mdc-standards.mdc](./001_mdc-standards.mdc) - MDC 文件生成和管理规范
-- [002_execution-standards.mdc](./002_execution-standards.mdc) - AI 行动执行规范
+- [002_documentation-standards.mdc](./002_documentation-standards.mdc) - 文档编写标准
+- [003_execution-standards.mdc](./003_execution-standards.mdc) - AI 行动执行规范
 
 ### 前端开发规范
-- [010_code-quality-standards.mdc](./010_code-quality-standards.mdc) - 代码质量规范
-- [011_typescript-standards.mdc](./011_typescript-standards.mdc) - TypeScript 类型规范
-- [012_code-style-standards.mdc](./012_code-style-standards.mdc) - 代码风格规范
-- [013_comment-standards.mdc](./013_comment-standards.mdc) - 注释编写规范
-- [014_engineering-standards.mdc](./014_engineering-standards.mdc) - 工程化实践规范
-- [015_testing-standards.mdc](./015_testing-standards.mdc) - 测试、错误处理和调试诊断规范
-- [016_tool-config-standards.mdc](./016_tool-config-standards.mdc) - 开发工具配置规范
-- [017_architecture-standards.mdc](./017_architecture-standards.mdc) - 项目架构规范
-- [018_documentation-standards.mdc](./018_documentation-standards.mdc) - 文档编写标准
-- [019_monorepo-standards.mdc](./019_monorepo-standards.mdc) - Monorepo 开发通用规范
+- [010_development-standards.mdc](./010_development-standards.mdc) - 开发规范
+- [020_engineering-standards.mdc](./020_engineering-standards.mdc) - 工程化实践规范
+- [021_monorepo-standards.mdc](./021_monorepo-standards.mdc) - Monorepo 开发通用规范
 
 ### 项目特定规范
-- [100_project-rules.mdc](./100_project-rules.mdc) - Element Plus Kit 项目特定开发规范
+- [100_project-rules.mdc](./100_project-rules.mdc) - 项目特定开发规范
 
 ## 强制要求：沟通响应规范
 
 ### 语言规范
 
-- 必须始终使用简体中文与用户进行沟通交流
-- 所有中文内容必须使用 UTF-8 编码
+- 必须始终使用[简体中文](#语言规范)与用户进行沟通交流
+- 所有中文内容必须使用 [UTF-8 编码](#语言规范)
 - 确保输出内容的中文字符正确显示，避免出现乱码、问号或方块字符
 - 如果发现中文乱码，必须检查编码设置并重新输出正确的内容
 - 在代码块、注释、文档等所有场景中，中文字符必须正确显示
-- 技术术语保持英文原文：API、DOM、Promise、React Hook 等技术术语不得翻译
-- 代码标识符使用英文：变量、函数、类名等标识符使用英文命名
-- 错误信息使用中文：错误提示信息使用中文，技术错误代码保持英文原文
+- [技术术语](#语言规范)保持英文原文：API、DOM、Promise、React Hook 等技术术语不得翻译
+- [代码标识符](#语言规范)使用英文：变量、函数、类名等标识符使用英文命名
+- [错误信息](#语言规范)使用中文：错误提示信息使用中文，技术错误代码保持英文原文
 
 ### 响应规范
 
+- 每次回答开始时，必须在回答内容的最开始声明规则文件列表（必须严格遵循 [`003_execution-standards.mdc`](./003_execution-standards.mdc) 中的[规则文件列表声明规范](./003_execution-standards.mdc#规则文件列表声明规范)章节）
 - 必须结合项目上下文和最新实现细节进行分析和回答（必须使用 `read_file` 工具逐行逐字符读取相关文件），确保建议和解决方案与当前代码库的实际实现保持一致
 - 必须提供专业、准确的技术建议和解决方案
 - 给出建议时，必须明确说明理由和适用场景

@@ -36,16 +36,17 @@ tags:
    - **动态查询**：必须使用 `list_dir` 或 `glob_file_search` 工具动态查询 `.cursor/rules/` 目录，确保获取最新的文件列表
    - **逐行逐字符读取**：必须使用 `read_file` 工具按编号顺序逐行逐字符读取每个规则文件，确保使用最新内容
    - **禁止假设**：禁止基于之前的对话或记忆假设规则文件内容，必须通过工具调用获取最新内容
-   - **强制要求**：必须根据 `000_core-standards.mdc` 中"目录导航"章节列出的所有规则文件进行输出和遵循，确保所有规则都被正确遵循，禁止遗漏任何列出的规则文件
-2. **在回答内容的最开始声明规则文件列表**（详细要求请参考"规则文件列表声明规范"章节）
+   - **强制要求**：必须根据 [`000_core-standards.mdc`](./000_core-standards.mdc) 中[目录导航](./000_core-standards.mdc#目录导航)章节列出的所有规则文件进行输出和遵循，确保所有规则都被正确遵循，禁止遗漏任何列出的规则文件
+   - **必须遵循所有规则文件**（关键要求）：必须严格遵循 [`000_core-standards.mdc`](./000_core-standards.mdc) 中的[强制要求：必须遵循所有规则文件](./000_core-standards.mdc#强制要求必须遵循所有规则文件)章节，禁止选择性遵循，必须全部读取所有规则文件
+2. **在回答内容的最开始声明规则文件列表**（详细要求请必须严格遵循[规则文件列表声明规范](#规则文件列表声明规范)章节）
 3. 检查回答内容是否符合规则文件的所有要求
 4. 检查回答内容的准确性、完整性和代码示例的正确性
-5. 检查相关文档是否需要同步更新（参考 `018_documentation-standards.mdc` 中的"文档同步机制"章节）
-6. 检查 `ai-generated/` 目录下的所有文件，确保文档分类正确、命名规范、内容完整（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
+5. 检查相关文档是否需要同步更新（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[文档同步机制](./002_documentation-standards.mdc#文档同步机制)章节）
+6. 检查 `ai-generated/` 目录下的所有文件，确保文档分类正确、命名规范、内容完整（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
 
 ### 响应后检查
 
-- 每次回答完成后，在返回最终答案前，必须执行时间返回规范的检查（详细要求请参考 `001_mdc-standards.mdc` 中的"时间返回规范"章节）
+- 每次回答完成后，在返回最终答案前，必须执行时间返回规范的检查（详细要求请必须严格遵循 [`001_mdc-standards.mdc`](./001_mdc-standards.mdc) 中的[时间返回规范](./001_mdc-standards.mdc#时间返回规范)章节）
 
 ### 复查任务检查清单
 
@@ -58,7 +59,7 @@ tags:
    - 必须使用 `codebase_search` 工具搜索相关实现和相似功能
 
 2. **规范符合性检查**：
-   - 必须使用 `read_file` 工具逐行逐字符读取所有相关规则文件（010-019、100）
+   - 必须使用 `read_file` 工具逐行逐字符读取所有相关规则文件（010、020、021、100）
    - 必须使用 `grep` 工具搜索代码中的命名、类型、注释等，检查是否符合规范
    - 必须使用 `read_lints` 工具检查代码规范，确保没有规范错误
    - 必须逐行逐字符检查代码，确保符合所有规范要求
@@ -75,8 +76,8 @@ tags:
 
 5. **文档同步检查**：
    - 必须使用 `grep` 工具搜索所有文档引用，确保文档同步
-   - 必须使用 `read_file` 工具逐行逐字符读取相关文档，检查是否需要更新（参考 `018_documentation-standards.mdc` 中的"文档同步机制"章节）
-   - 必须使用 `list_dir` 工具检查 `ai-generated/` 目录，确保文档分类正确（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
+   - 必须使用 `read_file` 工具逐行逐字符读取相关文档，检查是否需要更新（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[文档同步机制](./002_documentation-standards.mdc#文档同步机制)章节）
+   - 必须使用 `list_dir` 工具检查 `ai-generated/` 目录，确保文档分类正确（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
 
 6. **复查验证**：
    - 必须逐项检查复查验证清单，确保所有项目都已检查
@@ -87,7 +88,7 @@ tags:
 
 在执行任何任务前，必须执行以下检查：
 
-1. 执行响应前检查（详细要求请参考"响应前检查"章节）
+1. 执行响应前检查（详细要求请必须严格遵循[响应前检查](#响应前检查)章节）
 2. 检查任务是否符合规则文件的所有要求
 3. 评估任务的复杂度和影响范围
 
@@ -116,8 +117,8 @@ tags:
 
 3. **声明规则文件列表**：
    - 必须在回答内容的最开始（第一行）声明规则文件列表
-   - 使用统一的格式声明（参考"格式要求"章节）
-   - 必须包含 `000_core-standards.mdc` 中"目录导航"章节列出的所有规则文件
+   - 使用统一的格式声明（必须严格遵循[格式要求](#格式要求)章节）
+   - 必须包含 [`000_core-standards.mdc`](./000_core-standards.mdc) 中[目录导航](./000_core-standards.mdc#目录导航)章节列出的所有规则文件
 
 ### 格式要求
 
@@ -127,17 +128,11 @@ tags:
 严格遵循以下规则文件：
 - @000_core-standards.mdc
 - @001_mdc-standards.mdc
-- @002_execution-standards.mdc
-- @010_code-quality-standards.mdc
-- @011_typescript-standards.mdc
-- @012_code-style-standards.mdc
-- @013_comment-standards.mdc
-- @014_engineering-standards.mdc
-- @015_testing-standards.mdc
-- @016_tool-config-standards.mdc
-- @017_architecture-standards.mdc
-- @018_documentation-standards.mdc
-- @019_monorepo-standards.mdc
+- @002_documentation-standards.mdc
+- @003_execution-standards.mdc
+- @010_development-standards.mdc
+- @020_engineering-standards.mdc
+- @021_monorepo-standards.mdc
 - @100_project-rules.mdc
 ```
 
@@ -145,12 +140,12 @@ tags:
 - 第一行：固定文本 `严格遵循以下规则文件：`
 - 后续行：每个规则文件一行，使用 `- @文件名` 格式
 - 文件名：使用 `@` 符号引用，文件名必须与 `.cursor/rules/` 目录中的实际文件名完全一致
-- 顺序：按照编号顺序排列（000 → 001 → 010 → 011 → ... → 100）
+- 顺序：按照编号顺序排列（000 → 001 → 002 → 003 → 010 → 020 → 021 → 022 → 100）
 
 ### 验证机制
 
 - **自检要求**：在完成回答后，必须检查回答内容是否在开始处包含规则文件列表声明
-- **完整性检查**：必须确保 `000_core-standards.mdc` 中"目录导航"章节列出的所有规则文件都已包含在声明列表中
+- **完整性检查**：必须确保 [`000_core-standards.mdc`](./000_core-standards.mdc) 中[目录导航](./000_core-standards.mdc#目录导航)章节列出的所有规则文件都已包含在声明列表中
 - **格式检查**：必须确保格式符合"格式要求"章节中的标准格式
 
 ### 目的和意义
@@ -166,7 +161,7 @@ tags:
 
 - 接收任务后，必须先对功能进行评估
 - 评估必须在执行任何代码修改之前完成
-- 评估结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
+- 评估结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
 
 ### 评估内容
 
@@ -184,7 +179,7 @@ tags:
 
 ### 评估结果记录
 
-- 评估结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
+- 评估结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
 - 记录内容包括：任务描述、功能复杂度评估、技术可行性分析、影响范围分析、依赖关系分析、实现方案对比表格、推荐方案及理由
 
 ## 强制要求：步骤拆分规范
@@ -205,7 +200,7 @@ tags:
 
 ### 拆分结果记录
 
-- 拆分结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
+- 拆分结果必须记录在 `ai-generated/logs/development/` 目录下的执行日志中（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
 - 记录内容包括：任务描述、步骤列表、每个步骤的描述、目标、依赖关系、验证方式
 
 ## 强制要求：执行记录规范
@@ -227,13 +222,13 @@ tags:
 - 每个步骤执行开始时，必须记录开始执行的时间
 - 每个步骤执行完成后，必须记录完成的时间
 - 时间记录必须使用系统命令获取当前系统时间（使用 `run_terminal_cmd` 工具）
-- 时间格式：`YYYY-MM-DD HH:mm:ss 星期X`（详细要求请参考 `001_mdc-standards.mdc` 中的"时间返回规范"章节）
+- 时间格式：`YYYY-MM-DD HH:mm:ss 星期X`（详细要求请必须严格遵循 [`001_mdc-standards.mdc`](./001_mdc-standards.mdc) 中的[时间返回规范](./001_mdc-standards.mdc#时间返回规范)章节）
 
 ### 执行日志记录
 
-- 所有任务执行过程必须记录在 `ai-generated/logs/development/` 目录下（参考 `018_documentation-standards.mdc` 中的"AI 生成文档管理规范"章节）
-- 日志文件命名：使用任务描述和时间戳，格式为 `task-{任务描述}-{时间戳}.md`，必须使用小写字母和连字符（kebab-case）（参考 `018_documentation-standards.mdc` 中的"目录结构规范"章节）
-- 文件头注释：每个日志文件开头必须包含文件头注释（参考 `013_comment-standards.mdc`），说明文档用途、创建时间、相关模块等信息（参考 `018_documentation-standards.mdc` 中的"文档创建规范"章节）
+- 所有任务执行过程必须记录在 `ai-generated/logs/development/` 目录下（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[AI 生成文档管理规范](./002_documentation-standards.mdc#ai-生成文档管理规范)章节）
+- 日志文件命名：使用任务描述和时间戳，格式为 `task-{任务描述}-{时间戳}.md`，必须使用小写字母和连字符（kebab-case）（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[目录结构规范](./002_documentation-standards.mdc#目录结构规范)章节）
+- 文件头注释：每个日志文件开头必须包含文件头注释（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)），说明文档用途、创建时间、相关模块等信息（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[文档创建规范](./002_documentation-standards.mdc#文档创建规范)章节）
 - 记录内容包括：
   - 任务描述
   - 评估结果（功能复杂度、技术可行性、影响范围、依赖关系、实现方案对比）
@@ -241,7 +236,7 @@ tags:
   - 执行进度（当前步骤、已完成步骤、待执行步骤）
   - 每个步骤的执行记录（开始时间、完成时间、执行结果、遇到的问题）
   - 复查记录（每个步骤的复查结果、整体复查结果）
-- 文档格式：日志文件必须符合项目文档编写标准（参考 `018_documentation-standards.mdc` 中的"文档内容规范"章节）
+- 文档格式：日志文件必须符合项目文档编写标准（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[文档内容规范](./002_documentation-standards.mdc#文档内容规范)章节）
 
 ### 进度展示
 
@@ -271,7 +266,7 @@ tags:
   - 隐患检查：检查是否还有潜在的问题或隐患，包括代码错误、性能问题、安全问题等
   - 功能完整性：检查功能是否全部关联起来，是否满足需求，是否有遗漏的功能点
   - 规范符合性：检查代码实现是否已经符合规则文件和项目规范，包括代码风格、命名规范、类型定义、注释规范等
-  - 文档同步：检查相关文档是否需要同步更新（参考 `018_documentation-standards.mdc` 中的"文档同步机制"章节）
+  - 文档同步：检查相关文档是否需要同步更新（必须严格遵循 [`002_documentation-standards.mdc`](./002_documentation-standards.mdc) 中的[文档同步机制](./002_documentation-standards.mdc#文档同步机制)章节）
 - 整体复查结果必须记录在执行日志中，包括复查时间、复查内容、发现的问题、修复建议
 
 ### 复查记录
@@ -286,8 +281,8 @@ tags:
 执行任务时，按照以下流程进行：
 
 1. **任务接收**：接收用户任务，读取相关规则文件，理解任务要求
-2. **功能评估**：评估功能复杂度、技术可行性、影响范围、依赖关系，查询多个实现方案并对比，选择推荐方案（详细要求请参考"功能评估规范"章节）
-3. **步骤拆分**：将任务拆分为多个可执行的步骤，定义每个步骤的描述、目标、依赖关系、验证方式（详细要求请参考"步骤拆分规范"章节）
-4. **步骤执行**：按顺序执行每个步骤，记录开始和完成时间，进行步骤复查（详细要求请参考"执行记录规范"和"复查规范"章节）
-5. **整体复查**：所有步骤执行完成后，进行整体复查，检查隐患、功能完整性、规范符合性、文档同步（详细要求请参考"复查规范"章节）
+2. **功能评估**：评估功能复杂度、技术可行性、影响范围、依赖关系，查询多个实现方案并对比，选择推荐方案（详细要求请必须严格遵循[功能评估规范](#强制要求功能评估规范)章节）
+3. **步骤拆分**：将任务拆分为多个可执行的步骤，定义每个步骤的描述、目标、依赖关系、验证方式（详细要求请必须严格遵循[步骤拆分规范](#强制要求步骤拆分规范)章节）
+4. **步骤执行**：按顺序执行每个步骤，记录开始和完成时间，进行步骤复查（详细要求请必须严格遵循[执行记录规范](#强制要求执行记录规范)和[复查规范](#强制要求复查规范)章节）
+5. **整体复查**：所有步骤执行完成后，进行整体复查，检查隐患、功能完整性、规范符合性、文档同步（详细要求请必须严格遵循[复查规范](#强制要求复查规范)章节）
 6. **任务完成**：更新执行日志，标记任务完成，向用户展示任务完成情况和整体复查结果

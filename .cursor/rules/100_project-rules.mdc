@@ -10,12 +10,12 @@ tags:
 
 # Element Plus Kit 项目开发规范
 
-> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与核心开发规范总纲（`000_core-standards.mdc`）和 Monorepo 开发规范（`019_monorepo-standards.mdc`）结合使用。
+> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与核心开发规范总纲（[`000_core-standards.mdc`](./000_core-standards.mdc)）和 Monorepo 开发规范（[`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）结合使用。
 
 ## 项目架构概述
 
 ### Monorepo 结构
-- **包管理工具**：pnpm workspace（详细规范请参考 `019_monorepo-standards.mdc`）
+- **包管理工具**：pnpm workspace（详细规范必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **包结构说明**：
   - `packages/core`：核心工具函数包，提供基础工具函数和类型定义（无 Vue 组件）
   - `packages/form`：表单组件包，提供表单相关组件和功能（依赖 core）
@@ -44,19 +44,19 @@ kit (依赖 form 和 core)
 ## 开发环境配置
 
 ### Node.js 版本管理
-- **必须使用 Volta 管理 Node.js 版本**（请参考 `016_tool-config-standards.mdc`）（必须使用 `read_file` 工具逐行逐字符读取相关规则文件和 `package.json` 文件）
+- **必须使用 Volta 管理 Node.js 版本**（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）（必须使用 `read_file` 工具逐行逐字符读取相关规则文件和 `package.json` 文件）
 - **当前版本**：Node.js 25.1.0（`package.json` 的 `volta.node` 字段）（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
 - **版本要求**：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines` 字段）（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
 
 ### 包管理器
-- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（请参考 `019_monorepo-standards.mdc`）
+- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **工作区配置**：`pnpm-workspace.yaml` 文件定义工作区包（`packages/*`、`playground`、`docs`）（必须使用 `read_file` 工具逐行逐字符读取 `pnpm-workspace.yaml` 文件）
 
 ### 开发工具
-- **代码规范**：ESLint（基于 @iswangh/eslint-config，请参考 `012_code-style-standards.mdc`）
+- **代码规范**：ESLint（基于 @iswangh/eslint-config，必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 - **构建工具**：Vite（库模式）
-- **Git Hooks**：Husky + lint-staged（请参考 `014_engineering-standards.mdc`）
-- **提交规范**：Commitlint（遵循 Conventional Commits 规范，请参考 `014_engineering-standards.mdc`）
+- **Git Hooks**：Husky + lint-staged（必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
+- **提交规范**：Commitlint（遵循 Conventional Commits 规范，必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
 
 ---
 
@@ -96,7 +96,7 @@ kit (依赖 form 和 core)
 ## 包依赖管理
 
 ### 内部依赖
-- **使用 `workspace:*` 协议**（请参考 `019_monorepo-standards.mdc`）：
+- **使用 `workspace:*` 协议**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）：
   ```json
   {
     "dependencies": {
@@ -106,14 +106,14 @@ kit (依赖 form 和 core)
   ```
 
 ### 外部依赖
-- **使用 `peerDependencies` 声明**（请参考 `019_monorepo-standards.mdc`）
+- **使用 `peerDependencies` 声明**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **版本要求**：
   - Vue: `^3.5.23`
   - Element Plus: `^2.11.7`
 - **重要提示**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
 
 ### 开发依赖
-- **统一放在根目录的 `devDependencies`**（请参考 `019_monorepo-standards.mdc`）
+- **统一放在根目录的 `devDependencies`**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 
 ---
 
@@ -148,7 +148,7 @@ kit (依赖 form 和 core)
   - **样式组织**：保持样式文件结构清晰，便于维护和扩展
 
 ### 构建产物
-- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，请参考 `019_monorepo-standards.mdc`）
+- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **包含文件**：`.js`、`.d.ts`、`.d.ts.map`
 - **样式文件**：`packages/form/dist/style.css`
 - **多入口支持**：kit 包支持多入口导出（`index` 和 `resolver`）
@@ -161,7 +161,7 @@ kit (依赖 form 和 core)
 ## TypeScript 配置规范
 
 ### 项目引用
-- **使用 TypeScript Project References** 管理包之间的类型依赖（请参考 `019_monorepo-standards.mdc`）
+- **使用 TypeScript Project References** 管理包之间的类型依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **配置文件结构**：
   - **根目录**：
     - `tsconfig.app.json`：基础配置，包含共享编译器选项和路径别名（用于类型解析）
@@ -175,7 +175,7 @@ kit (依赖 form 和 core)
     - 配置自己的 `paths`，用于开发时直接引用包源码（支持 HMR）
 
 ### 类型定义
-- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（请参考 `019_monorepo-standards.mdc`）
+- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 - **类型生成**：构建时自动生成（使用 `vite-plugin-dts` 插件）
 - **类型文件位置**：`dist/` 目录
 - **路径别名**：
@@ -188,27 +188,27 @@ kit (依赖 form 和 core)
 ## 代码开发规范
 
 ### Vue 组件规范
-- **单文件组件**：必须使用 `<script setup lang="ts">`（请参考 `010_code-quality-standards.mdc`）
+- **单文件组件**：必须使用 `<script setup lang="ts">`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 - **组件前缀**：所有组件以 `W` 开头（如 `WForm`、`w-form`）
 - **组件命名**：使用 PascalCase（如 `WForm`、`FormItem`）
 
 ### TypeScript 类型规范
-- **类型推断优先**：充分利用类型推断，避免不必要的类型注解（请参考 `011_typescript-standards.mdc`）
+- **类型推断优先**：充分利用类型推断，避免不必要的类型注解（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 - **类型导出**：在包的 `src/types.ts` 或 `src/index.ts` 中统一导出类型
 - **类型命名**：使用 PascalCase（如 `FormItems`、`FormConfig`）
-- **接口优先**：优先使用 `interface` 定义对象类型（请参考 `011_typescript-standards.mdc`）
+- **接口优先**：优先使用 `interface` 定义对象类型（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ### 文件组织规范
-- **包目录结构**：遵循 Monorepo 通用规范（请参考 `019_monorepo-standards.mdc`）
-- **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（请参考 `017_architecture-standards.mdc`）
+- **包目录结构**：遵循 Monorepo 通用规范（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 - **文件命名**：
   - **TypeScript 文件**：`camelCase.ts`
   - **Vue 组件**：`PascalCase.vue`
   - **配置文件**：`kebab-case.config.ts`
 
 ### 导出规范
-- **统一导出**：通过 `src/index.ts` 统一导出所有公共 API（详细规范请参考 `017_architecture-standards.mdc` 中的"导出规范"章节）
-- **类型导出**：类型和值分开导出，使用 `export type` 导出类型（详细规范请参考 `017_architecture-standards.mdc` 中的"导出规范"章节）
+- **统一导出**：通过 `src/index.ts` 统一导出所有公共 API（详细规范必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
+- **类型导出**：类型和值分开导出，使用 `export type` 导出类型（详细规范必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
 
 ---
 
@@ -238,20 +238,20 @@ kit (依赖 form 和 core)
   - **使用场景**：单独执行类型检查，验证类型定义正确性
 
 ### 发布流程
-- **发布顺序**（强制要求）：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布（详细要求请参考 `019_monorepo-standards.mdc` 中的"发布顺序"和"Changesets 发布流程"章节）
-- **发布命令**（使用 Changesets）：详细要求请参考 `019_monorepo-standards.mdc` 中的"Changesets 发布流程"章节
+- **发布顺序**（强制要求）：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[发布顺序](./021_monorepo-standards.mdc#发布顺序)和[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
+- **发布命令**（使用 Changesets）：详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节
 
 ### 版本管理
-- **版本策略**：独立版本（每个包独立管理版本号）（详细要求请参考 `019_monorepo-standards.mdc` 中的"版本管理"章节）
-- **版本格式**：遵循语义化版本（SemVer）（详细要求请参考 `014_engineering-standards.mdc` 中的"版本管理规范"章节）
-- **版本管理工具**：使用 Changesets 管理版本和发布流程（详细要求请参考 `019_monorepo-standards.mdc` 中的"Changesets 发布流程"章节）
+- **版本策略**：独立版本（每个包独立管理版本号）（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[版本管理](./021_monorepo-standards.mdc#版本管理)章节）
+- **版本格式**：遵循语义化版本（SemVer）（详细要求必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本管理规范](./020_engineering-standards.mdc#版本管理规范)章节）
+- **版本管理工具**：使用 Changesets 管理版本和发布流程（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
 
 ---
 
 ## 代码质量规范
 
 ### ESLint 规则
-- **基础配置**：基于 `@iswangh/eslint-config`，集成了 Vue、TypeScript 和 JSX 支持（请参考 `012_code-style-standards.mdc`）
+- **基础配置**：基于 `@iswangh/eslint-config`，集成了 Vue、TypeScript 和 JSX 支持（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 - **配置文件**：`eslint.config.js`（使用 ESLint 9.x 扁平配置格式）
 - **项目特定规则**：
   - 统一项目代码风格，提高代码质量和可维护性
@@ -263,7 +263,7 @@ kit (依赖 form 和 core)
   - `pnpm eslint:inspect`：查看 ESLint 配置（使用 `@eslint/config-inspector`）
 
 ### Git 提交规范
-- **基础配置**：基于 `@iswangh/commitlint-config`，遵循 Conventional Commits 规范（详细要求请参考 `014_engineering-standards.mdc` 中的"版本控制规范"章节）
+- **基础配置**：基于 `@iswangh/commitlint-config`，遵循 Conventional Commits 规范（详细要求必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本控制规范](./020_engineering-standards.mdc#版本控制规范)章节）
 - **配置文件**：`commitlint.config.js`
 - **项目特定要求**：作用域（scope）建议使用包名（如 `core`、`form`、`kit`）
 
@@ -275,7 +275,7 @@ kit (依赖 form 和 core)
 - **README.md**：每个包必须包含 README.md，说明包的功能、安装使用方法、API 文档链接和示例代码
 
 ### 代码注释
-- **JSDoc 标准**：所有公共 API 必须使用 JSDoc 注释（请参考 `013_comment-standards.mdc`）
+- **JSDoc 标准**：所有公共 API 必须使用 JSDoc 注释（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ---
 
@@ -283,17 +283,17 @@ kit (依赖 form 和 core)
 
 ### 测试框架
 - **测试框架**：Vitest（已配置但未使用）
-- **测试文件组织**：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（请参考 `015_testing-standards.mdc`）
-- **测试要求**：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（请参考 `015_testing-standards.mdc`）
+- **测试文件组织**：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- **测试要求**：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ---
 
 ## 性能优化规范
 
 ### 构建优化
-- **代码分割**：按需导入，避免全量导入（请参考 `010_code-quality-standards.mdc`）
-- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（请参考 `019_monorepo-standards.mdc`）
-- **外部依赖**：使用 `external` 配置，避免打包外部依赖（请参考 `019_monorepo-standards.mdc`）
+- **代码分割**：按需导入，避免全量导入（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- **外部依赖**：使用 `external` 配置，避免打包外部依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 
 ### 运行时优化
 - **按需导入**：组件库支持按需导入
@@ -303,7 +303,7 @@ kit (依赖 form 和 core)
 
 ## 开发工作流规范
 
-- **根目录脚本配置和开发环境**：详细要求请参考 `019_monorepo-standards.mdc` 中的"开发工作流规范"章节
+- **根目录脚本配置和开发环境**：详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[开发工作流规范](./021_monorepo-standards.mdc#开发工作流规范)章节
 
 ### 自动导入配置
 - **Vue API 自动导入**：
