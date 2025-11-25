@@ -46,7 +46,7 @@ const formItems: FormItems = [
     prop: 'province',
     label: '省份',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: provinces,
     },
   },
@@ -54,7 +54,7 @@ const formItems: FormItems = [
     prop: 'city',
     label: '城市',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：使用 deps 配置内部依赖
       options: {
         loader: (formData) => {
@@ -73,7 +73,7 @@ const formItems: FormItems = [
     prop: 'district',
     label: '区县',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：依赖省市，使用 deps 配置内部依赖
       options: {
         loader: (formData) => {

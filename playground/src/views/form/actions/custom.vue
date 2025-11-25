@@ -8,7 +8,7 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'username', label: '用户名', comp: 'input' },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
 ]
 

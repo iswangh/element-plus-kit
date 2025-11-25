@@ -6,7 +6,7 @@ import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPick
  * 需要从 FormItem 中排除的自定义属性键名
  * 这些属性不会传递给 el-form-item 组件
  */
-export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compAttrs', 'vIf', 'vShow'] as const
+export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compProps', 'vIf', 'vShow'] as const
 
 /**
  * 拓展的组件映射
@@ -63,7 +63,7 @@ export const COMPONENT_DEFAULT_CONFIG = {
    * 获取组件默认属性
    */
   getDefaults(formItem: FormItem) {
-    const { comp, compAttrs = {} } = formItem
+    const { comp, compProps = {} } = formItem
 
     // 组件类型
     const compType = this.getComponentType(comp)
@@ -73,7 +73,7 @@ export const COMPONENT_DEFAULT_CONFIG = {
 
     return {
       ...compDefaults,
-      ...compAttrs, // 用户配置最后合并，优先级最高
+      ...compProps, // 用户配置最后合并，优先级最高
     }
   },
 

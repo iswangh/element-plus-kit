@@ -13,7 +13,7 @@ const formItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },

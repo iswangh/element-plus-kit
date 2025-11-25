@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
+import type { FormItems, RowProps } from '@iswangh/element-plus-kit-form'
 
 const form = ref({})
 const useColumnLayout = ref(false)
@@ -15,7 +15,7 @@ const defaultFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -24,7 +24,7 @@ const defaultFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -46,7 +46,7 @@ const columnFormItems: FormItems = [
     prop: 'name',
     label: '姓名',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
@@ -54,10 +54,10 @@ const columnFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -66,10 +66,10 @@ const columnFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -77,7 +77,7 @@ const columnFormItems: FormItems = [
     prop: 'phone',
     label: '手机号',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
@@ -85,7 +85,7 @@ const columnFormItems: FormItems = [
     prop: 'address',
     label: '地址',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 24,
     },
   },
@@ -93,7 +93,7 @@ const columnFormItems: FormItems = [
 
 const formItems = computed(() => useColumnLayout.value ? columnFormItems : defaultFormItems)
 
-const rowAttrs: RowAttrs = {
+const rowProps: RowProps = {
   gutter: 20,
 }
 </script>
@@ -120,14 +120,14 @@ const rowAttrs: RowAttrs = {
       >
         <template #default>
           <p class="text-sm text-gray-600 m-0">
-            {{ useColumnLayout ? '通过 rowAttrs 和 colAttrs 配置布局，每个表单项占据指定的列数（span）' : '默认配置不使用分栏布局，表单项垂直排列' }}
+            {{ useColumnLayout ? '通过 rowProps 和 colProps 配置布局，每个表单项占据指定的列数（span）' : '默认配置不使用分栏布局，表单项垂直排列' }}
           </p>
         </template>
       </el-alert>
       <WForm
         :model="form"
         :form-items="formItems"
-        :row-attrs="useColumnLayout ? rowAttrs : undefined"
+        :row-props="useColumnLayout ? rowProps : undefined"
       />
     </el-space>
   </el-card>

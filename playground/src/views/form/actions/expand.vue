@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ActionConfig, FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
+import type { ActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -8,11 +8,11 @@ const formRef = ref<InstanceType<typeof WForm>>()
 // 基础表单项（至少10个）
 const baseFormItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'city', label: '城市', comp: 'input' },
   { prop: 'province', label: '省份', comp: 'input' },
@@ -49,11 +49,11 @@ const actionConfig4: ActionConfig = {
 // 示例 5：与 vIf 一起使用
 const formItems5: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, vIf: data => !!data?.gender },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
@@ -66,11 +66,11 @@ const actionConfig5: ActionConfig = {
 // 示例 6：与 vShow 一起使用
 const formItems6: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: data => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, vShow: data => !!data?.gender },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: data => !!data?.phone },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vShow: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
@@ -83,11 +83,11 @@ const actionConfig6: ActionConfig = {
 // 示例 7：与 vIf vShow 一起使用
 const formItems7: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email, vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone, vShow: data => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, vIf: data => !!data?.gender, vShow: data => !!data?.gender },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone, vShow: data => !!data?.phone },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender, vShow: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
@@ -97,24 +97,24 @@ const actionConfig7: ActionConfig = {
   expand: { include: ['email', 'phone', 'gender'] },
 }
 
-// 示例 8：rowAttrs 和 colAttrs 布局配置（每行 4 个）
+// 示例 8：rowProps 和 colProps 布局配置（每行 4 个）
 const formItems8: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 }, colAttrs: { span: 6 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' }, colAttrs: { span: 6 } },
-  { prop: 'phone', label: '手机号', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colAttrs: { span: 6 } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, colAttrs: { span: 6 } },
-  { prop: 'address', label: '地址', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'city', label: '城市', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'province', label: '省份', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'postcode', label: '邮编', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'company', label: '公司', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'position', label: '职位', comp: 'input', colAttrs: { span: 6 } },
-  { prop: 'remark', label: '备注', comp: 'input', colAttrs: { span: 6 } },
+  { prop: 'name', label: '姓名', comp: 'input', colProps: { span: 6 } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 6 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' }, colProps: { span: 6 } },
+  { prop: 'phone', label: '手机号', comp: 'input', colProps: { span: 6 } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 6 } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, colProps: { span: 6 } },
+  { prop: 'address', label: '地址', comp: 'input', colProps: { span: 6 } },
+  { prop: 'city', label: '城市', comp: 'input', colProps: { span: 6 } },
+  { prop: 'province', label: '省份', comp: 'input', colProps: { span: 6 } },
+  { prop: 'postcode', label: '邮编', comp: 'input', colProps: { span: 6 } },
+  { prop: 'company', label: '公司', comp: 'input', colProps: { span: 6 } },
+  { prop: 'position', label: '职位', comp: 'input', colProps: { span: 6 } },
+  { prop: 'remark', label: '备注', comp: 'input', colProps: { span: 6 } },
 ]
 
-const rowAttrs8: RowAttrs = {
+const rowProps8: RowProps = {
   gutter: 20,
 }
 
@@ -410,18 +410,18 @@ function onReset(resetData: Record<string, unknown>) {
         </el-space>
       </el-card>
 
-      <!-- 示例 8：rowAttrs 和 colAttrs 布局配置 -->
+      <!-- 示例 8：rowProps 和 colProps 布局配置 -->
       <el-card class="w-full" shadow="hover">
         <template #header>
           <h2 class="text-lg text-gray-800 font-semibold m-0">
-            示例 8：rowAttrs 和 colAttrs 布局配置（inline 模式，每行 4 个表单项）
+            示例 8：rowProps 和 colProps 布局配置（inline 模式，每行 4 个表单项）
           </h2>
         </template>
         <el-space class="w-full" direction="vertical" :size="20" fill>
           <el-alert type="info" :closable="false" show-icon>
             <template #default>
               <p class="text-sm text-gray-600 m-0">
-                说明：通过 <code>rowAttrs</code> 配置行布局（如 <code>gutter: 20</code>），通过 <code>colAttrs</code> 配置每个表单项的列布局（如 <code>span: 6</code> 表示每行 4 个表单项）。
+                说明：通过 <code>rowProps</code> 配置行布局（如 <code>gutter: 20</code>），通过 <code>colProps</code> 配置每个表单项的列布局（如 <code>span: 6</code> 表示每行 4 个表单项）。
               </p>
             </template>
           </el-alert>
@@ -429,7 +429,7 @@ function onReset(resetData: Record<string, unknown>) {
             :model="form"
             inline
             :form-items="formItems8"
-            :row-attrs="rowAttrs8"
+            :row-props="rowProps8"
             :action-config="actionConfig8"
             @reset="onReset"
           />

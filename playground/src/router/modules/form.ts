@@ -10,7 +10,7 @@ export const formRouteMeta = {
   '/form/basic/manual': { title: '手动导入', description: '手动导入组件使用', showInSidebar: true },
   // 布局示例
   '/form/layout': { title: '布局示例', showInSidebar: true },
-  '/form/layout/default': { title: '默认布局', description: '通过 rowAttrs 和 colAttrs 配置布局', showInSidebar: true },
+  '/form/layout/default': { title: '默认布局', description: '通过 rowProps 和 colProps 配置布局', showInSidebar: true },
   '/form/layout/inline': { title: '一行展示', description: '使用 inline 属性，表单项在一行内展示', showInSidebar: true },
   // 操作按钮
   '/form/actions': { title: '操作按钮', showInSidebar: true },

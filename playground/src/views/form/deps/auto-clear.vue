@@ -32,7 +32,7 @@ const formItems: FormItems = [
     prop: 'province',
     label: '省份',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: provinces,
     },
   },
@@ -40,7 +40,7 @@ const formItems: FormItems = [
     prop: 'city',
     label: '城市（自动清理：默认）',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：默认 autoClear 为 true，依赖变化时自动清除值
       options: {
         loader: (formData) => {
@@ -59,7 +59,7 @@ const formItems: FormItems = [
     prop: 'cityCustom',
     label: '城市（自定义处理：autoClear: false）',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：autoClear 为 false，用户自己处理值的设置逻辑
       options: {
         loader: (formData) => {

@@ -5,7 +5,7 @@
  * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
  */
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { ActionConfig, Arrayable, ElFormAttrs, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
+import type { ActionConfig, Arrayable, ElFormProps, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowProps } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
@@ -15,9 +15,9 @@ import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
 import { debounce, deepCloneValue, hasButtonEvent } from './utils'
 
-interface Props extends ElFormAttrs {
+interface Props extends ElFormProps {
   formItems: FormItems
-  rowAttrs?: RowAttrs
+  rowProps?: RowProps
   actionConfig?: ActionConfig
 }
 
@@ -58,7 +58,7 @@ defineOptions({ name: 'WForm' })
 
 const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
-  rowAttrs: () => ({}),
+  rowProps: () => ({}),
   actionConfig: () => ({}),
 })
 const emit = defineEmits<Emits>()
@@ -90,7 +90,7 @@ const dynamicCompEvents = computed(() => {
 
 /** 提取并合并 form 属性 */
 const mergedAttrs = computed(() => {
-  const { formItems: _f, actionConfig: _a, rowAttrs: _r, ...rest } = props
+  const { formItems: _f, actionConfig: _a, rowProps: _r, ...rest } = props
 
   const filteredAttrs = Object.fromEntries(
     Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)),
@@ -166,15 +166,15 @@ function toggleExpand(value?: boolean) {
 /**
  * 过滤出需要渲染的 formItem（仅根据 vIf 条件，不包含展开/折叠状态）
  * - 根据 vIf 条件过滤表单项
- * - 处理每一项的 colAttrs.span 的默认值，默认为 rowAttrs.span
+ * - 处理每一项的 colProps.span 的默认值，默认为 rowProps.span
  */
 const filteredFormItems = computed(() => {
-  const { span: defaultSpan } = props.rowAttrs
+  const { span: defaultSpan } = props.rowProps
   return props.formItems
     .filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
     .map((v) => {
-      const { colAttrs = {} } = v ?? {}
-      return { ...v, colAttrs: { ...colAttrs, span: colAttrs.span ?? defaultSpan } }
+      const { colProps = {} } = v ?? {}
+      return { ...v, colProps: { ...colProps, span: colProps.span ?? defaultSpan } }
     })
 })
 
@@ -265,7 +265,7 @@ const slotsCache = computed(() => {
 })
 
 /** 判断是否渲染 el-row */
-const shouldRenderRow = computed(() => Object.keys(props.rowAttrs ?? {}).length > 0)
+const shouldRenderRow = computed(() => Object.keys(props.rowProps ?? {}).length > 0)
 
 /** 布局组件 */
 const layoutComponents = computed(() => ({
@@ -444,7 +444,7 @@ watch(
   >
     <component
       :is="layoutComponents.row"
-      v-bind="rowAttrs"
+      v-bind="rowProps"
     >
       <TransitionGroup
         v-if="expandEnabled"
@@ -457,7 +457,7 @@ watch(
           v-for="(v, i) in visibleFormItems"
           v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
           :key="`${v.prop}-${v._originalIndex ?? i}`"
-          v-bind="v.colAttrs"
+          v-bind="v.colProps"
         >
           <FormItemComp
             v-model="model[v.prop]"
@@ -476,7 +476,7 @@ watch(
           v-for="(v, i) in visibleFormItems"
           v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
           :key="`${v.prop}-${v._originalIndex ?? i}`"
-          v-bind="v.colAttrs"
+          v-bind="v.colProps"
         >
           <FormItemComp
             v-model="model[v.prop]"

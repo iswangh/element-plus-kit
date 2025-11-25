@@ -125,16 +125,16 @@ function onChange(event: any) {
 }
 
 /** 处理后的组件属性（包含默认值和用户配置） */
-const processedCompAttrs = computed(() => {
+const processedCompProps = computed(() => {
   const defaults = COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem)
-  const compAttrs = props.formItem.compAttrs ?? {}
+  const compProps = props.formItem.compProps ?? {}
 
-  // 只有当 compAttrs 中有 options 字段时，才设置 options 属性
-  const hasOptions = 'options' in compAttrs
+  // 只有当 compProps 中有 options 字段时，才设置 options 属性
+  const hasOptions = 'options' in compProps
 
   return {
     ...defaults,
-    ...compAttrs,
+    ...compProps,
     ...dynamicEventHandlers.value,
     ...(hasOptions && {
       options: resolvedOptions.value,
@@ -170,7 +170,7 @@ async function executeLoader(loader: OptionsLoader, formData: Record<string, any
  * @returns 对象模式配置或 null
  */
 function getOptionsConfig(): OptionsConfig | null {
-  const options = props.formItem.compAttrs?.options
+  const options = props.formItem.compProps?.options
   return isOptionsConfig(options) ? options : null
 }
 
@@ -184,7 +184,7 @@ function getOptionsConfig(): OptionsConfig | null {
  * - 如果当前值不在新的选项中，自动清理并触发 change 事件
  */
 async function loadOptions() {
-  const options = props.formItem.compAttrs?.options
+  const options = props.formItem.compProps?.options
   if (!options)
     return
 
@@ -310,7 +310,7 @@ watch(
 
 /** 使用 watchEffect 自动追踪外部 ref 依赖 */
 watchEffect(() => {
-  const options = props.formItem.compAttrs?.options
+  const options = props.formItem.compProps?.options
   if (!options)
     return
 
@@ -364,7 +364,7 @@ watch(
     <template v-if="formItem.comp !== 'custom'">
       <component
         :is="resolvedComponent"
-        v-bind="processedCompAttrs"
+        v-bind="processedCompProps"
         v-model="modelValue"
         @change="onChange"
       >

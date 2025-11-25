@@ -1,13 +1,12 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FormCompConfig } from './common'
-import type { FormItemComp } from './form-item'
+import type { FormItemComp, FormItemCompProps } from './form-item'
 
 /**
  * 检查组件类型是否包含 options 属性
  * 通过检查组件实例的 $props 中是否包含 'options' 来判断
  * @template C 组件类型
  */
-type HasOptionsProp<C extends FormItemComp> = 'options' extends keyof InstanceType<FormCompConfig[C]>['$props']
+type HasOptionsProp<C extends FormItemComp> = 'options' extends keyof FormItemCompProps<C>
   ? true
   : false
 
@@ -73,19 +72,13 @@ export type InferOptionsType<C extends FormItemComp, T = any> = IsOptionsSupport
  * @template C 组件类型
  */
 export type GetComponentOptionsType<C extends FormItemComp> = IsOptionsSupported<C> extends true
-  ? InstanceType<FormCompConfig[C]>['$props']['options']
+  ? FormItemCompProps<C>['options']
   : never
 
 /**
  * 检查组件类型是否包含 loading 属性
  * @template C 组件类型
  */
-type HasLoadingProp<C extends FormItemComp> = 'loading' extends keyof InstanceType<FormCompConfig[C]>['$props']
+type HasLoadingProp<C extends FormItemComp> = 'loading' extends keyof FormItemCompProps<C>
   ? true
   : false
-
-/**
- * 判断组件是否支持 loading 属性
- * @template C 组件类型
- */
-export type IsLoadingSupported<C extends FormItemComp> = HasLoadingProp<C>

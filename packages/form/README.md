@@ -30,7 +30,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -77,7 +77,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 | --- | --- | --- | --- |
 | model | 表单数据对象 | `Record<string, any>` | `{}` |
 | formItems | 表单项配置数组 | `FormItems` | `[]` |
-| rowAttrs | 行布局属性（ElRow 属性） | `RowAttrs` | `{}` |
+| rowProps | 行布局属性（ElRow 属性） | `RowProps` | `{}` |
 | actionConfig | 操作按钮配置 | `ActionConfig` | `{}` |
 
 **继承 Element Plus Form 属性**：组件继承所有 `ElForm` 的属性，如 `rules`、`labelPosition`、`size` 等。
@@ -113,14 +113,14 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
   prop: string                    // 表单字段名（必填）
   label: string                   // 标签文本
   comp: FormItemComp              // 组件类型（必填）
-  compAttrs?: FormItemCompAttrs<C> // 组件属性配置
-  // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），compAttrs.options 支持三种模式：
+  compProps?: FormItemCompProps<C> // 组件属性配置
+  // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），compProps.options 支持三种模式：
   // 1. 静态数组：options: [{ label: '选项1', value: '1' }]
   // 2. 函数模式：options: (formData) => [{ label: '选项1', value: '1' }]
   // 3. 对象模式：options: { loader: (formData) => [...], deps: ['field1'], immediate: true }
   vIf?: boolean | ((data?: any) => boolean)  // 条件渲染（v-if）
   vShow?: boolean | ((data?: any) => boolean) // 显示/隐藏（v-show）
-  colAttrs?: ColAttrs             // 列布局属性（ElCol 属性）
+  colProps?: ColProps             // 列布局属性（ElCol 属性）
   // ... 其他 ElFormItem 属性
 }
 ```
@@ -160,7 +160,7 @@ const formItems: FormItems = [
     prop: 'username',
     label: '用户名',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       placeholder: '请输入用户名',
       clearable: true,
     },
@@ -172,7 +172,7 @@ const formItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
       step: 1,
@@ -184,7 +184,7 @@ const formItems: FormItems = [
     prop: 'gender',
     label: '性别',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '男', value: 'male' },
         { label: '女', value: 'female' },

@@ -14,7 +14,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },

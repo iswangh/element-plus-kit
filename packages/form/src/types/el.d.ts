@@ -2,7 +2,7 @@
 import type { ElCol, ElRow, FormItemInstance, FormRules } from 'element-plus'
 
 /**
- * Element Plus Form Attributes
+ * Element Plus Form Props
  *
  * 由于 `FormInstance['$slots']` 类型定义存在问题，
  * 暂时无法直接使用 `FormInstance['$props']`，
@@ -10,7 +10,7 @@ import type { ElCol, ElRow, FormItemInstance, FormRules } from 'element-plus'
  *
  * @see {@link https://element-plus.org/zh-CN/component/form.html#form-attributes Element Plus Form Attributes}
  */
-export interface ElFormAttrs {
+export interface ElFormProps {
   // 数据相关
   model?: Record<string, any>
   rules?: FormRules
@@ -35,11 +35,11 @@ export interface ElFormAttrs {
   scrollIntoViewOptions?: ScrollIntoViewOptions
 }
 
-/** Element Plus FormItem 属性 */
-export type ElFormItemAttrs = FormItemInstance['$props']
+/** Element Plus FormItem Props */
+export type ElFormItemProps = FormItemInstance['$props']
 
-/** Element Plus Row 组件属性 */
-export type ElRowAttrs = InstanceType<typeof ElRow>['$props']
+/** Element Plus Row 组件 Props */
+export type ElRowProps = InstanceType<typeof ElRow>['$props']
 
-/** Element Plus Col 组件属性 */
-export type ElColAttrs = InstanceType<typeof ElCol>['$props']
+/** Element Plus Col 组件 Props */
+export type ElColProps = InstanceType<typeof ElCol>['$props']

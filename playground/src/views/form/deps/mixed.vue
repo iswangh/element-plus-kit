@@ -119,7 +119,7 @@ const formItems: FormItems = [
     prop: 'department',
     label: '部门',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: departments,
     },
   },
@@ -127,7 +127,7 @@ const formItems: FormItems = [
     prop: 'role',
     label: '角色',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：依赖部门字段（内部依赖）
       options: {
         loader: (formData) => {
@@ -156,7 +156,7 @@ const formItems: FormItems = [
     prop: 'features',
     label: '功能权限',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
       // 注意：配置了 deps 后，内部依赖通过 watch 监听，外部依赖通过 watchEffect 追踪（在 loader 中访问）
       options: {

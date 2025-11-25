@@ -34,7 +34,7 @@ const formItems: FormItems = [
     prop: 'textarea',
     label: '产品描述',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'textarea',
       rows: 3,
     },
@@ -43,7 +43,7 @@ const formItems: FormItems = [
     prop: 'select',
     label: '产品分类',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '选项1', value: 'option1' },
         { label: '选项2', value: 'option2' },
@@ -54,7 +54,7 @@ const formItems: FormItems = [
     prop: 'autocomplete',
     label: '地址搜索',
     comp: 'autocomplete',
-    compAttrs: {
+    compProps: {
       fetchSuggestions: () => [],
     },
   },
@@ -62,7 +62,7 @@ const formItems: FormItems = [
     prop: 'cascader',
     label: '省市区',
     comp: 'cascader',
-    compAttrs: {
+    compProps: {
       style: { width: '100%' },
       options: [
         {
@@ -88,7 +88,7 @@ const formItems: FormItems = [
     prop: 'datePicker',
     label: '创建日期',
     comp: 'date-picker',
-    compAttrs: {
+    compProps: {
       style: { width: '100%' },
       type: 'date',
     },
@@ -97,7 +97,7 @@ const formItems: FormItems = [
     prop: 'timePicker',
     label: '开始时间',
     comp: 'time-picker',
-    compAttrs: {
+    compProps: {
       style: { width: '100%' },
     },
   },
@@ -105,7 +105,7 @@ const formItems: FormItems = [
     prop: 'timeSelect',
     label: '预约时间',
     comp: 'time-select',
-    compAttrs: {
+    compProps: {
       style: { width: '100%' },
     },
   },
@@ -118,7 +118,7 @@ const formItems: FormItems = [
     prop: 'radio',
     label: '优先级',
     comp: 'radio',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '选项1', value: 'option1' },
         { label: '选项2', value: 'option2' },
@@ -129,7 +129,7 @@ const formItems: FormItems = [
     prop: 'checkbox',
     label: '兴趣爱好',
     comp: 'checkbox',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '选项1', value: 'option1' },
         { label: '选项2', value: 'option2' },
@@ -160,7 +160,7 @@ const formItems: FormItems = [
     prop: 'transfer',
     label: '权限分配',
     comp: 'transfer',
-    compAttrs: {
+    compProps: {
       data: [
         { key: 1, label: '选项1' },
         { key: 2, label: '选项2' },
@@ -174,7 +174,7 @@ const formItems: FormItems = [
     prop: 'treeSelect',
     label: '部门选择',
     comp: 'tree-select',
-    compAttrs: {
+    compProps: {
       style: { width: '100%' },
       data: [
         {
@@ -229,7 +229,7 @@ const formItems: FormItems = [
     prop: 'password',
     label: '密码',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'password',
       showPassword: true,
     },
@@ -238,7 +238,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -328,7 +328,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
     vIf: (data) => data?.hasEmail === true,
@@ -479,7 +479,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -523,17 +523,17 @@ const onAction = (eventName: string) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit'
+import type { FormItems, RowProps } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
-// 分栏布局的表单项（配置了 colAttrs）
+// 分栏布局的表单项（配置了 colProps）
 const columnFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
@@ -541,10 +541,10 @@ const columnFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -553,10 +553,10 @@ const columnFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -564,13 +564,13 @@ const columnFormItems: FormItems = [
     prop: 'phone',
     label: '手机号',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
 ]
 
-// 默认布局的表单项（无 colAttrs）
+// 默认布局的表单项（无 colProps）
 const defaultFormItems: FormItems = [
   {
     prop: 'name',
@@ -581,7 +581,7 @@ const defaultFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -590,7 +590,7 @@ const defaultFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -601,31 +601,31 @@ const defaultFormItems: FormItems = [
   },
 ]
 
-const rowAttrs: RowAttrs = {
+const rowProps: RowProps = {
   gutter: 20,
 }
 </script>
 
 <template>
   <div>
-    <h3>场景 1：非 inline 模式 + rowAttrs + colAttrs（分栏布局）</h3>
-    <p class="text-sm text-gray-600 mb-2">配置了 rowAttrs 和 colAttrs，表单项按指定列数分布</p>
-    <WForm :model="form" :form-items="columnFormItems" :row-attrs="rowAttrs" />
+    <h3>场景 1：非 inline 模式 + rowProps + colProps（分栏布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">配置了 rowProps 和 colProps，表单项按指定列数分布</p>
+    <WForm :model="form" :form-items="columnFormItems" :row-props="rowProps" />
     
-    <h3 style="margin-top: 40px">场景 2：非 inline 模式 + 无 rowAttrs（默认布局）</h3>
-    <p class="text-sm text-gray-600 mb-2">未配置 rowAttrs，即使设置了 colAttrs 也不会生效，表单项垂直排列</p>
+    <h3 style="margin-top: 40px">场景 2：非 inline 模式 + 无 rowProps（默认布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">未配置 rowProps，即使设置了 colProps 也不会生效，表单项垂直排列</p>
     <WForm :model="form" :form-items="columnFormItems" />
     
-    <h3 style="margin-top: 40px">场景 3：inline 模式 + rowAttrs + colAttrs（分栏布局）</h3>
-    <p class="text-sm text-gray-600 mb-2">配置了 rowAttrs 和 colAttrs，表单项在一行内按指定列数分布</p>
-    <WForm :model="form" :form-items="columnFormItems" :row-attrs="rowAttrs" inline />
+    <h3 style="margin-top: 40px">场景 3：inline 模式 + rowProps + colProps（分栏布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">配置了 rowProps 和 colProps，表单项在一行内按指定列数分布</p>
+    <WForm :model="form" :form-items="columnFormItems" :row-props="rowProps" inline />
     
-    <h3 style="margin-top: 40px">场景 4：inline 模式 + 无 rowAttrs（默认布局）</h3>
-    <p class="text-sm text-gray-600 mb-2">未配置 rowAttrs，表单项在一行内按默认方式排列（colAttrs 不会生效）</p>
+    <h3 style="margin-top: 40px">场景 4：inline 模式 + 无 rowProps（默认布局）</h3>
+    <p class="text-sm text-gray-600 mb-2">未配置 rowProps，表单项在一行内按默认方式排列（colProps 不会生效）</p>
     <WForm :model="form" :form-items="defaultFormItems" inline />
     
-    <h3 style="margin-top: 40px">场景 5：colAttrs 有配置但 rowAttrs 无配置（不生效）</h3>
-    <p class="text-sm text-gray-600 mb-2">⚠️ 即使设置了 colAttrs，如果 rowAttrs 没有配置，colAttrs 也不会生效</p>
+    <h3 style="margin-top: 40px">场景 5：colProps 有配置但 rowProps 无配置（不生效）</h3>
+    <p class="text-sm text-gray-600 mb-2">⚠️ 即使设置了 colProps，如果 rowProps 没有配置，colProps 也不会生效</p>
     <WForm :model="form" :form-items="columnFormItems" />
   </div>
 </template>
@@ -654,11 +654,11 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'city', label: '城市', comp: 'input' },
 ]
@@ -697,11 +697,11 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
   { prop: 'address', label: '地址', comp: 'input' },
 ]
 
@@ -739,8 +739,8 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'city', label: '城市', comp: 'input' },
@@ -776,24 +776,24 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems, RowAttrs } from '@iswangh/element-plus-kit'
+import type { ActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input', colAttrs: { span: 8 } },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 }, colAttrs: { span: 8 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' }, colAttrs: { span: 8 } },
-  { prop: 'phone', label: '手机号', comp: 'input', colAttrs: { span: 8 } },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colAttrs: { span: 8 } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' }, colAttrs: { span: 8 } },
-  { prop: 'address', label: '地址', comp: 'input', colAttrs: { span: 8 } },
-  { prop: 'city', label: '城市', comp: 'input', colAttrs: { span: 8 } },
-  { prop: 'province', label: '省份', comp: 'input', colAttrs: { span: 8 } },
-  { prop: 'postcode', label: '邮编', comp: 'input', colAttrs: { span: 8 } },
+  { prop: 'name', label: '姓名', comp: 'input', colProps: { span: 8 } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 8 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' }, colProps: { span: 8 } },
+  { prop: 'phone', label: '手机号', comp: 'input', colProps: { span: 8 } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 8 } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, colProps: { span: 8 } },
+  { prop: 'address', label: '地址', comp: 'input', colProps: { span: 8 } },
+  { prop: 'city', label: '城市', comp: 'input', colProps: { span: 8 } },
+  { prop: 'province', label: '省份', comp: 'input', colProps: { span: 8 } },
+  { prop: 'postcode', label: '邮编', comp: 'input', colProps: { span: 8 } },
 ]
 
-const rowAttrs: RowAttrs = {
+const rowProps: RowProps = {
   gutter: 20,
 }
 
@@ -811,7 +811,7 @@ const actionConfig: ActionConfig = {
     inline
     label-width="54px"
     :form-items="formItems"
-    :row-attrs="rowAttrs"
+    :row-props="rowProps"
     :action-config="actionConfig"
   />
 </template>
@@ -834,11 +834,11 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'city', label: '城市', comp: 'input' },
 ]
@@ -880,11 +880,11 @@ const form = ref({})
 
 const formItems: FormItems = [
   { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compAttrs: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compAttrs: { type: 'email' } },
+  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compAttrs: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compAttrs: { type: 'date' } },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'city', label: '城市', comp: 'input' },
 ]
@@ -938,7 +938,7 @@ const formItems: FormItems = [
     prop: 'province',
     label: '省份',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 静态模式：直接使用数组
       options: [
         { label: '北京市', value: '1' },
@@ -980,7 +980,7 @@ const formItems: FormItems = [
     prop: 'category',
     label: '分类',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 函数模式：动态返回选项数组
       options: () => {
         // 可以在这里进行异步操作或复杂逻辑
@@ -997,7 +997,7 @@ const formItems: FormItems = [
     prop: 'status',
     label: '状态',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 函数模式：接收 formData 参数
       options: (formData) => {
         // 可以根据表单数据动态返回选项
@@ -1047,7 +1047,7 @@ const formItems: FormItems = [
     prop: 'priority',
     label: '优先级',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：基础用法
       options: {
         loader: () => {
@@ -1066,7 +1066,7 @@ const formItems: FormItems = [
     prop: 'tags',
     label: '标签',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
       // 注意：当优先级变化时，如果标签的当前值（如 'normal' 或 'minor'）在新的选项中存在，
       // 组件会保留该值，不会自动清理。如果需要强制清理，需要手动设置 form.value.tags = undefined
@@ -1186,7 +1186,7 @@ const formItems: FormItems = [
     prop: 'province',
     label: '省份',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: provinces,
     },
   },
@@ -1194,7 +1194,7 @@ const formItems: FormItems = [
     prop: 'city',
     label: '城市',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: {
         loader: (formData) => {
           const province = formData.province as string | undefined
@@ -1211,7 +1211,7 @@ const formItems: FormItems = [
     prop: 'district',
     label: '区县',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: {
         loader: (formData) => {
           const city = formData.city as string | undefined
@@ -1276,7 +1276,7 @@ const formItems: FormItems = [
     prop: 'userType',
     label: '用户类型',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '管理员', value: 'admin' },
         { label: '普通用户', value: 'user' },
@@ -1288,7 +1288,7 @@ const formItems: FormItems = [
     prop: 'menu',
     label: '菜单选项',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
       options: () => {
         // 通过闭包访问外部 ref：userType
@@ -1304,7 +1304,7 @@ const formItems: FormItems = [
     prop: 'action',
     label: '操作选项',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
       options: () => {
         // 通过闭包访问外部 ref：userType（外部状态依赖，watchEffect 会自动追踪）
@@ -1486,7 +1486,7 @@ const formItems: FormItems = [
     prop: 'department',
     label: '部门',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: departments,
     },
   },
@@ -1494,7 +1494,7 @@ const formItems: FormItems = [
     prop: 'role',
     label: '角色',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：依赖部门字段（表单字段依赖）
       options: {
         loader: (formData) => {
@@ -1522,7 +1522,7 @@ const formItems: FormItems = [
     prop: 'features',
     label: '功能权限',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
       // 注意：配置了 deps 后，表单字段依赖通过 watch 监听，外部状态依赖通过 watchEffect 追踪（在 loader 中访问）
       options: {
@@ -1585,7 +1585,7 @@ const onChange = (extendedParams: any, value: any) => {
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | formItems | 表单项配置数组，详见 [FormItem 配置](#formitem-配置) | `FormItems` | `[]` |
-| rowAttrs | 行布局属性，详见 [rowAttrs 配置](#rowattrs-配置) | `RowAttrs` | `{}` |
+| rowProps | 行布局属性，详见 [rowProps 配置](#rowprops-配置) | `RowProps` | `{}` |
 | actionConfig | 操作按钮配置，详见 [actionConfig 配置](#actionconfig-配置) | `ActionConfig` | `{}` |
 | expanded | 展开/折叠状态（双向绑定，仅在 `inline` 模式下且 `actionConfig.buttons` 包含 `'expand'` 时可用） | `boolean` | `false` |
 
@@ -1603,10 +1603,10 @@ const onChange = (extendedParams: any, value: any) => {
 | --- | --- | --- | --- |
 | prop | 表单字段名（必填） | `string` | - |
 | comp | 组件类型（必填） | `FormItemComp` | - |
-| compAttrs | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compAttrs.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>详见 [Options 配置](#options-配置) | `FormItemCompAttrs<C>` | - |
+| compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compProps.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>详见 [Options 配置](#options-配置) | `FormItemCompProps<C>` | - |
 | vIf | 条件渲染（v-if），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
 | vShow | 显示/隐藏（v-show），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
-| colAttrs | 列布局属性，详见 [`ElCol`](https://element-plus.org/zh-CN/component/layout#col-attributes) 组件属性 | `ColAttrs` | - |
+| colProps | 列布局属性，详见 [`ElCol`](https://element-plus.org/zh-CN/component/layout#col-attributes) 组件属性 | `ColProps` | - |
 
 ##### 支持的组件类型
 
@@ -1639,7 +1639,7 @@ const onChange = (extendedParams: any, value: any) => {
 
 ##### Options 配置
 
-`compAttrs.options` 支持三种配置模式，适用于不同的使用场景。
+`compProps.options` 支持三种配置模式，适用于不同的使用场景。
 
 | 模式 | 类型 | 说明 |
 | --- | --- | --- |
@@ -1663,7 +1663,7 @@ const onChange = (extendedParams: any, value: any) => {
 - **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
 - **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理。可以在 `change` 事件中根据业务逻辑进行清理（如 `form.value.tags = undefined`）
 
-#### rowAttrs 配置
+#### rowProps 配置
 
 支持 [`ElRow`](https://element-plus.org/zh-CN/component/layout#row-attributes) 所有的属性。
 
@@ -1671,7 +1671,7 @@ const onChange = (extendedParams: any, value: any) => {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| span | 默认列数（用于 `colAttrs.span` 的默认值） | `number` | - |
+| span | 默认列数（用于 `colProps.span` 的默认值） | `number` | - |
 
 #### actionConfig 配置
 

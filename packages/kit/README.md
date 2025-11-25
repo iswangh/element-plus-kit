@@ -291,14 +291,14 @@ import type {
   ActionConfig,
   ActionConfigButtonItem,
   Arrayable,
-  ColAttrs,
-  ElFormAttrs,
+  ColProps,
+  ElFormProps,
   FormItemExtendedEventParams,
   ExpandRule,
   FormItem,
   FormItems,
   FormItemSlotScope,
-  RowAttrs,
+  RowProps,
 } from '@iswangh/element-plus-kit'
 ```
 
@@ -325,7 +325,7 @@ const formItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
     rules: [

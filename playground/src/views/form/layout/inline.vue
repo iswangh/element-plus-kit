@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems, RowAttrs } from '@iswangh/element-plus-kit-form'
+import type { FormItems, RowProps } from '@iswangh/element-plus-kit-form'
 
 const form = ref({})
 const useColumnLayout = ref(false)
@@ -15,7 +15,7 @@ const defaultFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -24,7 +24,7 @@ const defaultFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -37,7 +37,7 @@ const defaultFormItems: FormItems = [
     prop: 'gender',
     label: '性别',
     comp: 'select',
-    compAttrs: {
+    compProps: {
       options: [
         { label: '男', value: 'male' },
         { label: '女', value: 'female' },
@@ -48,7 +48,7 @@ const defaultFormItems: FormItems = [
     prop: 'birthday',
     label: '生日',
     comp: 'date-picker',
-    compAttrs: {
+    compProps: {
       type: 'date',
     },
   },
@@ -60,7 +60,7 @@ const columnFormItems: FormItems = [
     prop: 'name',
     label: '姓名',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
   },
@@ -68,10 +68,10 @@ const columnFormItems: FormItems = [
     prop: 'age',
     label: '年龄',
     comp: 'input-number',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
-    compAttrs: {
+    compProps: {
       min: 0,
       max: 120,
     },
@@ -80,10 +80,10 @@ const columnFormItems: FormItems = [
     prop: 'email',
     label: '邮箱',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
-    compAttrs: {
+    compProps: {
       type: 'email',
     },
   },
@@ -91,7 +91,7 @@ const columnFormItems: FormItems = [
     prop: 'phone',
     label: '手机号',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
   },
@@ -99,10 +99,10 @@ const columnFormItems: FormItems = [
     prop: 'gender',
     label: '性别',
     comp: 'select',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
-    compAttrs: {
+    compProps: {
       options: [
         { label: '男', value: 'male' },
         { label: '女', value: 'female' },
@@ -113,10 +113,10 @@ const columnFormItems: FormItems = [
     prop: 'birthday',
     label: '生日',
     comp: 'date-picker',
-    colAttrs: {
+    colProps: {
       span: 6,
     },
-    compAttrs: {
+    compProps: {
       type: 'date',
     },
   },
@@ -124,7 +124,7 @@ const columnFormItems: FormItems = [
     prop: 'address',
     label: '地址',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
@@ -132,7 +132,7 @@ const columnFormItems: FormItems = [
     prop: 'remark',
     label: '备注',
     comp: 'input',
-    colAttrs: {
+    colProps: {
       span: 12,
     },
   },
@@ -140,7 +140,7 @@ const columnFormItems: FormItems = [
 
 const formItems = computed(() => useColumnLayout.value ? columnFormItems : defaultFormItems)
 
-const rowAttrs: RowAttrs = {
+const rowProps: RowProps = {
   gutter: 20,
 }
 </script>
@@ -167,14 +167,14 @@ const rowAttrs: RowAttrs = {
       >
         <template #default>
           <p class="text-sm text-gray-600 m-0">
-            {{ useColumnLayout ? '使用 inline 属性配合 colAttrs 配置，表单项在一行内按指定列数分布' : '使用 inline 属性，表单项在一行内展示，适合字段较少的场景' }}
+            {{ useColumnLayout ? '使用 inline 属性配合 colProps 配置，表单项在一行内按指定列数分布' : '使用 inline 属性，表单项在一行内展示，适合字段较少的场景' }}
           </p>
         </template>
       </el-alert>
       <WForm
         :model="form"
         :form-items="formItems"
-        :row-attrs="useColumnLayout ? rowAttrs : undefined"
+        :row-props="useColumnLayout ? rowProps : undefined"
         inline
       />
     </el-space>

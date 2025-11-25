@@ -1,8 +1,25 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FormCompConfig } from './common'
-import type { ElFormItemAttrs } from './el'
-import type { ColAttrs } from './layout'
+import type { FORM_ITEM_COMP_MAP } from '../config'
+import type { ElFormItemProps } from './el'
+import type { ColProps } from './layout'
 import type { GetComponentOptionsType, InferOptionsType, IsOptionsSupported } from './options'
+
+/**
+ * 表单组件配置映射类型
+ */
+export type FormCompConfig = typeof FORM_ITEM_COMP_MAP
+
+/**
+ * 根据组件类型获取组件实例类型
+ * @template C 组件类型
+ */
+export type FormItemCompInstance<C extends FormItemComp> = InstanceType<FormCompConfig[C]>
+
+/**
+ * 根据组件类型获取组件完整 Props 类型（包含事件处理器）
+ * @template C 组件类型
+ */
+type FormItemCompPropsFull<C extends FormItemComp> = FormItemCompInstance<C>['$props']
 
 /**
  * 支持的表单组件枚举
@@ -36,11 +53,11 @@ export type FormItemComp
     | 'custom'
 
 /**
- * 根据组件类型推断对应的属性类型（排除事件处理器）
+ * 根据组件类型推断对应的 Props 类型（排除事件处理器）
  * @template T - 组件类型
  */
-export type FormItemCompAttrs<T extends FormItemComp = FormItemComp>
-  = Omit<InstanceType<FormCompConfig[T]>['$props'], `on${string}`>
+export type FormItemCompProps<T extends FormItemComp = FormItemComp>
+  = Omit<FormItemCompPropsFull<T>, `on${string}`>
 
 /**
  * 根据组件类型推断 options 类型
@@ -52,14 +69,14 @@ export type FormItemOptions<C extends FormItemComp> = IsOptionsSupported<C> exte
   : never
 
 /**
- * FormItem 属性
+ * FormItem Props
  *
- * 扩展自 Element Plus 的 FormItem 组件属性，添加了自定义配置选项
+ * 扩展自 Element Plus 的 FormItem 组件 Props，添加了自定义配置选项
  *
  * @template C - 组件类型
- * @extends {ElFormItemAttrs} Element Plus FormItem 组件原始属性
+ * @extends {ElFormItemProps} Element Plus FormItem 组件原始 Props
  * @property {C} comp 使用的组件类型
- * @property {FormItemCompAttrs<C>} [compAttrs] 传递给组件的属性配置对象
+ * @property {FormItemCompProps<C>} [compProps] 传递给组件的 Props 配置对象
  * @property {boolean | ((data?: any) => boolean)} [vIf] 条件渲染控制，支持布尔值或接收表单数据的函数
  * @property {boolean | ((data?: any) => boolean)} [vShow] 显示/隐藏控制，支持布尔值或接收表单数据的函数
  *
@@ -67,15 +84,15 @@ export type FormItemOptions<C extends FormItemComp> = IsOptionsSupported<C> exte
  */
 export interface FormItem<
   C extends FormItemComp = FormItemComp,
-> extends ElFormItemAttrs {
+> extends ElFormItemProps {
   prop: string
   comp: C
-  compAttrs?: IsOptionsSupported<C> extends true
-    ? FormItemCompAttrs<C> & { options?: FormItemOptions<C> } // 支持 options 的组件：直接覆盖 options 类型为扩展类型
-    : FormItemCompAttrs<C> // 不支持 options 的组件：使用原始属性类型
+  compProps?: IsOptionsSupported<C> extends true
+    ? FormItemCompProps<C> & { options?: FormItemOptions<C> } // 支持 options 的组件：直接覆盖 options 类型为扩展类型
+    : FormItemCompProps<C> // 不支持 options 的组件：使用原始 Props 类型
   vIf?: boolean | ((data: Record<string, any>) => boolean)
   vShow?: boolean | ((data: Record<string, any>) => boolean)
-  colAttrs?: ColAttrs
+  colProps?: ColProps
 }
 
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
