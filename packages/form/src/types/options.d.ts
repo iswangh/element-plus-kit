@@ -1,5 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FormItemComp, FormItemCompProps } from './form-item'
+import type { FormItemComp, FormItemCompProps } from './comp'
 
 /**
  * 检查组件类型是否包含 options 属性
@@ -71,14 +71,6 @@ export type InferOptionsType<T extends FormItemComp, U = any> = IsOptionsSupport
  * 从组件实例的 $props 中提取 options 属性的类型
  * @template T 组件类型
  */
-export type GetComponentOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
+export type GetCompOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
   ? FormItemCompProps<T>['options']
   : never
-
-/**
- * 检查组件类型是否包含 loading 属性
- * @template T 组件类型
- */
-type HasLoadingProp<T extends FormItemComp> = 'loading' extends keyof FormItemCompProps<T>
-  ? true
-  : false

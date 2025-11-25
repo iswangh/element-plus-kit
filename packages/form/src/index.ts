@@ -67,12 +67,13 @@ export { default } from './Form.vue'
 export { default as WForm } from './Form.vue'
 
 export type {
-  ActionConfig,
-  ActionConfigButtonItem,
   Arrayable,
   ColProps,
   ElFormProps,
-  ExpandRule,
+  FormActionButtonItem,
+  FormActionButtons,
+  FormActionConfig,
+  FormExpandRule,
   FormItem,
   FormItemComp,
   FormItemCompProps,

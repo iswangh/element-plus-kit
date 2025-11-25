@@ -8,7 +8,7 @@ import type { Condition } from './common'
  * @property {string} label 按钮文字
  * @property {string} eventName 事件名称
  */
-export interface ActionConfigButtonItem extends Partial<ButtonProps> {
+export interface FormActionButtonItem extends Partial<ButtonProps> {
   label?: string
   eventName: string
 }
@@ -18,7 +18,7 @@ export interface ActionConfigButtonItem extends Partial<ButtonProps> {
  *
  * 可以是标准化的按钮配置对象，也可以是预定义的按钮类型字符串
  */
-export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' | 'search' | 'reset' | 'expand'
+export type FormActionButtons = FormActionButtonItem | 'submit' | 'cancel' | 'search' | 'reset' | 'expand'
 
 /**
  * 展开规则基础配置
@@ -37,7 +37,7 @@ export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' |
  *   - 默认值为 `{ behavior: 'smooth', block: 'center', inline: 'nearest' }`
  *   - 支持所有 `ScrollIntoViewOptions` 类型的选项配置
  */
-export interface ExpandRuleBase {
+export interface FormExpandRuleBase {
   /** 是否启用鼠标悬停自动展开功能 */
   autoExpandOnHover?: boolean
   /** 是否在展开/收起后自动滚动到表单中心 */
@@ -56,21 +56,21 @@ export interface ExpandRuleBase {
  *
  * **配置优先级**：`exclude` > `include` > `count`
  */
-export type ExpandRule
-  = | ({ count: number } & ExpandRuleBase)
-    | ({ include: string[] } & ExpandRuleBase)
-    | ({ exclude: string[] } & ExpandRuleBase)
+export type FormExpandRule
+  = | ({ count: number } & FormExpandRuleBase)
+    | ({ include: string[] } & FormExpandRuleBase)
+    | ({ exclude: string[] } & FormExpandRuleBase)
 
 /**
  * 表单操作项配置
  */
-export interface ActionConfig {
+export interface FormActionConfig {
   /** 是否显示操作区域（支持函数动态判断） */
   vIf?: Condition
   /** 是否显示操作区域（支持函数动态判断，使用 v-show） */
   vShow?: Condition
   /** 操作按钮配置数组 */
-  buttons?: ActionConfigButtons[]
+  buttons?: FormActionButtons[]
   /** 默认展开规则（仅在 buttons 包含 'expand' 时生效） */
-  expand?: ExpandRule
+  expand?: FormExpandRule
 }

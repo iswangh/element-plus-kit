@@ -5,7 +5,7 @@ import type { FormItem, FormItemExtendedEventParams, OptionsConfig, OptionsLoade
 import { ElFormItem } from 'element-plus'
 import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useChangeEventState } from './composables'
-import { COMPONENT_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
+import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
 import { checkValueInOptions, getDepsValues, isEmpty, isOptionsConfig, processDeps } from './utils'
 
 interface ProcessedSlot {
@@ -54,7 +54,7 @@ const formItemProps = computed(() => {
 const formItemSlots = computed(() => props.formSlots.formItemSlots)
 
 /** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
-const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
+const resolvedComp = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
 
 /** 事件扩展参数 */
 const eventExtendedParams = computed(() => ({ prop: props.formItem.prop, formItem: props.formItem, index: props.index }))
@@ -126,7 +126,7 @@ function onChange(event: any) {
 
 /** 处理后的组件属性（包含默认值和用户配置） */
 const processedCompProps = computed(() => {
-  const defaults = COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem)
+  const defaults = COMP_DEFAULT_CONFIG.getDefaults(props.formItem)
   const compProps = props.formItem.compProps ?? {}
 
   // 只有当 compProps 中有 options 字段时，才设置 options 属性
@@ -363,7 +363,7 @@ watch(
     <!-- 标准组件 -->
     <template v-if="formItem.comp !== 'custom'">
       <component
-        :is="resolvedComponent"
+        :is="resolvedComp"
         v-bind="processedCompProps"
         v-model="modelValue"
         @change="onChange"

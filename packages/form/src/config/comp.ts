@@ -10,10 +10,9 @@ export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compProps', 'vIf', 'vShow'] as 
 
 /**
  * 拓展的组件映射
+ * 导出以便在类型文件中使用 typeof 提取类型
  */
-const EXPAND_COMP_MAP = {
-  custom: 'div',
-} as const
+export const EXPAND_COMP_MAP = { custom: 'div' } as const
 
 /**
  * Element Plus 组件映射
@@ -49,16 +48,16 @@ const EL_COMP_MAP = {
  *
  * 使用显式类型注解避免类型推断超出编译器序列化限制
  * 类型提示通过 keyof 提取键名，不依赖完整的类型定义
+ *
+ * 注意：虽然这里使用 Record<string, any>，但实际的类型定义
+ * 通过类型工具在 comp.d.ts 中从 EL_COMP_MAP 和 EXPAND_COMP_MAP 提取
  */
-export const FORM_ITEM_COMP_MAP: Record<string, any> = {
-  ...EL_COMP_MAP,
-  ...EXPAND_COMP_MAP,
-} as const
+export const FORM_ITEM_COMP_MAP = { ...EL_COMP_MAP, ...EXPAND_COMP_MAP } as unknown as Record<string, any>
 
 /**
  * 动态组件默认配置
  */
-export const COMPONENT_DEFAULT_CONFIG = {
+export const COMP_DEFAULT_CONFIG = {
   /**
    * 获取组件默认属性
    */
@@ -66,10 +65,10 @@ export const COMPONENT_DEFAULT_CONFIG = {
     const { comp, compProps = {} } = formItem
 
     // 组件类型
-    const compType = this.getComponentType(comp)
+    const compType = this.getCompType(comp)
 
     // 组件默认属性
-    const compDefaults = this.buildComponentAttrs(formItem, compType)
+    const compDefaults = this.buildCompProps(formItem, compType)
 
     return {
       ...compDefaults,
@@ -80,21 +79,21 @@ export const COMPONENT_DEFAULT_CONFIG = {
   /**
    * 判断组件类型
    */
-  getComponentType(comp: string) {
+  getCompType(comp: string) {
     // 输入类组件
-    const inputComponents: readonly string[] = ['autocomplete', 'input', 'input-number', 'input-tag', 'mention']
+    const inputComps: readonly string[] = ['autocomplete', 'input', 'input-number', 'input-tag', 'mention']
 
     // 选择类组件
-    const selectComponents: readonly string[] = ['cascader', 'select', 'select-v2', 'tree-select']
+    const selectComps: readonly string[] = ['cascader', 'select', 'select-v2', 'tree-select']
 
     // 日期类组件
-    const pickerComponents: readonly string[] = ['date-picker', 'time-select', 'time-picker']
+    const pickerComps: readonly string[] = ['date-picker', 'time-select', 'time-picker']
 
-    if (inputComponents.includes(comp))
+    if (inputComps.includes(comp))
       return 'input'
-    if (selectComponents.includes(comp))
+    if (selectComps.includes(comp))
       return 'select'
-    if (pickerComponents.includes(comp))
+    if (pickerComps.includes(comp))
       return 'picker'
 
     return 'other'
@@ -124,7 +123,7 @@ export const COMPONENT_DEFAULT_CONFIG = {
   /**
    * 构建组件属性
    */
-  buildComponentAttrs(formItem: FormItem, type: string) {
+  buildCompProps(formItem: FormItem, type: string) {
     const defaults: Record<string, any> = {}
     if ((['input', 'select', 'picker'] as readonly string[]).includes(type)) {
       defaults.placeholder = this.generatePlaceholder(formItem, type)

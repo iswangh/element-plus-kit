@@ -1,63 +1,8 @@
-import type { FORM_ITEM_COMP_MAP } from '../config'
 import type { Condition } from './common'
+import type { FormItemComp, FormItemCompProps } from './comp'
 import type { ElFormItemProps } from './el'
 import type { ColProps } from './layout'
-import type { GetComponentOptionsType, InferOptionsType, IsOptionsSupported } from './options'
-
-/**
- * 表单组件配置映射类型
- */
-export type FormCompConfig = typeof FORM_ITEM_COMP_MAP
-
-/**
- * 根据组件类型获取组件实例类型
- * @template T 组件类型
- */
-export type FormItemCompInstance<T extends FormItemComp> = InstanceType<FormCompConfig[T]>
-
-/**
- * 根据组件类型获取组件完整 Props 类型（包含事件处理器）
- * @template T 组件类型
- */
-type FormItemCompPropsFull<T extends FormItemComp> = FormItemCompInstance<T>['$props']
-
-/**
- * 支持的表单组件枚举
- *
- * 显式定义所有可用的组件键名，确保类型提示正常工作
- * 注意：由于 FORM_ITEM_COMP_MAP 使用了 Record<string, any> 避免类型推断超出限制，
- * 我们需要显式定义键名类型，而不是从 typeof FORM_ITEM_COMP_MAP 中提取
- */
-export type FormItemComp
-  = | 'autocomplete'
-    | 'cascader'
-    | 'checkbox'
-    | 'color-picker'
-    | 'color-picker-panel'
-    | 'date-picker'
-    | 'date-picker-panel'
-    | 'input'
-    | 'input-number'
-    | 'input-tag'
-    | 'mention'
-    | 'radio'
-    | 'rate'
-    | 'select'
-    | 'select-v2'
-    | 'slider'
-    | 'switch'
-    | 'time-picker'
-    | 'time-select'
-    | 'transfer'
-    | 'tree-select'
-    | 'custom'
-
-/**
- * 根据组件类型推断对应的 Props 类型（排除事件处理器）
- * @template T - 组件类型
- */
-export type FormItemCompProps<T extends FormItemComp = FormItemComp>
-  = Omit<FormItemCompPropsFull<T>, `on${string}`>
+import type { GetCompOptionsType, InferOptionsType, IsOptionsSupported } from './options'
 
 /**
  * 根据组件类型推断 options 类型
@@ -65,7 +10,7 @@ export type FormItemCompProps<T extends FormItemComp = FormItemComp>
  * @template T - 组件类型
  */
 export type FormItemOptions<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? InferOptionsType<T, GetComponentOptionsType<T>>
+  ? InferOptionsType<T, GetCompOptionsType<T>>
   : never
 
 /**

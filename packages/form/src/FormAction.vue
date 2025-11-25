@@ -1,16 +1,16 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang="ts">
 import type { Slot } from 'vue'
-import type { ActionConfig, ActionConfigButtonItem } from './types'
+import type { FormActionButtonItem, FormActionConfig } from './types'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { ElButton, ElFormItem, ElIcon } from 'element-plus'
 import { computed } from 'vue'
-import { ACTION_DEFAULT_CONFIG, DEFAULT_FORM_ACTION_BUTTONS } from './config'
+import { DEFAULT_FORM_ACTION_BUTTONS, FORM_ACTION_DEFAULT_CONFIG } from './config'
 
 interface Props {
   inline?: boolean
   actionSlot?: Slot
-  config?: ActionConfig
+  config?: FormActionConfig
   /** 展开/折叠状态（仅在 buttons 包含 'expand' 时有效） */
   expanded?: boolean
   /** 是否启用鼠标悬停自动展开 */
@@ -29,16 +29,16 @@ defineOptions({ name: 'ElementPlusKitFormItemAction' })
 
 const props = withDefaults(defineProps<Props>(), {
   inline: false,
-  config: () => ({}), // 默认值在 processedActionAttrs 中处理
+  config: () => ({}), // 默认值在 processedActionProps 中处理
   expanded: false,
 })
 
 const emit = defineEmits<Emits>()
 
 /** 处理后的动作组件属性（合并默认配置和用户自定义配置） */
-const processedActionAttrs = computed(() => ({
+const processedActionProps = computed(() => ({
   ...props,
-  config: { ...ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) },
+  config: { ...FORM_ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) },
 }))
 
 /**
@@ -46,7 +46,7 @@ const processedActionAttrs = computed(() => ({
  * 将字符串类型的按钮配置转换为完整的按钮对象，确保每个按钮都有 eventName 属性
  */
 const normalizedButtons = computed(() => {
-  const { buttons } = processedActionAttrs.value.config
+  const { buttons } = processedActionProps.value.config
 
   return buttons.map((v) => {
     if (typeof v !== 'string')
@@ -62,12 +62,12 @@ const normalizedButtons = computed(() => {
 /**
  * 判断按钮是否为展开/折叠按钮
  */
-function isExpandButton(btn: ActionConfigButtonItem): boolean {
+function isExpandButton(btn: FormActionButtonItem): boolean {
   return btn.eventName === 'expand'
 }
 
 /** 提取 el-button 的属性（排除自定义属性） */
-function getBtnAttrs(btn: ActionConfigButtonItem) {
+function getBtnProps(btn: FormActionButtonItem) {
   const { label: _label, eventName: _eventName, ...rest } = btn
 
   // 如果是 expand 按钮，添加特殊属性
@@ -89,7 +89,7 @@ function getBtnAttrs(btn: ActionConfigButtonItem) {
  *
  * @param btn - 按钮配置
  */
-function onButtonClick(btn: ActionConfigButtonItem) {
+function onButtonClick(btn: FormActionButtonItem) {
   const eventName = btn.eventName
   const data = isExpandButton(btn) ? props.expanded : undefined
   emit('action', { eventName, data })
@@ -100,7 +100,7 @@ function onButtonClick(btn: ActionConfigButtonItem) {
  *
  * @param btn - 按钮配置
  */
-function onButtonMouseEnter(btn: ActionConfigButtonItem) {
+function onButtonMouseEnter(btn: FormActionButtonItem) {
   if (isExpandButton(btn) && props.autoExpandOnHover)
     props.onMouseEnter?.()
 }
@@ -110,7 +110,7 @@ function onButtonMouseEnter(btn: ActionConfigButtonItem) {
  *
  * @param btn - 按钮配置
  */
-function onButtonMouseLeave(btn: ActionConfigButtonItem) {
+function onButtonMouseLeave(btn: FormActionButtonItem) {
   if (isExpandButton(btn) && props.autoExpandOnHover)
     props.onMouseLeave?.()
 }
@@ -118,8 +118,8 @@ function onButtonMouseLeave(btn: ActionConfigButtonItem) {
 
 <template>
   <ElFormItem
-    v-if="processedActionAttrs.config.vIf"
-    v-show="processedActionAttrs.config.vShow"
+    v-if="processedActionProps.config.vIf"
+    v-show="processedActionProps.config.vShow"
     prop="action"
   >
     <template v-if="!actionSlot">
@@ -127,7 +127,7 @@ function onButtonMouseLeave(btn: ActionConfigButtonItem) {
       <ElButton
         v-for="(btn, i) in normalizedButtons"
         :key="`${btn.eventName}-${i}`"
-        v-bind="getBtnAttrs(btn)"
+        v-bind="getBtnProps(btn)"
         @mouseenter="onButtonMouseEnter(btn)"
         @mouseleave="onButtonMouseLeave(btn)"
         @click="onButtonClick(btn)"

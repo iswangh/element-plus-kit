@@ -5,12 +5,13 @@
  * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
  */
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { ActionConfig, Arrayable, ElFormProps, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowProps } from './types'
+import type { Arrayable, ElFormProps, FormActionConfig, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowProps } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
 import { useAutoExpandOnHover } from './composables'
-import { DEFAULT_EXPAND_SCROLL_OPTIONS, DEFAULT_FORM_ATTRS } from './config'
+import { DEFAULT_FORM_PROPS } from './config'
+import { DEFAULT_SCROLL_OPTIONS } from './config/scroll'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
 import { debounce, deepCloneValue, hasButtonEvent } from './utils'
@@ -18,7 +19,7 @@ import { debounce, deepCloneValue, hasButtonEvent } from './utils'
 interface Props extends ElFormProps {
   formItems: FormItems
   rowProps?: RowProps
-  actionConfig?: ActionConfig
+  actionConfig?: FormActionConfig
 }
 
 interface Emits {
@@ -96,7 +97,7 @@ const mergedAttrs = computed(() => {
     Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)),
   )
 
-  return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
+  return { ...rest, ...DEFAULT_FORM_PROPS, ...filteredAttrs }
 })
 
 // 展开/折叠状态（支持 v-model:expanded）
@@ -158,7 +159,7 @@ function toggleExpand(value?: boolean) {
   if (expandRule?.scrollOnToggle) {
     // 等待 DOM 更新和动画完成（动画时长约 250ms）
     nextTick(() => {
-      setTimeout(() => formRef.value?.$el?.scrollIntoView?.(expandRule.scrollIntoViewOptions ?? DEFAULT_EXPAND_SCROLL_OPTIONS), 250)
+      setTimeout(() => formRef.value?.$el?.scrollIntoView?.(expandRule.scrollIntoViewOptions ?? DEFAULT_SCROLL_OPTIONS), 250)
     })
   }
 }

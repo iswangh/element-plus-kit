@@ -1,4 +1,4 @@
 export * from './action'
-export * from './component'
+export * from './comp'
 export * from './form'
 export * from './scroll'
