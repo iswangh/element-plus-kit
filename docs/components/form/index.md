@@ -465,7 +465,7 @@ const rules: FormRules = {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
+import type { FormItems, FormActionConfig } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -485,7 +485,7 @@ const formItems: FormItems = [
   },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   vIf: true, // 当 inline 为 false 时，需要显式设置为 true 才会显示按钮
   buttons: ['submit', 'cancel'],
 }
@@ -648,7 +648,7 @@ const rowProps: RowProps = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -663,7 +663,7 @@ const formItems: FormItems = [
   { prop: 'city', label: '城市', comp: 'input' },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 3, // 默认展开前 3 个字段
@@ -691,7 +691,7 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -705,7 +705,7 @@ const formItems: FormItems = [
   { prop: 'address', label: '地址', comp: 'input' },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     include: ['name', 'email', 'phone'], // 只展开指定的字段
@@ -733,7 +733,7 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -748,7 +748,7 @@ const formItems: FormItems = [
   { prop: 'postcode', label: '邮编', comp: 'input' },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     exclude: ['address', 'city', 'province', 'postcode'], // 折叠指定的字段
@@ -776,7 +776,7 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -797,7 +797,7 @@ const rowProps: RowProps = {
   gutter: 20,
 }
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 6, // 默认展开前 6 个字段（前两行）
@@ -828,7 +828,7 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -843,7 +843,7 @@ const formItems: FormItems = [
   { prop: 'city', label: '城市', comp: 'input' },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 3,
@@ -874,7 +874,7 @@ const actionConfig: ActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -889,7 +889,7 @@ const formItems: FormItems = [
   { prop: 'city', label: '城市', comp: 'input' },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 3,
@@ -1586,7 +1586,7 @@ const onChange = (extendedParams: any, value: any) => {
 | --- | --- | --- | --- |
 | formItems | 表单项配置数组，详见 [FormItem 配置](#formitem-配置) | `FormItems` | `[]` |
 | rowProps | 行布局属性，详见 [rowProps 配置](#rowprops-配置) | `RowProps` | `{}` |
-| actionConfig | 操作按钮配置，详见 [actionConfig 配置](#actionconfig-配置) | `ActionConfig` | `{}` |
+| actionConfig | 操作按钮配置，详见 [actionConfig 配置](#actionconfig-配置) | `FormActionConfig` | `{}` |
 | expanded | 展开/折叠状态（双向绑定，仅在 `inline` 模式下且 `actionConfig.buttons` 包含 `'expand'` 时可用） | `boolean` | `false` |
 
 #### FormItem 配置
@@ -1683,8 +1683,8 @@ const onChange = (extendedParams: any, value: any) => {
 | --- | --- | --- | --- |
 | vIf | 是否显示操作区域（支持函数动态判断） | `boolean \| ((data?: Record<string, any>) => boolean)` | `inline` 为 `true` 时默认为 `true`，`inline` 为 `false` 时默认为 `false` |
 | vShow | 显示/隐藏操作区域（支持函数动态判断，使用 v-show） | `boolean \| ((data?: Record<string, any>) => boolean)` | `true` |
-| buttons | 按钮列表，详见 [buttons 配置](#buttons-配置) | `ActionConfigButtons[]` | `inline` 为 `true` 时默认为 `['search', 'reset']`，`inline` 为 `false` 时默认为 `['submit', 'cancel']` |
-| expand | 默认展开规则（仅在 `buttons` 包含 `'expand'` 时生效），详见 [expand 配置](#expand-配置) | `ExpandRule` | - |
+| buttons | 按钮列表，详见 [buttons 配置](#buttons-配置) | `FormActionButtons[]` | `inline` 为 `true` 时默认为 `['search', 'reset']`，`inline` 为 `false` 时默认为 `['submit', 'cancel']` |
+| expand | 默认展开规则（仅在 `buttons` 包含 `'expand'` 时生效），详见 [expand 配置](#expand-配置) | `FormExpandRule` | - |
 
 ##### buttons 配置
 
@@ -1715,13 +1715,13 @@ const onChange = (extendedParams: any, value: any) => {
 
 | 配置方式 | 说明 | 类型 | 示例 |
 | --- | --- | --- | --- |
-| count | 按字段数量展开（从第一个开始） | `{ count: number } & ExpandRuleBase` | `{ count: 3 }` |
-| include | 指定展示的字段（白名单，字段 prop 数组） | `{ include: string[] } & ExpandRuleBase` | `{ include: ['field1', 'field2'] }` |
-| exclude | 指定折叠的字段（黑名单，字段 prop 数组） | `{ exclude: string[] } & ExpandRuleBase` | `{ exclude: ['field3', 'field4'] }` |
+| count | 按字段数量展开（从第一个开始） | `{ count: number } & FormExpandRuleBase` | `{ count: 3 }` |
+| include | 指定展示的字段（白名单，字段 prop 数组） | `{ include: string[] } & FormExpandRuleBase` | `{ include: ['field1', 'field2'] }` |
+| exclude | 指定折叠的字段（黑名单，字段 prop 数组） | `{ exclude: string[] } & FormExpandRuleBase` | `{ exclude: ['field3', 'field4'] }` |
 
 **配置优先级**：`exclude` > `include` > `count`
 
-**ExpandRuleBase 基础配置**：
+**FormExpandRuleBase 基础配置**：
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |

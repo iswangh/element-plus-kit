@@ -17,6 +17,7 @@ interface ProcessedSlot {
 interface FormSlots {
   formItemSlots: ProcessedSlot[]
   dynamicComponentSlots: Map<string, ProcessedSlot[]>
+  customComponentSlots: Map<string, ProcessedSlot[]>
 }
 
 interface Props {
@@ -35,7 +36,7 @@ defineOptions({ name: 'ElementPlusKitFormItem' })
 
 const props = withDefaults(defineProps<Props>(), {
   formData: () => ({}),
-  formSlots: () => ({ formItemSlots: [], dynamicComponentSlots: new Map() }),
+  formSlots: () => ({ formItemSlots: [], dynamicComponentSlots: new Map(), customComponentSlots: new Map() }),
 })
 
 const emit = defineEmits<Emits>()
@@ -145,6 +146,12 @@ const processedCompProps = computed(() => {
 /** 根据 prop 获取对应的动态组件插槽 */
 function getDynamicComponentSlots(prop: string) {
   return props.formSlots.dynamicComponentSlots.get(prop)
+}
+
+/** 根据 prop 获取对应的自定义组件插槽 */
+function getCustomComponentSlot(prop: string) {
+  const slots = props.formSlots.customComponentSlots.get(prop)
+  return slots && slots.length > 0 && slots[0] ? slots[0].slotFn : undefined
 }
 
 /**
@@ -371,7 +378,13 @@ watch(
     </template>
     <!-- 自定义组件 -->
     <template v-else>
-      <slot :name="formItem.prop" :value="modelValue" :form="formData" :form-item="formItem" />
+      <component
+        :is="getCustomComponentSlot(formItem.prop)!"
+        v-if="getCustomComponentSlot(formItem.prop)"
+        :value="modelValue"
+        :form="formData"
+        :form-item="formItem"
+      />
     </template>
   </ElFormItem>
 </template>

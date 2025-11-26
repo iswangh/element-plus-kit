@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
 import { Loading } from '@element-plus/icons-vue'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
@@ -21,7 +21,7 @@ const loadingStates = ref({
 })
 
 // 测试 1：内置按钮通过配置传入 loading
-const actionConfig1 = computed<ActionConfig>(() => ({
+const actionConfig1 = computed<FormActionConfig>(() => ({
   vIf: true,
   buttons: [
     { eventName: 'search', label: '搜索', type: 'primary', loading: loadingStates.value.search },
@@ -30,7 +30,7 @@ const actionConfig1 = computed<ActionConfig>(() => ({
 }))
 
 // 测试 2：自定义按钮的 loading
-const actionConfig2 = computed<ActionConfig>(() => ({
+const actionConfig2 = computed<FormActionConfig>(() => ({
   vIf: true,
   buttons: [
     { eventName: 'submit', label: '提交', type: 'primary', loading: loadingStates.value.submit },
@@ -40,7 +40,7 @@ const actionConfig2 = computed<ActionConfig>(() => ({
 
 // 测试 3：混合使用（预设按钮字符串 + 自定义按钮对象）
 const customLoading = ref(false)
-const actionConfig3 = computed<ActionConfig>(() => ({
+const actionConfig3 = computed<FormActionConfig>(() => ({
   vIf: true,
   buttons: [
     'search',

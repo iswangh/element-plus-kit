@@ -246,20 +246,31 @@ function getSlotsByPrefix(prefix: string) {
     }))
 }
 
-/** 缓存 el-form-item 和动态组件的插槽配置 */
+/** 缓存 el-form-item、动态组件和自定义组件的插槽配置 */
 const slotsCache = computed(() => {
   const formItemSlots = getSlotsByPrefix('form-item-')
   const dynamicComponentSlots = new Map()
+  const customComponentSlots = new Map()
 
   // 缓存字段插槽
   for (const item of filteredFormItems.value) {
+    // 动态组件插槽（格式：{prop}-{slotName}）
     const fieldSlots = getSlotsByPrefix(`${item.prop}-`)
     if (fieldSlots.length > 0) {
       dynamicComponentSlots.set(item.prop, fieldSlots)
     }
+
+    // 自定义组件插槽（格式：{prop}，且 comp === 'custom'）
+    if (item.comp === 'custom' && slots[item.prop]) {
+      customComponentSlots.set(item.prop, [{
+        rawSlotName: item.prop,
+        slotName: item.prop,
+        slotFn: slots[item.prop]!,
+      }])
+    }
   }
 
-  return { formItemSlots, dynamicComponentSlots }
+  return { formItemSlots, dynamicComponentSlots, customComponentSlots }
 })
 
 /** 判断是否渲染 el-row */
