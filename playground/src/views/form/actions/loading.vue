@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
-import { Loading } from '@element-plus/icons-vue'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 
@@ -106,65 +105,80 @@ async function onAction3(eventName: string) {
 </script>
 
 <template>
-  <div class="loading-test">
-    <el-card shadow="hover" class="mb-4">
+  <el-space class="w-full" direction="vertical" :size="20" fill>
+    <!-- 测试 1：内置按钮通过配置传入 loading -->
+    <el-card class="w-full" shadow="hover">
       <template #header>
-        <div class="flex items-center gap-2">
-          <el-icon><Loading /></el-icon>
-          <span class="font-semibold">Loading 状态测试</span>
-        </div>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 1：内置按钮通过配置传入 loading
+        </h2>
       </template>
-      <div class="space-y-6">
-        <!-- 测试 1：内置按钮通过配置传入 loading -->
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 1：内置按钮通过配置传入 loading
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig1"
-            label-width="100px"
-            @action="onAction1"
-          />
-        </div>
-
-        <!-- 测试 2：自定义按钮的 loading -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 2：自定义按钮的 loading
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig2"
-            label-width="100px"
-            @action="onAction2"
-          />
-        </div>
-
-        <!-- 测试 3：混合使用 -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 3：混合使用（预设按钮字符串 + 自定义按钮对象）
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig3"
-            label-width="100px"
-            @action="onAction3"
-          />
-        </div>
-      </div>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过配置传入 <code>loading</code> 属性，控制内置按钮的加载状态。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig1"
+          label-width="100px"
+          @action="onAction1"
+        />
+      </el-space>
     </el-card>
-  </div>
-</template>
 
-<style scoped lang="scss">
-.loading-test {
-  padding: 20px;
-}
-</style>
+    <!-- 测试 2：自定义按钮的 loading -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 2：自定义按钮的 loading
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：自定义按钮同样支持 <code>loading</code> 属性，可以控制加载状态。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig2"
+          label-width="100px"
+          @action="onAction2"
+        />
+      </el-space>
+    </el-card>
+
+    <!-- 测试 3：混合使用 -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 3：混合使用（预设按钮字符串 + 自定义按钮对象）
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：可以混合使用预设按钮（字符串）和自定义按钮（对象），自定义按钮支持 <code>loading</code> 属性。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig3"
+          label-width="100px"
+          @action="onAction3"
+        />
+      </el-space>
+    </el-card>
+  </el-space>
+</template>

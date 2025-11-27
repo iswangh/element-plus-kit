@@ -1,3 +1,8 @@
+/**
+ * @file 路由配置
+ * @description 动态生成路由配置，支持扁平化路由结构，菜单栏支持多级嵌套显示
+ * @module playground/src/router
+ */
 // 类型导入需要手动导入（类型导入不影响运行时）
 import type { RouteRecordRaw } from 'vue-router'
 // createRouter、createWebHistory 会自动导入，无需手动导入
@@ -10,6 +15,7 @@ interface RouteMetaConfig {
   title: string
   description?: string
   showInSidebar?: boolean
+  order?: number // 菜单排序顺序，数字越小越靠前
 }
 
 /**
@@ -80,76 +86,12 @@ function pathToName(path: string): string {
 }
 
 /**
- * 确保父路由存在，如果不存在则创建
- */
-function ensureParentRoute(
-  parentPath: string,
-  routeMap: Map<string, RouteRecordRaw>,
-  rootRoutes: RouteRecordRaw[],
-): RouteRecordRaw {
-  // 如果父路由已存在，直接返回
-  const existing = routeMap.get(parentPath)
-  if (existing)
-    return existing
-
-  const parentParts = parentPath.split('/').filter(Boolean)
-
-  // 查找父路由的 index.vue 文件
-  const parentIndexPath = `${parentPath}/index.vue`
-  const parentIndexFile = Object.keys(modules).find(f => f.includes(parentIndexPath.replace('../views', '')))
-
-  // 获取父路由的元信息
-  const parentMeta = routeMetaMap[parentPath] || {
-    title: parentParts[parentParts.length - 1]?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Page',
-    showInSidebar: true,
-  }
-
-  // 如果父路由还有父路由，递归创建
-  let routePath: string
-  if (parentParts.length > 1) {
-    // 如果有父路由，使用相对路径（最后一个路径段）
-    routePath = parentParts[parentParts.length - 1] || ''
-  }
-  else {
-    // 如果没有父路由，使用绝对路径
-    routePath = parentPath
-  }
-
-  // 创建父路由
-  const parentRoute: RouteRecordRaw = {
-    path: routePath,
-    name: pathToName(parentPath),
-    component: parentIndexFile
-      ? modules[parentIndexFile] as () => Promise<unknown>
-      : () => Promise.resolve({ default: { template: '<router-view />' } }),
-    meta: {
-      ...parentMeta,
-      showInSidebar: parentMeta.showInSidebar ?? true,
-    },
-    children: [],
-  }
-
-  // 如果父路由还有父路由，递归创建
-  if (parentParts.length > 1) {
-    const grandParentPath = `/${parentParts.slice(0, -1).join('/')}`
-    const grandParentRoute = ensureParentRoute(grandParentPath, routeMap, rootRoutes)
-    if (!grandParentRoute.children)
-      grandParentRoute.children = []
-    grandParentRoute.children.push(parentRoute)
-  }
-  else {
-    rootRoutes.push(parentRoute)
-  }
-
-  routeMap.set(parentPath, parentRoute)
-  return parentRoute
-}
-
-/**
- * 构建嵌套路由结构
+ * 构建扁平化路由结构（所有路由都是根路由的直接子路由）
+ * 保持路径层级用于菜单栏嵌套显示
+ * @param routeItems - 路由项数组
+ * @returns 扁平化的路由配置数组
  */
 function buildNestedRoutes(routeItems: RouteItem[]): RouteRecordRaw[] {
-  const routeMap = new Map<string, RouteRecordRaw>()
   const rootRoutes: RouteRecordRaw[] = []
 
   // 按路径深度排序（浅层在前）
@@ -160,8 +102,6 @@ function buildNestedRoutes(routeItems: RouteItem[]): RouteRecordRaw[] {
   })
 
   for (const item of sortedItems) {
-    const pathParts = item.path.split('/').filter(Boolean)
-
     // 根路径
     if (item.path === '/') {
       const route: RouteRecordRaw = {
@@ -171,103 +111,22 @@ function buildNestedRoutes(routeItems: RouteItem[]): RouteRecordRaw[] {
         meta: {
           ...item.meta,
         },
-        children: [],
       }
       rootRoutes.push(route)
-      routeMap.set('/', route)
       continue
     }
 
-    // 一级路由
-    if (pathParts.length === 1) {
-      // 检查是否已存在（可能由 ensureParentRoute 创建）
-      const existing = routeMap.get(item.path)
-      if (existing) {
-        // 如果已存在，更新组件（使用实际的 index.vue 组件）
-        existing.component = item.component
-        existing.meta = {
-          ...item.meta,
-        }
-      }
-      else {
-        const route: RouteRecordRaw = {
-          path: item.path,
-          name: item.name,
-          component: item.component,
-          meta: {
-            ...item.meta,
-          },
-          children: [],
-        }
-        rootRoutes.push(route)
-        routeMap.set(item.path, route)
-      }
+    // 所有其他路由都作为根路由的直接子路由（扁平化）
+    // 使用完整路径作为路由路径，保持路径层级用于菜单栏嵌套显示
+    const route: RouteRecordRaw = {
+      path: item.path,
+      name: item.name,
+      component: item.component,
+      meta: {
+        ...item.meta,
+      },
     }
-    else {
-      // 多级路由
-      const parentPath = `/${pathParts.slice(0, -1).join('/')}`
-
-      // 检查当前项是否是 index.vue（父路由本身）
-      if (item.isIndex) {
-        // index.vue 应该更新对应路径的路由组件
-        // 先确保父路由存在（如果不存在，会创建）
-        ensureParentRoute(parentPath, routeMap, rootRoutes)
-
-        // 检查当前路径的路由是否已存在
-        const existing = routeMap.get(item.path)
-        if (existing) {
-          // 如果已存在（可能由 ensureParentRoute 创建），更新组件
-          existing.component = item.component
-          existing.meta = {
-            ...item.meta,
-          }
-        }
-        else {
-          // 如果不存在，需要创建路由并添加到父路由的 children
-          const parentRoute = ensureParentRoute(parentPath, routeMap, rootRoutes)
-          const route: RouteRecordRaw = {
-            path: pathParts[pathParts.length - 1] || '',
-            name: item.name,
-            component: item.component,
-            meta: {
-              ...item.meta,
-            },
-            children: [],
-          }
-
-          if (!parentRoute.children)
-            parentRoute.children = []
-          parentRoute.children.push(route)
-
-          // 使用完整路径作为 key，用于查找
-          routeMap.set(item.path, route)
-        }
-      }
-      else {
-        // 非 index.vue，查找或创建父路由，然后创建子路由
-        const parentRoute = ensureParentRoute(parentPath, routeMap, rootRoutes)
-
-        // 子路由使用相对路径（相对于父路由）
-        const childPath = pathParts[pathParts.length - 1] || ''
-        const route: RouteRecordRaw = {
-          path: childPath,
-          name: item.name,
-          component: item.component,
-          meta: {
-            ...item.meta,
-          },
-          children: [],
-        }
-
-        // 将当前路由添加到父路由的 children
-        if (!parentRoute.children)
-          parentRoute.children = []
-        parentRoute.children.push(route)
-
-        // 使用完整路径作为 key，用于查找
-        routeMap.set(item.path, route)
-      }
-    }
+    rootRoutes.push(route)
   }
 
   return rootRoutes
@@ -275,6 +134,7 @@ function buildNestedRoutes(routeItems: RouteItem[]): RouteRecordRaw[] {
 
 /**
  * 生成路由配置
+ * @returns 路由配置数组
  */
 function generateRoutes(): RouteRecordRaw[] {
   const routeItems: RouteItem[] = []
@@ -307,14 +167,15 @@ function generateRoutes(): RouteRecordRaw[] {
     })
   }
 
-  // 构建嵌套路由
+  // 构建扁平化路由（所有路由都是根路由的直接子路由）
   const routes = buildNestedRoutes(routeItems)
 
   // 确保首页路由在第一位
   const homeIndex = routes.findIndex(r => r.path === '/')
   if (homeIndex > 0) {
     const homeRoute = routes.splice(homeIndex, 1)[0]
-    routes.unshift(homeRoute)
+    if (homeRoute)
+      routes.unshift(homeRoute)
   }
 
   // 添加 404 路由

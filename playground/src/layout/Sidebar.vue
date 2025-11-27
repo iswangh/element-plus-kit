@@ -2,6 +2,7 @@
 import type { PropType } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
 import router from '@/router'
+import { formRouteMeta } from '@/router/modules'
 
 const route = useRoute()
 
@@ -62,23 +63,39 @@ const menuItems = computed(() => {
 })
 
 /**
+ * 获取路由元信息中的中文标题
+ */
+function getRouteTitle(path: string): string | undefined {
+  // 从 formRouteMeta 中查找
+  const formMeta = formRouteMeta[path as keyof typeof formRouteMeta]
+  if (formMeta)
+    return formMeta.title
+
+  // 从路由中查找
+  const route = router.getRoutes().find(r => getFullPath(r) === path)
+  return route?.meta?.title as string | undefined
+}
+
+/**
  * 确保父菜单存在，如果不存在则创建
  */
 function ensureParentMenu(
   parentPath: string,
   menuMap: Map<string, MenuItemType>,
   rootMenus: MenuItemType[],
+  routes: RouteRecordNormalized[],
 ): MenuItemType {
   // 如果父菜单已存在，直接返回
   const existing = menuMap.get(parentPath)
   if (existing)
     return existing
 
+  // 优先从路由元信息中获取中文标题，其次从路由中获取，最后使用路径转换
+  const parentLabel = getRouteTitle(parentPath)
+    || routes.find(r => getFullPath(r) === parentPath)?.meta?.title as string | undefined
+    || parentPath.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || parentPath
+
   const parentParts = parentPath.split('/').filter(Boolean)
-  const lastPart = parentParts[parentParts.length - 1]
-  const parentLabel = lastPart
-    ?.replace(/-/g, ' ')
-    .replace(/\b\w/g, l => l.toUpperCase()) || parentPath
 
   // 创建父菜单
   const newParentMenu: MenuItemType = {
@@ -91,7 +108,7 @@ function ensureParentMenu(
   // 如果父菜单还有父菜单，递归创建
   if (parentParts.length > 1) {
     const grandParentPath = `/${parentParts.slice(0, -1).join('/')}`
-    const grandParentMenu = ensureParentMenu(grandParentPath, menuMap, rootMenus)
+    const grandParentMenu = ensureParentMenu(grandParentPath, menuMap, rootMenus, routes)
     if (!grandParentMenu.children)
       grandParentMenu.children = []
     grandParentMenu.children.push(newParentMenu)
@@ -147,16 +164,7 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
   const menuMap = new Map<string, MenuItemType>()
   const rootMenus: MenuItemType[] = []
 
-  // Form 菜单排序优先级
-  const formMenuOrder: Record<string, number> = {
-    basic: 1,
-    layout: 2,
-    actions: 3,
-    options: 4,
-    deps: 5,
-  }
-
-  // 按路径深度排序（浅层在前），首页始终在第一位，form 菜单按自定义顺序排序
+  // 排序逻辑：优先使用 meta.order，其次按路径深度，最后按路径字符串
   const sortedRoutes = [...routes].sort((a, b) => {
     const fullPathA = getFullPath(a)
     const fullPathB = getFullPath(b)
@@ -167,47 +175,35 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
     if (fullPathB === '/')
       return 1
 
-    // Form 菜单自定义排序
-    const isFormA = fullPathA.startsWith('/form/')
-    const isFormB = fullPathB.startsWith('/form/')
+    // 优先使用 meta.order 字段（如果存在）
+    const orderA = (a.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER
+    const orderB = (b.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER
 
-    if (isFormA && isFormB) {
-      const pathPartsA = fullPathA.split('/').filter(Boolean)
-      const pathPartsB = fullPathB.split('/').filter(Boolean)
+    if (orderA !== orderB)
+      return orderA - orderB
 
-      // 提取第二级路径（如 basic、layout 等）
-      const secondLevelA = pathPartsA[1]
-      const secondLevelB = pathPartsB[1]
-
-      const orderA = formMenuOrder[secondLevelA] ?? 999
-      const orderB = formMenuOrder[secondLevelB] ?? 999
-
-      // 如果优先级相同，按路径深度排序
-      if (orderA !== orderB)
-        return orderA - orderB
-
-      // 如果深度相同，按路径字符串排序
-      const depthA = pathPartsA.length
-      const depthB = pathPartsB.length
-      if (depthA !== depthB)
-        return depthA - depthB
-
-      return fullPathA.localeCompare(fullPathB)
-    }
-
-    // 非 form 菜单保持原有排序逻辑
+    // 如果 order 相同，按路径深度排序（浅层在前）
     const depthA = fullPathA.split('/').filter(Boolean).length
     const depthB = fullPathB.split('/').filter(Boolean).length
-    return depthA - depthB
+    if (depthA !== depthB)
+      return depthA - depthB
+
+    // 如果深度相同，按路径字符串排序
+    return fullPathA.localeCompare(fullPathB)
   })
 
   for (const routeItem of sortedRoutes) {
     const fullPath = getFullPath(routeItem)
     const pathParts = fullPath.split('/').filter(Boolean)
 
+    // 优先从路由元信息中获取中文标题，其次从路由 meta 中获取，最后使用路由名称
+    const menuLabel = getRouteTitle(fullPath)
+      || (routeItem.meta?.title as string | undefined)
+      || routeItem.name as string
+
     const menuItem: MenuItemType = {
       key: routeItem.name as string,
-      label: _get(routeItem, 'meta.title') || routeItem.name as string,
+      label: menuLabel,
       path: fullPath,
       children: [],
     }
@@ -228,7 +224,7 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
     else {
       // 多级菜单，查找或创建父菜单
       const parentPath = `/${pathParts.slice(0, -1).join('/')}`
-      const parentMenu = ensureParentMenu(parentPath, menuMap, rootMenus)
+      const parentMenu = ensureParentMenu(parentPath, menuMap, rootMenus, routes)
 
       // 将当前菜单项添加到父菜单的 children
       if (!parentMenu.children)
@@ -238,6 +234,31 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
       menuMap.set(fullPath, menuItem)
     }
   }
+
+  // 对每个菜单的 children 进行排序
+  function sortMenuChildren(menus: MenuItemType[]) {
+    for (const menu of menus) {
+      if (menu.children && menu.children.length > 0) {
+        // 按 order 字段排序，如果没有 order 则按路径排序
+        menu.children.sort((a, b) => {
+          const routeA = routes.find(r => getFullPath(r) === a.path)
+          const routeB = routes.find(r => getFullPath(r) === b.path)
+          const orderA = (routeA?.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER
+          const orderB = (routeB?.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER
+
+          if (orderA !== orderB)
+            return orderA - orderB
+
+          return a.path.localeCompare(b.path)
+        })
+
+        // 递归排序子菜单
+        sortMenuChildren(menu.children)
+      }
+    }
+  }
+
+  sortMenuChildren(rootMenus)
 
   return rootMenus
 }

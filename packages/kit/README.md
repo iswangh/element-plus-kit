@@ -288,13 +288,13 @@ import { WForm } from '@iswangh/element-plus-kit'
 
 ```typescript
 import type {
-  ActionConfig,
-  ActionConfigButtonItem,
+  FormActionConfig,
+  FormActionButtonItem,
   Arrayable,
   ColProps,
   ElFormProps,
   FormItemExtendedEventParams,
-  ExpandRule,
+  FormExpandRule,
   FormItem,
   FormItems,
   FormItemSlotScope,
@@ -352,7 +352,7 @@ const form = ref({
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WForm } from '@iswangh/element-plus-kit'
-import type { FormItems, ActionConfig } from '@iswangh/element-plus-kit'
+import type { FormItems, FormActionConfig } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {
@@ -362,7 +362,7 @@ const formItems: FormItems = [
   },
 ]
 
-const actionConfig: ActionConfig = {
+const actionConfig: FormActionConfig = {
   buttons: ['search', 'reset'],
 }
 

@@ -2,7 +2,7 @@ import type { Condition } from './common'
 import type { FormItemComp, FormItemCompProps } from './comp'
 import type { ElFormItemProps } from './el'
 import type { ColProps } from './layout'
-import type { GetCompOptionsType, InferOptionsType, IsOptionsSupported } from './options'
+import type { InferOptionsType, IsOptionsSupported } from './options'
 
 /**
  * 根据组件类型推断 options 类型
@@ -10,7 +10,7 @@ import type { GetCompOptionsType, InferOptionsType, IsOptionsSupported } from '.
  * @template T - 组件类型
  */
 export type FormItemOptions<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? InferOptionsType<T, GetCompOptionsType<T>>
+  ? InferOptionsType<T>
   : never
 
 /**

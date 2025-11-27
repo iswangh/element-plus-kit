@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormItems } from '@iswangh/element-plus-kit-form'
-import { Edit, Lock, Search, User } from '@element-plus/icons-vue'
+import { Edit, Lock, QuestionFilled, Search, User, WarningFilled } from '@element-plus/icons-vue'
 import { WForm } from '@iswangh/element-plus-kit'
 
 const form = ref({
@@ -37,12 +37,16 @@ const formItems1: FormItems = [
   },
 ]
 
-// 示例 2：表单项插槽（label、error）
-const formItems2: FormItems = [
+// 示例 2-1：通用表单项插槽（form-item-label、form-item-error）
+const formItems2a: FormItems = [
   {
     prop: 'username',
     label: '用户名',
     comp: 'input',
+    rules: [
+      { required: true, message: '请输入用户名', trigger: 'blur' },
+      { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
+    ],
   },
   {
     prop: 'email',
@@ -54,6 +58,62 @@ const formItems2: FormItems = [
     rules: [
       { required: true, message: '请输入邮箱', trigger: 'blur' },
       { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },
+    ],
+  },
+  {
+    prop: 'phone',
+    label: '手机号',
+    comp: 'input',
+    rules: [
+      { required: true, message: '请输入手机号', trigger: 'blur' },
+      { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+    ],
+  },
+]
+
+// 示例 2-2：特定字段的表单项插槽（form-item-{prop}-label、form-item-{prop}-error）
+const formItems2b: FormItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    comp: 'input',
+    rules: [
+      { required: true, message: '请输入用户名', trigger: 'blur' },
+      { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
+    ],
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    comp: 'input',
+    compProps: {
+      type: 'email',
+    },
+    rules: [
+      { required: true, message: '请输入邮箱', trigger: 'blur' },
+      { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },
+    ],
+  },
+  {
+    prop: 'phone',
+    label: '手机号',
+    comp: 'input',
+    rules: [
+      { required: true, message: '请输入手机号', trigger: 'blur' },
+      { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+    ],
+  },
+  {
+    prop: 'password',
+    label: '密码',
+    comp: 'input',
+    compProps: {
+      type: 'password',
+      showPassword: true,
+    },
+    rules: [
+      { required: true, message: '请输入密码', trigger: 'blur' },
+      { min: 8, message: '密码长度不能少于 8 位', trigger: 'blur' },
     ],
   },
 ]
@@ -151,29 +211,90 @@ const formItems4: FormItems = [
       </el-space>
     </el-card>
 
-    <!-- 示例 2：表单项插槽（label、error） -->
+    <!-- 示例 2-1：通用表单项插槽（form-item-label、form-item-error） -->
     <el-card class="w-full" shadow="hover">
       <template #header>
         <h2 class="text-lg text-gray-800 font-semibold m-0">
-          示例 2：表单项插槽（label、error）
+          示例 2-1：通用表单项插槽（form-item-label、form-item-error）
         </h2>
       </template>
       <el-space class="w-full" direction="vertical" :size="20" fill>
         <el-alert type="info" :closable="false" show-icon>
           <template #default>
             <p class="text-sm text-gray-600 m-0">
-              说明：使用表单项插槽自定义表单项内容，如 <code>label</code>、<code>error</code> 等。
+              说明：使用通用表单项插槽 <code>form-item-label</code> 和 <code>form-item-error</code>，会应用到所有表单项。
               <br>
-              <strong>插槽命名规则</strong>：<code>form-item-{slotName}</code>，如 <code>form-item-email-label</code>。
+              <strong>插槽命名规则</strong>：<code>form-item-{slotName}</code>，如 <code>form-item-label</code>、<code>form-item-error</code>。
+              <br>
+              <strong>作用域参数</strong>：<code>{ value, form, formItem, ...elFormItemProps }</code>。
             </p>
           </template>
         </el-alert>
-        <WForm :model="form" :form-items="formItems2" label-width="100px">
-          <!-- 表单项插槽：form-item-email-label -->
-          <template #form-item-email-label="{ formItem }">
-            <span style="color: #409eff">
-              {{ formItem.label }}（自定义标签）
+        <WForm :model="form" :form-items="formItems2a" label-width="120px">
+          <!-- 通用表单项插槽：form-item-label（应用到所有字段） -->
+          <template #form-item-label="{ formItem, label }">
+            <span class="flex items-center gap-1">
+              <span>{{ label }}</span>
+              <el-tag v-if="formItem?.rules?.some((r: any) => r.required)" size="small" type="danger" effect="plain">必填</el-tag>
             </span>
+          </template>
+
+          <!-- 通用表单项插槽：form-item-error（自定义错误信息显示） -->
+          <template #form-item-error="{ error }">
+            <div class="flex items-center gap-1 text-red-500">
+              <el-icon><WarningFilled /></el-icon>
+              <span class="font-medium">{{ error }}</span>
+            </div>
+          </template>
+        </WForm>
+      </el-space>
+    </el-card>
+
+    <!-- 示例 2-2：特定字段的表单项插槽（form-item-{prop}-label、form-item-{prop}-error） -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          示例 2-2：特定字段的表单项插槽（form-item-{prop}-label、form-item-{prop}-error）
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：使用特定字段的表单项插槽，可以针对特定字段自定义标签和错误信息。
+              <br>
+              <strong>插槽命名规则</strong>：<code>form-item-{prop}-{slotName}</code>，如 <code>form-item-email-label</code>、<code>form-item-phone-error</code>。
+              <br>
+              <strong>优先级</strong>：特定字段插槽优先级高于通用插槽。
+            </p>
+          </template>
+        </el-alert>
+        <WForm :model="form" :form-items="formItems2b" label-width="100px">
+          <!-- 特定字段插槽：form-item-email-label（只应用于 email 字段） -->
+          <template #form-item-email-label="{ formItem }">
+            <span v-if="formItem" class="flex items-center gap-1">
+              <el-icon class="text-blue-500"><Edit /></el-icon>
+              <span class="font-semibold text-blue-600">{{ formItem?.label }}</span>
+              <el-tag size="small" type="danger" effect="plain">必填</el-tag>
+            </span>
+          </template>
+
+          <!-- 特定字段插槽：form-item-phone-label（只应用于 phone 字段） -->
+          <template #form-item-phone-label="{ formItem }">
+            <span v-if="formItem" class="flex items-center gap-2">
+              <span>{{ formItem?.label }}</span>
+              <el-tooltip content="请输入11位手机号码" placement="top">
+                <el-icon class="text-gray-400 cursor-help"><QuestionFilled /></el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+
+          <!-- 特定字段插槽：form-item-password-error（只应用于 password 字段） -->
+          <template #form-item-password-error="{ error }">
+            <div class="flex items-center gap-1 text-red-500">
+              <el-icon><WarningFilled /></el-icon>
+              <span class="font-medium">{{ error }}</span>
+            </div>
           </template>
         </WForm>
       </el-space>
@@ -243,8 +364,8 @@ const formItems4: FormItems = [
 
           <!-- 表单项插槽：form-item-email-label -->
           <template #form-item-email-label="{ formItem }">
-            <span style="color: #409eff">
-              {{ formItem.label }}（自定义标签）
+            <span v-if="formItem" style="color: #409eff">
+              {{ formItem?.label }}（自定义标签）
             </span>
           </template>
 

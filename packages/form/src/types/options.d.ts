@@ -60,10 +60,9 @@ export interface OptionsConfig {
 /**
  * 根据组件类型推断 options 类型
  * @template T 组件类型
- * @template U 组件实例类型
  */
-export type InferOptionsType<T extends FormItemComp, U = any> = IsOptionsSupported<T> extends true
-  ? U[] | OptionsLoader | OptionsConfig
+export type InferOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
+  ? any[] | OptionsLoader | OptionsConfig
   : never
 
 /**

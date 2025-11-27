@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
-import { Delete, Download, Edit, Setting, Upload } from '@element-plus/icons-vue'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
+import { Delete, Download, Edit, Upload } from '@element-plus/icons-vue'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 
@@ -13,7 +13,7 @@ const formItems: FormItems = [
 ]
 
 // 测试 1：完全自定义按钮
-const actionConfig1: ActionConfig = {
+const actionConfig1: FormActionConfig = {
   vIf: true,
   buttons: [
     { eventName: 'download', label: '下载', icon: Download, type: 'primary' },
@@ -24,7 +24,7 @@ const actionConfig1: ActionConfig = {
 }
 
 // 测试 2：自定义按钮样式
-const actionConfig2: ActionConfig = {
+const actionConfig2: FormActionConfig = {
   vIf: true,
   buttons: [
     { eventName: 'primary', label: '主要按钮', type: 'primary' },
@@ -36,7 +36,7 @@ const actionConfig2: ActionConfig = {
 }
 
 // 测试 3：自定义按钮大小和形状
-const actionConfig3: ActionConfig = {
+const actionConfig3: FormActionConfig = {
   vIf: true,
   buttons: [
     { eventName: 'large', label: '大按钮', size: 'large' },
@@ -48,7 +48,7 @@ const actionConfig3: ActionConfig = {
 }
 
 // 测试 4：混合使用预设和自定义按钮
-const actionConfig4: ActionConfig = {
+const actionConfig4: FormActionConfig = {
   vIf: true,
   buttons: [
     'search',
@@ -79,80 +79,105 @@ function onAction4(eventName: string) {
 </script>
 
 <template>
-  <div class="custom-test">
-    <el-card shadow="hover" class="mb-4">
+  <el-space class="w-full" direction="vertical" :size="20" fill>
+    <!-- 测试 1：完全自定义按钮 -->
+    <el-card class="w-full" shadow="hover">
       <template #header>
-        <div class="flex items-center gap-2">
-          <el-icon><Setting /></el-icon>
-          <span class="font-semibold">自定义按钮测试</span>
-        </div>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 1：完全自定义按钮（带图标）
+        </h2>
       </template>
-      <div class="space-y-6">
-        <!-- 测试 1：完全自定义按钮 -->
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 1：完全自定义按钮（带图标）
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig1"
-            label-width="100px"
-            @action="onAction1"
-          />
-        </div>
-
-        <!-- 测试 2：自定义按钮样式 -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 2：自定义按钮样式
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig2"
-            label-width="100px"
-            @action="onAction2"
-          />
-        </div>
-
-        <!-- 测试 3：自定义按钮大小和形状 -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 3：自定义按钮大小和形状
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig3"
-            label-width="100px"
-            @action="onAction3"
-          />
-        </div>
-
-        <!-- 测试 4：混合使用 -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 4：混合使用预设和自定义按钮
-          </h3>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig4"
-            label-width="100px"
-            @action="onAction4"
-          />
-        </div>
-      </div>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：使用对象数组配置按钮，支持自定义图标、类型等属性。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig1"
+          label-width="100px"
+          @action="onAction1"
+        />
+      </el-space>
     </el-card>
-  </div>
-</template>
 
-<style scoped lang="scss">
-.custom-test {
-  padding: 20px;
-}
-</style>
+    <!-- 测试 2：自定义按钮样式 -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 2：自定义按钮样式
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>type</code> 属性自定义按钮样式，支持 <code>primary</code>、<code>success</code>、<code>info</code>、<code>warning</code>、<code>danger</code>。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig2"
+          label-width="100px"
+          @action="onAction2"
+        />
+      </el-space>
+    </el-card>
+
+    <!-- 测试 3：自定义按钮大小和形状 -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 3：自定义按钮大小和形状
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>size</code> 属性控制按钮大小，通过 <code>circle</code> 和 <code>round</code> 属性控制按钮形状。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig3"
+          label-width="100px"
+          @action="onAction3"
+        />
+      </el-space>
+    </el-card>
+
+    <!-- 测试 4：混合使用 -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 4：混合使用预设和自定义按钮
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：可以混合使用预设按钮（字符串）和自定义按钮（对象），灵活配置按钮组合。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig4"
+          label-width="100px"
+          @action="onAction4"
+        />
+      </el-space>
+    </el-card>
+  </el-space>
+</template>

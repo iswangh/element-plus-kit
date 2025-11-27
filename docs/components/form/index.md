@@ -929,7 +929,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -950,7 +950,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -971,7 +971,7 @@ const onChange = (extendedParams: any, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1017,7 +1017,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1038,7 +1038,7 @@ const onChange = (extendedParams: any, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1091,7 +1091,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1116,7 +1116,7 @@ Options 支持表单字段依赖和外部状态依赖，可以单独使用或组
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1226,7 +1226,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1247,7 +1247,7 @@ const onChange = (extendedParams: any, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态：用户类型
 const userType = ref<'admin' | 'user' | 'guest'>('user')
@@ -1331,7 +1331,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1368,7 +1368,7 @@ const onChange = (extendedParams: any, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态：用户权限级别
 const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
@@ -1546,7 +1546,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: any, value: any) => {
+const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>

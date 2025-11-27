@@ -360,7 +360,7 @@ watch(
   <ElFormItem v-bind="formItemProps">
     <!-- el-form-item slots -->
     <template v-for="(slot, slotIndex) in formItemSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-      <component :is="slot.slotFn" :value="modelValue" :form="formData" :form-item="formItem" v-bind="slotProps" />
+      <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
     </template>
     <!-- 标准组件 -->
     <template v-if="formItem.comp !== 'custom'">
@@ -372,7 +372,7 @@ watch(
       >
         <!-- dynamic component slots -->
         <template v-for="(slot, slotIndex) in getDynamicComponentSlots(formItem.prop) ?? []" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-          <component :is="slot.slotFn" :value="modelValue" :form="formData" :form-item="formItem" v-bind="slotProps" />
+          <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
         </template>
       </component>
     </template>

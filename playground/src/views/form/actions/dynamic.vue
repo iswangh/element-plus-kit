@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { ActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
-import { Connection } from '@element-plus/icons-vue'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 
@@ -15,13 +14,13 @@ const formItems: FormItems = [
 ]
 
 // 测试 1：根据表单数据动态控制按钮显示
-const actionConfig1 = computed<ActionConfig>(() => ({
+const actionConfig1 = computed<FormActionConfig>(() => ({
   vIf: form.value.hasData,
   buttons: ['submit', 'cancel'],
 }))
 
 // 测试 2：根据表单数据动态控制按钮状态（disabled）
-const actionConfig2 = computed<ActionConfig>(() => ({
+const actionConfig2 = computed<FormActionConfig>(() => ({
   vIf: true,
   buttons: [
     {
@@ -40,7 +39,7 @@ const actionConfig2 = computed<ActionConfig>(() => ({
 
 // 测试 3：根据表单数据动态控制按钮 loading
 const loadingState = ref(false)
-const actionConfig3 = computed<ActionConfig>(() => ({
+const actionConfig3 = computed<FormActionConfig>(() => ({
   vIf: true,
   buttons: [
     {
@@ -81,75 +80,82 @@ async function onAction3(eventName: string) {
 </script>
 
 <template>
-  <div class="dynamic-test">
-    <el-card shadow="hover" class="mb-4">
+  <el-space class="w-full" direction="vertical" :size="20" fill>
+    <!-- 测试 1：根据表单数据动态控制按钮显示 -->
+    <el-card class="w-full" shadow="hover">
       <template #header>
-        <div class="flex items-center gap-2">
-          <el-icon><Connection /></el-icon>
-          <span class="font-semibold">动态控制按钮状态测试</span>
-        </div>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 1：根据表单数据动态控制按钮显示（vIf）
+        </h2>
       </template>
-      <div class="space-y-6">
-        <!-- 测试 1：根据表单数据动态控制按钮显示 -->
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 1：根据表单数据动态控制按钮显示（vIf）
-          </h3>
-          <p class="mb-2 text-sm text-gray-500">
-            当"是否有数据"开关为开启时，按钮才会显示
-          </p>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig1"
-            label-width="100px"
-            @action="onAction1"
-          />
-        </div>
-
-        <!-- 测试 2：根据表单数据动态控制按钮状态（disabled） -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 2：根据表单数据动态控制按钮状态（disabled）
-          </h3>
-          <p class="mb-2 text-sm text-gray-500">
-            当"是否有数据"开关为关闭时，按钮会被禁用
-          </p>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig2"
-            label-width="100px"
-            @action="onAction2"
-          />
-        </div>
-
-        <!-- 测试 3：根据表单数据动态控制按钮 loading -->
-        <el-divider />
-        <div>
-          <h3 class="mb-2 text-base font-medium">
-            测试 3：根据表单数据动态控制按钮 loading 和 disabled
-          </h3>
-          <p class="mb-2 text-sm text-gray-500">
-            提交按钮：当"是否有数据"开关为关闭时禁用，提交时显示 loading<br>
-            取消按钮：提交时禁用
-          </p>
-          <WForm
-            :model="form"
-            :form-items="formItems"
-            :action-config="actionConfig3"
-            label-width="100px"
-            @action="onAction3"
-          />
-        </div>
-      </div>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>vIf</code> 属性根据表单数据动态控制按钮显示。当"是否有数据"开关为开启时，按钮才会显示。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig1"
+          label-width="100px"
+          @action="onAction1"
+        />
+      </el-space>
     </el-card>
-  </div>
-</template>
 
-<style scoped lang="scss">
-.dynamic-test {
-  padding: 20px;
-}
-</style>
+    <!-- 测试 2：根据表单数据动态控制按钮状态（disabled） -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 2：根据表单数据动态控制按钮状态（disabled）
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：通过 <code>disabled</code> 属性根据表单数据动态控制按钮状态。当"是否有数据"开关为关闭时，按钮会被禁用。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig2"
+          label-width="100px"
+          @action="onAction2"
+        />
+      </el-space>
+    </el-card>
+
+    <!-- 测试 3：根据表单数据动态控制按钮 loading -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          测试 3：根据表单数据动态控制按钮 loading 和 disabled
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：同时使用 <code>loading</code> 和 <code>disabled</code> 属性动态控制按钮状态。<br>
+              提交按钮：当"是否有数据"开关为关闭时禁用，提交时显示 loading<br>
+              取消按钮：提交时禁用
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form"
+          :form-items="formItems"
+          :action-config="actionConfig3"
+          label-width="100px"
+          @action="onAction3"
+        />
+      </el-space>
+    </el-card>
+  </el-space>
+</template>

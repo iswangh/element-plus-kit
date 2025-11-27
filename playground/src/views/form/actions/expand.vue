@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit-form'
+import type { FormActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -23,25 +23,25 @@ const baseFormItems: FormItems = [
 ]
 
 // 示例 1：count（前三个）
-const actionConfig1: ActionConfig = {
+const actionConfig1: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { count: 3 },
 }
 
 // 示例 2：include（白名单：中间三个）
-const actionConfig2: ActionConfig = {
+const actionConfig2: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { include: ['email', 'phone', 'gender'] },
 }
 
 // 示例 3：exclude（黑名单：中间三个）
-const actionConfig3: ActionConfig = {
+const actionConfig3: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { exclude: ['email', 'phone', 'gender'] },
 }
 
 // 示例 4：受控模式（中间三个）
-const actionConfig4: ActionConfig = {
+const actionConfig4: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { include: ['email', 'phone', 'gender'] },
 }
@@ -52,13 +52,13 @@ const formItems5: FormItems = [
   { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
   { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone },
   { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
 
-const actionConfig5: ActionConfig = {
+const actionConfig5: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { include: ['email', 'phone', 'gender'] },
 }
@@ -69,13 +69,13 @@ const formItems6: FormItems = [
   { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
   { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: data => !!data?.phone },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: (data: Record<string, any>) => !!data?.phone },
   { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vShow: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
 
-const actionConfig6: ActionConfig = {
+const actionConfig6: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { include: ['email', 'phone', 'gender'] },
 }
@@ -86,13 +86,13 @@ const formItems7: FormItems = [
   { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
   { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
   { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email, vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: data => !!data?.phone, vShow: data => !!data?.phone },
+  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone, vShow: (data: Record<string, any>) => !!data?.phone },
   { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender, vShow: data => !!data?.gender },
   { prop: 'address', label: '地址', comp: 'input' },
   { prop: 'remark', label: '备注', comp: 'input' },
 ]
 
-const actionConfig7: ActionConfig = {
+const actionConfig7: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { include: ['email', 'phone', 'gender'] },
 }
@@ -118,19 +118,19 @@ const rowProps8: RowProps = {
   gutter: 20,
 }
 
-const actionConfig8: ActionConfig = {
+const actionConfig8: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { count: 6 },
 }
 
 // 示例 9：鼠标悬停自动展开/收起
-const actionConfig9: ActionConfig = {
+const actionConfig9: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { count: 3, autoExpandOnHover: true },
 }
 
 // 示例 10：使用对象数组配置 buttons（展开放在第一位）
-const actionConfig10: ActionConfig = {
+const actionConfig10: FormActionConfig = {
   buttons: [
     { eventName: 'expand', type: 'text' },
     { eventName: 'search', label: '搜索', type: 'primary' },
@@ -140,7 +140,7 @@ const actionConfig10: ActionConfig = {
 }
 
 // 示例 11：展开按钮使用圆形主题色 plain 样式
-const actionConfig11: ActionConfig = {
+const actionConfig11: FormActionConfig = {
   buttons: [
     { eventName: 'expand', type: 'primary', plain: true, circle: true },
     { eventName: 'search', label: '搜索', type: 'primary' },
@@ -151,13 +151,13 @@ const actionConfig11: ActionConfig = {
 
 // 示例 12：v-model:expanded 双向绑定（受控模式）
 const isExpanded12 = ref(false)
-const actionConfig12: ActionConfig = {
+const actionConfig12: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: { count: 3 },
 }
 
 // 示例 13：展开/收起后自动滚动到表单中心
-const actionConfig13: ActionConfig = {
+const actionConfig13: FormActionConfig = {
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 3,
@@ -187,7 +187,7 @@ const selectedScrollBlock = ref<ScrollLogicalPosition>('center')
 const selectedScrollBehavior = ref<ScrollBehavior>('smooth')
 
 // 测试区域的 actionConfig（动态配置 scrollIntoViewOptions）
-const testActionConfig = computed<ActionConfig>(() => ({
+const testActionConfig = computed<FormActionConfig>(() => ({
   buttons: ['search', 'reset', 'expand'],
   expand: {
     count: 3,
