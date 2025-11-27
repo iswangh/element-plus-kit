@@ -272,7 +272,7 @@ const formItems4: FormItems = [
         <WForm :model="form" :form-items="formItems2b" label-width="100px">
           <!-- 特定字段插槽：form-item-email-label（只应用于 email 字段） -->
           <template #form-item-email-label="{ formItem }">
-            <span v-if="formItem" class="flex items-center gap-1">
+            <span class="flex items-center gap-1">
               <el-icon class="text-blue-500"><Edit /></el-icon>
               <span class="font-semibold text-blue-600">{{ formItem?.label }}</span>
               <el-tag size="small" type="danger" effect="plain">必填</el-tag>
@@ -281,7 +281,7 @@ const formItems4: FormItems = [
 
           <!-- 特定字段插槽：form-item-phone-label（只应用于 phone 字段） -->
           <template #form-item-phone-label="{ formItem }">
-            <span v-if="formItem" class="flex items-center gap-2">
+            <span class="flex items-center gap-2">
               <span>{{ formItem?.label }}</span>
               <el-tooltip content="请输入11位手机号码" placement="top">
                 <el-icon class="text-gray-400 cursor-help"><QuestionFilled /></el-icon>
@@ -364,7 +364,7 @@ const formItems4: FormItems = [
 
           <!-- 表单项插槽：form-item-email-label -->
           <template #form-item-email-label="{ formItem }">
-            <span v-if="formItem" style="color: #409eff">
+            <span style="color: #409eff">
               {{ formItem?.label }}（自定义标签）
             </span>
           </template>

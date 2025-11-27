@@ -360,9 +360,13 @@ watch(
   <ElFormItem v-bind="formItemProps">
     <!-- el-form-item slots -->
     <template v-for="(slot, slotIndex) in formItemSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-      <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
+      <!-- 使用 span 包裹确保只有一个根元素，避免 TransitionGroup 警告 -->
+      <span v-if="slot.slotName === 'error'" class="form-item-slot-wrapper">
+        <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
+      </span>
+      <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
     </template>
-    <!-- 标准组件 -->
+    <!-- Element Plus 标准组件 -->
     <template v-if="formItem.comp !== 'custom'">
       <component
         :is="resolvedComp"
@@ -370,7 +374,7 @@ watch(
         v-model="modelValue"
         @change="onChange"
       >
-        <!-- dynamic component slots -->
+        <!-- 动态组件插槽 -->
         <template v-for="(slot, slotIndex) in getDynamicComponentSlots(formItem.prop) ?? []" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
           <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
         </template>

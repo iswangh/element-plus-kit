@@ -1,18 +1,3 @@
-/**
- * Form 模块路由元信息配置
- *
- * 菜单顺序最佳实践：
- * 1. 基础示例 - 入门必看，了解如何使用组件
- * 2. 组件类型 - 了解所有支持的组件类型
- * 3. 布局示例 - 了解如何配置表单布局
- * 4. 条件渲染 - 了解如何控制字段显示/隐藏
- * 5. 选项示例 - 了解如何配置选项数据
- * 6. 依赖示例 - 了解选项依赖功能
- * 7. 验证示例 - 了解表单验证功能
- * 8. 插槽示例 - 了解插槽功能
- * 9. 事件示例 - 了解事件处理
- * 10. 操作按钮 - 了解操作按钮配置（放在最后，因为依赖前面的知识）
- */
 export const formRouteMeta = {
   // Form 父菜单（不在侧边栏显示，仅用于获取中文标题）
   '/form': { title: '表单组件', showInSidebar: false },
@@ -43,18 +28,14 @@ export const formRouteMeta = {
   '/form/deps/external': { title: '外部依赖', description: '选项依赖外部状态', showInSidebar: true, order: 2 },
   '/form/deps/mixed': { title: '混合依赖', description: '选项依赖内部和外部状态', showInSidebar: true, order: 3 },
   '/form/deps/auto-clear': { title: '智能清理', description: '选项变化时自动清理无效值', showInSidebar: true, order: 4 },
-  // 验证示例 (order: 7) - 了解表单验证功能
-  '/form/validation': { title: '验证示例', showInSidebar: true, order: 7 },
-  '/form/validation/rules': { title: '验证规则', description: '使用 rules 配置验证规则', showInSidebar: true, order: 1 },
-  '/form/validation/validate-event': { title: '验证事件', description: '监听 validate 事件和手动验证方法', showInSidebar: true, order: 2 },
-  // 插槽示例 (order: 8) - 了解插槽功能
+  // 插槽示例 (order: 7) - 了解插槽功能
   '/form/slots': { title: '插槽示例', showInSidebar: true, order: 8 },
   // 事件示例 (order: 9) - 了解事件处理
   '/form/events': { title: '事件示例', showInSidebar: true, order: 9 },
   '/form/events/change': { title: 'change 事件', description: '监听字段值变化事件', showInSidebar: true, order: 1 },
   '/form/events/action': { title: 'action 事件', description: '监听按钮点击事件', showInSidebar: true, order: 2 },
-  // 操作按钮 (order: 10) - 了解操作按钮配置（放在最后，因为依赖前面的知识）
-  '/form/actions': { title: '操作按钮', showInSidebar: true, order: 10 },
+  // 操作按钮 (order: 9) - 了解操作按钮配置（放在最后，因为依赖前面的知识）
+  '/form/actions': { title: '操作按钮', showInSidebar: true, order: 9 },
   '/form/actions/expand': { title: '展开/折叠', description: '表单字段展开/折叠功能', showInSidebar: true, order: 1 },
   '/form/actions/loading': { title: 'Loading 状态', description: '测试按钮的 loading 状态支持', showInSidebar: true, order: 2 },
   '/form/actions/custom': { title: '自定义按钮', description: '测试自定义按钮配置', showInSidebar: true, order: 3 },
