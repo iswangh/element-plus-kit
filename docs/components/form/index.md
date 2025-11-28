@@ -1031,7 +1031,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 
 ### 对象模式
 
-使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。关于依赖变更时的自动清理逻辑，详见 [依赖变更特别注意](#依赖变更特别注意)。
+使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。
 
 :::demo
 
@@ -1068,8 +1068,6 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
-      // 注意：当优先级变化时，如果标签的当前值（如 'normal' 或 'minor'）在新的选项中存在，
-      // 组件会保留该值，不会自动清理。如果需要强制清理，需要手动设置 form.value.tags = undefined
       options: {
         loader: (formData) => {
           // 可以根据表单数据动态返回选项
@@ -1654,14 +1652,6 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 | `loader` | 选项加载器函数，支持同步和异步 | `(formData: Record<string, any>) => any[] \| Promise<any[]>` | - |
 | `immediate` | 是否立即加载 | `boolean` | `false` |
 | `deps` | 表单字段依赖列表 | `string[]` | `[]` |
-
-<a id="依赖变更特别注意"></a>
-
-**依赖变更特别注意**：
-- 当依赖字段变化导致选项更新时，组件会**检查**当前值是否在新的选项中
-- **如果当前值在新的选项中存在**：保留当前值，**不会自动清理**
-- **如果当前值在新的选项中不存在**：自动清理当前值并触发 `change` 事件
-- **如果需要强制清理**：即使当前值在新的选项中存在，也需要手动清理。可以在 `change` 事件中根据业务逻辑进行清理（如 `form.value.tags = undefined`）
 
 #### rowProps 配置
 

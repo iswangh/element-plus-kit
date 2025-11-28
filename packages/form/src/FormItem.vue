@@ -4,7 +4,7 @@ import type { Slot } from 'vue'
 import type { FormItem, FormItemExtendedEventParams, OptionsConfig, OptionsLoader } from './types'
 import { ElFormItem } from 'element-plus'
 import { computed, nextTick, ref, watch, watchEffect } from 'vue'
-import { useChangeEventState } from './composables'
+import { useChangeEventState, useClearState } from './composables'
 import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
 import { checkValueInOptions, getDepsValues, isEmpty, isOptionsConfig, processDeps } from './utils'
 
@@ -82,65 +82,23 @@ const resolvedOptions = ref<any[]>([])
 /** options 加载状态 */
 const isOptionsLoading = ref(false)
 
-// Change 事件状态管理
+// Change 事件状态管理（仅用于防止重复触发 change 事件）
 const changeEventState = useChangeEventState()
 
-/**
- * 清空当前字段的值并触发 change 事件
- * 单一职责：只负责清空和触发事件，不包含检查逻辑
- */
-function clearValue() {
-  if (!isEmpty(modelValue.value)) {
-    // 如果正在清理，避免重复触发
-    if (changeEventState.isClearing)
-      return
-
-    // 记录清理前的值并设置清理状态
-    changeEventState.startClearing(modelValue.value)
-
-    // 清空值并触发 change 事件
-    modelValue.value = undefined
-    emit('change', eventExtendedParams.value, undefined)
-
-    // 使用 nextTick 确保在下一个 tick 时重置标志，避免影响后续的正常 change 事件
-    nextTick(() => {
-      changeEventState.endClearing()
-    })
-  }
-}
-
-/**
- * 检查当前值是否在新的选项中，如果不在则清理（仅选择类组件）
- * 输入类组件（如 mention）允许输入任意文本，不需要自动清理
- * @param options - 选项数组
- */
-function clearIfNotInOptions(options: any[]) {
-  const { formItem } = props
-
-  // 输入类组件允许输入任意文本，不需要自动清理
-  const compTypeCategory = COMP_DEFAULT_CONFIG.getCompType(formItem.compType)
-  if (compTypeCategory === 'input')
-    return
-
-  // 检查当前值是否在新的选项中，如果不在则清理（仅选择类组件）
-  if (!checkValueInOptions({ modelValue: modelValue.value, options, formItem }))
-    clearValue()
-}
+// 清理状态管理（用于管理依赖变更时的清理操作，支持用户在 change 事件中设置默认值）
+const clearState = useClearState()
 
 /**
  * 处理用户交互的 change 事件
  * @param event - change 事件的值
  */
 function onChange(event: any) {
-  // 如果正在清理，说明是程序化清理操作，不需要触发用户交互的 change 事件
-  if (!changeEventState.isClearing) {
-    changeEventState.startUserInteraction()
-    emit('change', eventExtendedParams.value, event)
-    // 使用 nextTick 确保在下一个 tick 时重置标志，避免影响 watch modelValue 的判断
-    nextTick(() => {
-      changeEventState.endUserInteraction()
-    })
-  }
+  changeEventState.start()
+  emit('change', eventExtendedParams.value, event)
+  // 在下一个 tick 时重置标志，避免影响 watch modelValue 的判断
+  nextTick(() => {
+    changeEventState.end()
+  })
 }
 
 /** 处理后的组件属性（包含默认值和用户配置） */
@@ -210,47 +168,96 @@ function getOptionsConfig(): OptionsConfig | null {
 }
 
 /**
+ * 清空当前字段的值并触发 change 事件
+ * 先触发 change 事件（值为 undefined），允许用户在 change 事件中设置默认值
+ */
+function clearValue() {
+  if (isEmpty(modelValue.value))
+    return
+
+  emit('change', eventExtendedParams.value, undefined)
+
+  // 在下一个 tick 检查，如果用户在 change 事件中设置了值，则不清空
+  nextTick(() => {
+    if (clearState.changing && clearState.hasUserValue)
+      return
+
+    modelValue.value = undefined
+  })
+}
+
+/**
+ * 检查当前值是否在新的选项中，如果不在则清理（仅选择类组件）
+ * 输入类组件（如 mention）允许输入任意文本，不需要自动清理
+ * @param options - 选项数组
+ */
+function clearIfNotInOptions(options: any[]) {
+  const { formItem } = props
+
+  // 输入类组件允许输入任意文本，不需要自动清理
+  const compTypeCategory = COMP_DEFAULT_CONFIG.getCompType(formItem.compType)
+  if (compTypeCategory === 'input')
+    return
+
+  // 如果当前值在新的选项中存在，不需要清理
+  if (checkValueInOptions({ modelValue: modelValue.value, options, formItem }))
+    return
+
+  clearValue()
+}
+
+/**
  * 加载 options
  * 支持函数模式和对象模式，自动处理依赖和异步加载
- * 加载完成后自动检查并清理无效值（仅当当前值不在新选项中时才清理）
- *
- * 智能清理逻辑：
- * - 如果当前值在新的选项中，保留（支持用户在 change 事件中设置的默认值）
- * - 如果当前值不在新的选项中，自动清理并触发 change 事件
- * - mention 等输入类组件允许输入任意文本，不需要自动清理
+ * @param isDependencyChange - 是否是依赖变更触发的（依赖变更时会先清理，但允许用户在 change 事件中设置默认值）
  */
-async function loadOptions() {
+async function loadOptions(isDependencyChange = false) {
   const options = props.formItem.compProps?.options
   // 静态模式（数组）或空值：不需要处理
   if (!options || Array.isArray(options))
     return
 
+  // 依赖变更时，先清理（允许用户在 change 事件中设置默认值）
+  if (isDependencyChange) {
+    clearState.start()
+    clearValue()
+    // 等待清理完成，确保用户在 change 事件中设置的值不会被后续清理
+    await nextTick()
+  }
+
   isOptionsLoading.value = true
   try {
+    let loadedOptions: any[]
+
     // 函数模式
     if (typeof options === 'function') {
-      const loadedOptions = await executeLoader(options, props.formData ?? {})
-      resolvedOptions.value = loadedOptions
-      clearIfNotInOptions(loadedOptions)
+      loadedOptions = await executeLoader(options, props.formData ?? {})
     }
     // 对象模式
     else if (isOptionsConfig(options)) {
       const { loader, deps = [] } = options
       const formData = props.formData ?? {}
       const depsValues = getDepsValues(deps, formData, props.formItem.prop)
-      const loadedOptions = await executeLoader(loader, { ...formData, ...depsValues })
-      resolvedOptions.value = loadedOptions
-      clearIfNotInOptions(loadedOptions)
+      loadedOptions = await executeLoader(loader, { ...formData, ...depsValues })
     }
+    else {
+      return
+    }
+
+    resolvedOptions.value = loadedOptions
+
+    // 依赖变更时已清理过，不再清理（允许用户在 change 事件中设置的值）
+    if (!isDependencyChange)
+      clearIfNotInOptions(loadedOptions)
   }
   finally {
     isOptionsLoading.value = false
+    if (isDependencyChange)
+      clearState.end()
   }
 }
 
-/**
- * 处理函数模式 options
- */
+/** 处理函数模式 options */
 function handleFunctionOptions() {
   loadOptions()
 }
@@ -262,8 +269,7 @@ function handleFunctionOptions() {
 function handleObjectOptions(config: OptionsConfig) {
   const { immediate = false, deps = [], loader } = config
 
-  // 如果配置了 deps，内部依赖通过 watch 监听，但外部依赖（通过闭包访问）仍需要通过 watchEffect 追踪
-  // 所以即使配置了 deps，也需要追踪外部依赖
+  // 配置了 deps 时，内部依赖通过 watch 监听，外部依赖（通过闭包访问）通过 watchEffect 追踪
   // 注意：内部依赖变化时，watch 会触发 loadOptions，这里只处理外部依赖变化的情况
   if (deps.length > 0) {
     // 追踪外部依赖：同步调用 loader 函数来追踪外部 ref（watchEffect 会追踪 loader 中访问的外部 ref）
@@ -276,13 +282,12 @@ function handleObjectOptions(config: OptionsConfig) {
     catch {
       // 忽略错误，这里只用于追踪依赖
     }
-    // 如果 immediate 为 true，执行 loadOptions 来加载选项
     if (immediate)
       loadOptions()
     return
   }
 
-  // 如果 immediate 为 false 且没有 deps，不自动加载（等待依赖变化）
+  // immediate 为 false 且没有 deps 时，不自动加载（等待依赖变化）
   if (!immediate)
     return
 
@@ -305,7 +310,7 @@ const optionsImmediate = computed(() => {
 /** 监听依赖变化（仅对象模式，且配置了 deps） */
 watch(
   () => {
-    // 创建一个对象来追踪依赖字段的值，确保 watch 能正确追踪变化
+    // 创建对象来追踪依赖字段的值，确保 watch 能正确追踪变化
     const deps = optionsDeps.value
     return Object.fromEntries(deps.map(dep => [dep, props.formData?.[dep]]))
   },
@@ -314,8 +319,8 @@ watch(
     if (!config)
       return
 
-    // 重新加载 options（loadOptions 内部会检查并清理无效值，并触发 change 事件）
-    loadOptions()
+    // 依赖变更时，先清理（允许用户在 change 事件中设置默认值），然后重新加载 options
+    loadOptions(true)
   },
   { deep: true, immediate: optionsImmediate.value },
 )
@@ -327,10 +332,8 @@ watchEffect(() => {
     return
 
   // 函数模式：自动追踪外部 ref
-  if (typeof options === 'function') {
-    handleFunctionOptions()
-    return
-  }
+  if (typeof options === 'function')
+    return handleFunctionOptions()
 
   // 对象模式：根据 immediate 和 deps 决定是否自动加载
   if (isOptionsConfig(options)) {
@@ -342,20 +345,18 @@ watchEffect(() => {
 watch(
   () => modelValue.value,
   (newValue, oldValue) => {
-    // 如果是清理操作，已经在 clearValueAndEmit 中处理了 change 事件，不需要重复触发
-    if (changeEventState.isClearingOperation(oldValue, newValue, isEmpty))
+    // 用户交互已在 @change 中处理，不需要重复触发
+    if (changeEventState.isUser)
       return
 
-    // 如果是用户交互，已经在 @change 中处理了，不需要重复触发
-    if (changeEventState.isUserInteraction)
-      return
+    // 正在处理依赖变更且值不是空值时，说明用户在 change 事件中设置了值
+    if (clearState.changing && !isEmpty(newValue))
+      clearState.markValue()
 
-    // 如果值发生变化，说明是外部程序化设置的值，需要触发 change 事件
-    // 与 Element Plus 的行为保持一致："选中值发生变化时触发"
+    // 值发生变化时，触发 change 事件（与 Element Plus 行为保持一致："选中值发生变化时触发"）
     // 注意：初始化时（oldValue 为 undefined）如果设置了值，也应该触发 change
-    if (newValue !== oldValue) {
+    if (newValue !== oldValue)
       emit('change', eventExtendedParams.value, newValue)
-    }
   },
 )
 </script>
