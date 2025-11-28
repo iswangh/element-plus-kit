@@ -17,17 +17,17 @@ const formItems1: FormItems = [
   {
     prop: 'showAdvanced',
     label: '显示高级选项',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -35,13 +35,13 @@ const formItems1: FormItems = [
   {
     prop: 'advancedOption1',
     label: '高级选项1',
-    comp: 'input',
+    compType: 'input',
     vShow: () => form.value.showAdvanced,
   },
   {
     prop: 'advancedOption2',
     label: '高级选项2',
-    comp: 'input',
+    compType: 'input',
     vShow: () => form.value.showAdvanced,
   },
 ]
@@ -51,7 +51,7 @@ const formItems2: FormItems = [
   {
     prop: 'accountType',
     label: '账号类型',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '个人', value: 'personal' },
@@ -62,12 +62,12 @@ const formItems2: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -76,7 +76,7 @@ const formItems2: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     vShow: data => data.accountType === 'company',
   },
 ]
@@ -86,13 +86,13 @@ const formItems3: FormItems = [
   {
     prop: 'username',
     label: '用户名（vIf）',
-    comp: 'input',
+    compType: 'input',
     vIf: () => form.value.showAdvanced,
   },
   {
     prop: 'email',
     label: '邮箱（vShow）',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },

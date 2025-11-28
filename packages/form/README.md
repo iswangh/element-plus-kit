@@ -24,12 +24,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -99,7 +99,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 
 | 插槽名 | 说明 | 作用域参数 |
 | --- | --- | --- |
-| `{prop}` | 自定义组件插槽，当 `comp` 为 `custom` 时使用 | `FormItemSlotScope` |
+| `{prop}` | 自定义组件插槽，当 `compType` 为 `custom` 时使用 | `FormItemSlotScope` |
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
@@ -112,7 +112,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 interface FormItem<C extends FormItemComp = FormItemComp> {
   prop: string                    // 表单字段名（必填）
   label: string                   // 标签文本
-  comp: FormItemComp              // 组件类型（必填）
+  compType: FormItemComp              // 组件类型（必填）
   compProps?: FormItemCompProps<C> // 组件属性配置
   // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），compProps.options 支持三种模式：
   // 1. 静态数组：options: [{ label: '选项1', value: '1' }]
@@ -159,7 +159,7 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       placeholder: '请输入用户名',
       clearable: true,
@@ -171,7 +171,7 @@ const formItems: FormItems = [
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,
@@ -183,7 +183,7 @@ const formItems: FormItems = [
   {
     prop: 'gender',
     label: '性别',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '男', value: 'male' },
@@ -253,12 +253,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     // 只有当用户名存在时才显示邮箱字段
     vIf: (data) => !!data?.username,
   },
@@ -286,7 +286,7 @@ const formItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入邮箱', trigger: 'blur' },
       { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },

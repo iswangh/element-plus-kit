@@ -16,12 +16,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -29,7 +29,7 @@ const formItems: FormItems = [
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,
@@ -38,7 +38,7 @@ const formItems: FormItems = [
   {
     prop: 'gender',
     label: '性别',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '男', value: 'male' },

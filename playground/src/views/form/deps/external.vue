@@ -28,7 +28,7 @@ const formItems: FormItems = [
   {
     prop: 'userType',
     label: '用户类型',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '管理员', value: 'admin' },
@@ -40,7 +40,7 @@ const formItems: FormItems = [
   {
     prop: 'menu',
     label: '菜单选项',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部依赖）
       options: () => {
@@ -57,7 +57,7 @@ const formItems: FormItems = [
   {
     prop: 'action',
     label: '操作选项',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：同时依赖外部 ref（userType）和表单字段（menu）
       options: {

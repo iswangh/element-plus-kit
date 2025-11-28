@@ -47,7 +47,7 @@ const formItems: FormItems = [
   {
     prop: 'province',
     label: '省份',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: provinces,
     },
@@ -55,7 +55,7 @@ const formItems: FormItems = [
   {
     prop: 'city',
     label: '城市',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: () => {
         const province = form.value.province as string | undefined
@@ -68,7 +68,7 @@ const formItems: FormItems = [
   {
     prop: 'district',
     label: '区县',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: () => {
         const city = form.value.city as string | undefined

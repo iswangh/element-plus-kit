@@ -17,7 +17,7 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
       { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
@@ -26,7 +26,7 @@ const formItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -38,7 +38,7 @@ const formItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入手机号', trigger: 'blur' },
       { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },

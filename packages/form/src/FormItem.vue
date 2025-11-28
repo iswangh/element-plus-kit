@@ -54,7 +54,7 @@ const formItemProps = computed(() => {
 const formItemSlots = computed(() => props.formSlots.formItemSlots)
 
 /** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
-const resolvedComp = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
+const resolvedComp = computed(() => FORM_ITEM_COMP_MAP[props.formItem.compType] || 'div')
 
 /** 事件扩展参数 */
 const eventExtendedParams = computed(() => ({ prop: props.formItem.prop, formItem: props.formItem, index: props.index }))
@@ -87,8 +87,9 @@ const changeEventState = useChangeEventState()
 
 /**
  * 清空当前字段的值并触发 change 事件
+ * 单一职责：只负责清空和触发事件，不包含检查逻辑
  */
-function clearValueAndEmit() {
+function clearValue() {
   if (!isEmpty(modelValue.value)) {
     // 如果正在清理，避免重复触发
     if (changeEventState.isClearing)
@@ -106,6 +107,24 @@ function clearValueAndEmit() {
       changeEventState.endClearing()
     })
   }
+}
+
+/**
+ * 检查当前值是否在新的选项中，如果不在则清理（仅选择类组件）
+ * 输入类组件（如 mention）允许输入任意文本，不需要自动清理
+ * @param options - 选项数组
+ */
+function clearIfNotInOptions(options: any[]) {
+  const { formItem } = props
+
+  // 输入类组件允许输入任意文本，不需要自动清理
+  const compTypeCategory = COMP_DEFAULT_CONFIG.getCompType(formItem.compType)
+  if (compTypeCategory === 'input')
+    return
+
+  // 检查当前值是否在新的选项中，如果不在则清理（仅选择类组件）
+  if (!checkValueInOptions({ modelValue: modelValue.value, options, formItem }))
+    clearValue()
 }
 
 /**
@@ -131,14 +150,24 @@ const processedCompProps = computed(() => {
 
   // 只有当 compProps 中有 options 字段时，才设置 options 属性
   const hasOptions = 'options' in compProps
+  const options = compProps.options
+
+  // 从 compProps 中排除 options，避免与 resolvedOptions.value 冲突
+  const { options: _options, ...restCompProps } = compProps
+
+  // 区分静态数组和动态选项
+  const isStaticArray = Array.isArray(options)
+  const isFunctionOrObject = typeof options === 'function' || isOptionsConfig(options)
 
   return {
     ...defaults,
-    ...compProps,
+    ...restCompProps,
     ...dynamicEventHandlers.value,
     ...(hasOptions && {
-      options: resolvedOptions.value,
-      loading: isOptionsLoading.value,
+      // 静态数组直接使用原始数组，动态选项使用 resolvedOptions.value
+      options: isStaticArray ? options : resolvedOptions.value,
+      // 只有动态选项才需要 loading 状态
+      ...(isFunctionOrObject && { loading: isOptionsLoading.value }),
     }),
   }
 })
@@ -188,54 +217,35 @@ function getOptionsConfig(): OptionsConfig | null {
  * 智能清理逻辑：
  * - 如果当前值在新的选项中，保留（支持用户在 change 事件中设置的默认值）
  * - 如果当前值不在新的选项中，自动清理并触发 change 事件
+ * - mention 等输入类组件允许输入任意文本，不需要自动清理
  */
 async function loadOptions() {
   const options = props.formItem.compProps?.options
-  if (!options)
-    return
-
-  // 静态模式（数组）：已在 watchEffect 中处理
-  if (Array.isArray(options))
+  // 静态模式（数组）或空值：不需要处理
+  if (!options || Array.isArray(options))
     return
 
   isOptionsLoading.value = true
   try {
     // 函数模式
     if (typeof options === 'function') {
-      const newOptions = await executeLoader(options, props.formData ?? {})
-      resolvedOptions.value = newOptions
-      // 加载完成后，智能检查并清理：如果当前值不在新选项中，才清理
-      if (!checkValueInOptions(modelValue.value, newOptions)) {
-        clearValueAndEmit()
-      }
+      const loadedOptions = await executeLoader(options, props.formData ?? {})
+      resolvedOptions.value = loadedOptions
+      clearIfNotInOptions(loadedOptions)
     }
     // 对象模式
     else if (isOptionsConfig(options)) {
       const { loader, deps = [] } = options
       const formData = props.formData ?? {}
       const depsValues = getDepsValues(deps, formData, props.formItem.prop)
-      const newOptions = await executeLoader(loader, { ...formData, ...depsValues })
-      resolvedOptions.value = newOptions
-      // 加载完成后，智能检查并清理：如果当前值不在新选项中，才清理
-      if (!checkValueInOptions(modelValue.value, newOptions)) {
-        clearValueAndEmit()
-      }
+      const loadedOptions = await executeLoader(loader, { ...formData, ...depsValues })
+      resolvedOptions.value = loadedOptions
+      clearIfNotInOptions(loadedOptions)
     }
   }
   finally {
     isOptionsLoading.value = false
   }
-}
-
-/**
- * 处理静态模式 options（数组）
- * @param options - 选项数组
- */
-function handleStaticOptions(options: any[]) {
-  resolvedOptions.value = options
-  // 检查当前值是否在新的选项中，如果不在则清理
-  if (!checkValueInOptions(modelValue.value, options))
-    clearValueAndEmit()
 }
 
 /**
@@ -310,17 +320,11 @@ watch(
   { deep: true, immediate: optionsImmediate.value },
 )
 
-/** 使用 watchEffect 自动追踪外部 ref 依赖 */
+/** 使用 watchEffect 自动追踪外部 ref 依赖（仅处理函数模式和对象模式） */
 watchEffect(() => {
   const options = props.formItem.compProps?.options
-  if (!options)
+  if (!options || Array.isArray(options))
     return
-
-  // 静态模式
-  if (Array.isArray(options)) {
-    handleStaticOptions(options)
-    return
-  }
 
   // 函数模式：自动追踪外部 ref
   if (typeof options === 'function') {
@@ -367,7 +371,7 @@ watch(
       <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
     </template>
     <!-- Element Plus 标准组件 -->
-    <template v-if="formItem.comp !== 'custom'">
+    <template v-if="formItem.compType !== 'custom'">
       <component
         :is="resolvedComp"
         v-bind="processedCompProps"

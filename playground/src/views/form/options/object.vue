@@ -8,7 +8,7 @@ const formItems: FormItems = [
   {
     prop: 'priority',
     label: '优先级',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：基础用法
       options: {
@@ -27,7 +27,7 @@ const formItems: FormItems = [
   {
     prop: 'tags',
     label: '标签',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
       options: {

@@ -17,12 +17,12 @@ const formItems: FormItems = [
   {
     prop: 'hasAccount',
     label: '已有账号',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'accountType',
     label: '账号类型',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '个人', value: 'personal' },
@@ -34,13 +34,13 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     vIf: data => !!data.hasAccount && !!data.accountType,
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -49,19 +49,19 @@ const formItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     vShow: data => data.accountType === 'company',
   },
   {
     prop: 'showAdvanced',
     label: '显示高级选项',
-    comp: 'switch',
+    compType: 'switch',
     vIf: data => !!data.hasAccount && !!data.accountType && !!data.username,
   },
   {
     prop: 'advancedOption',
     label: '高级选项',
-    comp: 'input',
+    compType: 'input',
     vShow: data => !!data.showAdvanced,
   },
 ]

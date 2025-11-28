@@ -6,7 +6,7 @@ import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPick
  * 需要从 FormItem 中排除的自定义属性键名
  * 这些属性不会传递给 el-form-item 组件
  */
-export const FORM_ITEM_EXCLUDED_KEYS = ['comp', 'compProps', 'vIf', 'vShow'] as const
+export const FORM_ITEM_EXCLUDED_KEYS = ['compType', 'compProps', 'vIf', 'vShow'] as const
 
 /**
  * 拓展的组件映射
@@ -62,13 +62,13 @@ export const COMP_DEFAULT_CONFIG = {
    * 获取组件默认属性
    */
   getDefaults(formItem: FormItem) {
-    const { comp, compProps = {} } = formItem
+    const { compType, compProps = {} } = formItem
 
     // 组件类型
-    const compType = this.getCompType(comp)
+    const compTypeCategory = this.getCompType(compType)
 
     // 组件默认属性
-    const compDefaults = this.buildCompProps(formItem, compType)
+    const compDefaults = this.buildCompProps(formItem, compTypeCategory)
 
     return {
       ...compDefaults,
@@ -103,12 +103,12 @@ export const COMP_DEFAULT_CONFIG = {
    * 动态生成 placeholder
    */
   generatePlaceholder(formItem: FormItem, type: string) {
-    const { label, comp } = formItem as FormItem & { label?: string }
+    const { label, compType } = formItem as FormItem & { label?: string }
 
     const _label = label ? `${label}` : ''
 
     if (type === 'input') {
-      if (comp === 'input-number')
+      if (compType === 'input-number')
         return '请输入'
 
       return `请输入${_label}`

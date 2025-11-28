@@ -26,12 +26,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'province',
     label: '省份',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: provinces,
     },
@@ -39,7 +39,7 @@ const formItems: FormItems = [
   {
     prop: 'city',
     label: '城市（自动清理：默认）',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：默认 autoClear 为 true，依赖变化时自动清除值
       options: {
@@ -58,7 +58,7 @@ const formItems: FormItems = [
   {
     prop: 'cityCustom',
     label: '城市（自定义处理：autoClear: false）',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：autoClear 为 false，用户自己处理值的设置逻辑
       options: {

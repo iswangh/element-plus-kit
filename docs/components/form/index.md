@@ -23,17 +23,17 @@ const formItems: FormItems = [
   {
     prop: 'input',
     label: '产品名称',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'inputNumber',
     label: '库存数量',
-    comp: 'input-number',
+    compType: 'input-number',
   },
   {
     prop: 'textarea',
     label: '产品描述',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'textarea',
       rows: 3,
@@ -42,7 +42,7 @@ const formItems: FormItems = [
   {
     prop: 'select',
     label: '产品分类',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '选项1', value: 'option1' },
@@ -53,7 +53,7 @@ const formItems: FormItems = [
   {
     prop: 'autocomplete',
     label: '地址搜索',
-    comp: 'autocomplete',
+    compType: 'autocomplete',
     compProps: {
       fetchSuggestions: () => [],
     },
@@ -61,7 +61,7 @@ const formItems: FormItems = [
   {
     prop: 'cascader',
     label: '省市区',
-    comp: 'cascader',
+    compType: 'cascader',
     compProps: {
       style: { width: '100%' },
       options: [
@@ -87,7 +87,7 @@ const formItems: FormItems = [
   {
     prop: 'datePicker',
     label: '创建日期',
-    comp: 'date-picker',
+    compType: 'date-picker',
     compProps: {
       style: { width: '100%' },
       type: 'date',
@@ -96,7 +96,7 @@ const formItems: FormItems = [
   {
     prop: 'timePicker',
     label: '开始时间',
-    comp: 'time-picker',
+    compType: 'time-picker',
     compProps: {
       style: { width: '100%' },
     },
@@ -104,7 +104,7 @@ const formItems: FormItems = [
   {
     prop: 'timeSelect',
     label: '预约时间',
-    comp: 'time-select',
+    compType: 'time-select',
     compProps: {
       style: { width: '100%' },
     },
@@ -112,12 +112,12 @@ const formItems: FormItems = [
   {
     prop: 'switch',
     label: '启用状态',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'radio',
     label: '优先级',
-    comp: 'radio',
+    compType: 'radio',
     compProps: {
       options: [
         { label: '选项1', value: 'option1' },
@@ -128,7 +128,7 @@ const formItems: FormItems = [
   {
     prop: 'checkbox',
     label: '兴趣爱好',
-    comp: 'checkbox',
+    compType: 'checkbox',
     compProps: {
       options: [
         { label: '选项1', value: 'option1' },
@@ -139,27 +139,27 @@ const formItems: FormItems = [
   {
     prop: 'rate',
     label: '满意度评分',
-    comp: 'rate',
+    compType: 'rate',
   },
   {
     prop: 'slider',
     label: '价格区间',
-    comp: 'slider',
+    compType: 'slider',
   },
   {
     prop: 'colorPicker',
     label: '主题颜色',
-    comp: 'color-picker',
+    compType: 'color-picker',
   },
   {
     prop: 'inputTag',
     label: '标签',
-    comp: 'input-tag',
+    compType: 'input-tag',
   },
   {
     prop: 'transfer',
     label: '权限分配',
-    comp: 'transfer',
+    compType: 'transfer',
     compProps: {
       data: [
         { key: 1, label: '选项1' },
@@ -173,7 +173,7 @@ const formItems: FormItems = [
   {
     prop: 'treeSelect',
     label: '部门选择',
-    comp: 'tree-select',
+    compType: 'tree-select',
     compProps: {
       style: { width: '100%' },
       data: [
@@ -223,12 +223,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'password',
     label: '密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -237,7 +237,7 @@ const formItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -245,7 +245,7 @@ const formItems: FormItems = [
   {
     prop: 'customField',
     label: '自定义字段',
-    comp: 'custom',
+    compType: 'custom',
   },
 ]
 </script>
@@ -322,12 +322,12 @@ const formItems: FormItems = [
   {
     prop: 'hasEmail',
     label: '填写邮箱',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -336,18 +336,18 @@ const formItems: FormItems = [
   {
     prop: 'hasPhone',
     label: '填写手机',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     vShow: (data) => data?.hasPhone === true,
   },
   {
     prop: 'address',
     label: '地址',
-    comp: 'input',
+    compType: 'input',
     vShow: () => externalStatus.value === true,
   },
 ]
@@ -473,12 +473,12 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -532,7 +532,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -540,7 +540,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     colProps: {
       span: 12,
     },
@@ -552,7 +552,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -563,7 +563,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -575,12 +575,12 @@ const defaultFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,
@@ -589,7 +589,7 @@ const defaultFormItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -597,7 +597,7 @@ const defaultFormItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
   },
 ]
 
@@ -653,14 +653,14 @@ import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'city', label: '城市', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' } },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'city', label: '城市', compType: 'input' },
 ]
 
 const actionConfig: FormActionConfig = {
@@ -696,13 +696,13 @@ import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
-  { prop: 'address', label: '地址', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' } },
+  { prop: 'address', label: '地址', compType: 'input' },
 ]
 
 const actionConfig: FormActionConfig = {
@@ -738,14 +738,14 @@ import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'city', label: '城市', comp: 'input' },
-  { prop: 'province', label: '省份', comp: 'input' },
-  { prop: 'postcode', label: '邮编', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'city', label: '城市', compType: 'input' },
+  { prop: 'province', label: '省份', compType: 'input' },
+  { prop: 'postcode', label: '邮编', compType: 'input' },
 ]
 
 const actionConfig: FormActionConfig = {
@@ -781,16 +781,16 @@ import type { FormActionConfig, FormItems, RowProps } from '@iswangh/element-plu
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input', colProps: { span: 8 } },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 8 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' }, colProps: { span: 8 } },
-  { prop: 'phone', label: '手机号', comp: 'input', colProps: { span: 8 } },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 8 } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, colProps: { span: 8 } },
-  { prop: 'address', label: '地址', comp: 'input', colProps: { span: 8 } },
-  { prop: 'city', label: '城市', comp: 'input', colProps: { span: 8 } },
-  { prop: 'province', label: '省份', comp: 'input', colProps: { span: 8 } },
-  { prop: 'postcode', label: '邮编', comp: 'input', colProps: { span: 8 } },
+  { prop: 'name', label: '姓名', compType: 'input', colProps: { span: 8 } },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 8 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' }, colProps: { span: 8 } },
+  { prop: 'phone', label: '手机号', compType: 'input', colProps: { span: 8 } },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 8 } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' }, colProps: { span: 8 } },
+  { prop: 'address', label: '地址', compType: 'input', colProps: { span: 8 } },
+  { prop: 'city', label: '城市', compType: 'input', colProps: { span: 8 } },
+  { prop: 'province', label: '省份', compType: 'input', colProps: { span: 8 } },
+  { prop: 'postcode', label: '邮编', compType: 'input', colProps: { span: 8 } },
 ]
 
 const rowProps: RowProps = {
@@ -833,14 +833,14 @@ import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'city', label: '城市', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' } },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'city', label: '城市', compType: 'input' },
 ]
 
 const actionConfig: FormActionConfig = {
@@ -879,14 +879,14 @@ import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 const form = ref({})
 
 const formItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'city', label: '城市', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' } },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'city', label: '城市', compType: 'input' },
 ]
 
 const actionConfig: FormActionConfig = {
@@ -937,7 +937,7 @@ const formItems: FormItems = [
   {
     prop: 'province',
     label: '省份',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 静态模式：直接使用数组
       options: [
@@ -979,7 +979,7 @@ const formItems: FormItems = [
   {
     prop: 'category',
     label: '分类',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 函数模式：动态返回选项数组
       options: () => {
@@ -996,7 +996,7 @@ const formItems: FormItems = [
   {
     prop: 'status',
     label: '状态',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 函数模式：接收 formData 参数
       options: (formData) => {
@@ -1046,7 +1046,7 @@ const formItems: FormItems = [
   {
     prop: 'priority',
     label: '优先级',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：基础用法
       options: {
@@ -1065,7 +1065,7 @@ const formItems: FormItems = [
   {
     prop: 'tags',
     label: '标签',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
       // 注意：当优先级变化时，如果标签的当前值（如 'normal' 或 'minor'）在新的选项中存在，
@@ -1185,7 +1185,7 @@ const formItems: FormItems = [
   {
     prop: 'province',
     label: '省份',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: provinces,
     },
@@ -1193,7 +1193,7 @@ const formItems: FormItems = [
   {
     prop: 'city',
     label: '城市',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: {
         loader: (formData) => {
@@ -1210,7 +1210,7 @@ const formItems: FormItems = [
   {
     prop: 'district',
     label: '区县',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: {
         loader: (formData) => {
@@ -1275,7 +1275,7 @@ const formItems: FormItems = [
   {
     prop: 'userType',
     label: '用户类型',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '管理员', value: 'admin' },
@@ -1287,7 +1287,7 @@ const formItems: FormItems = [
   {
     prop: 'menu',
     label: '菜单选项',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
       options: () => {
@@ -1303,7 +1303,7 @@ const formItems: FormItems = [
   {
     prop: 'action',
     label: '操作选项',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
       options: () => {
@@ -1485,7 +1485,7 @@ const formItems: FormItems = [
   {
     prop: 'department',
     label: '部门',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: departments,
     },
@@ -1493,7 +1493,7 @@ const formItems: FormItems = [
   {
     prop: 'role',
     label: '角色',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：依赖部门字段（表单字段依赖）
       options: {
@@ -1521,7 +1521,7 @@ const formItems: FormItems = [
   {
     prop: 'features',
     label: '功能权限',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
       // 注意：配置了 deps 后，表单字段依赖通过 watch 监听，外部状态依赖通过 watchEffect 追踪（在 loader 中访问）
@@ -1602,7 +1602,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | prop | 表单字段名（必填） | `string` | - |
-| comp | 组件类型（必填） | `FormItemComp` | - |
+| compType | 组件类型（必填） | `FormItemComp` | - |
 | compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compProps.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>详见 [Options 配置](#options-配置) | `FormItemCompProps<C>` | - |
 | vIf | 条件渲染（v-if），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
 | vShow | 显示/隐藏（v-show），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
@@ -1610,7 +1610,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 
 ##### 支持的组件类型
 
-`comp` 字段支持以下组件类型：
+`compType` 字段支持以下组件类型：
 
 | 组件类型 | 说明 | 默认值 | 文档链接 |
 | --- | --- | --- | --- |
@@ -1755,7 +1755,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 
 | 插槽名 | 说明 | 作用域参数 |
 | --- | --- | --- |
-| `{prop}` | 自定义组件插槽，当 `comp` 为 `custom` 时使用 | `FormItemSlotScope` |
+| `{prop}` | 自定义组件插槽，当 `compType` 为 `custom` 时使用 | `FormItemSlotScope` |
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `action` | 自定义操作按钮区域 | - |

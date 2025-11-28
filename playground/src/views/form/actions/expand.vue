@@ -7,19 +7,19 @@ const formRef = ref<InstanceType<typeof WForm>>()
 
 // 基础表单项（至少10个）
 const baseFormItems: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input' },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' } },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'city', label: '城市', comp: 'input' },
-  { prop: 'province', label: '省份', comp: 'input' },
-  { prop: 'postcode', label: '邮编', comp: 'input' },
-  { prop: 'company', label: '公司', comp: 'input' },
-  { prop: 'position', label: '职位', comp: 'input' },
-  { prop: 'remark', label: '备注', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input' },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' } },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'city', label: '城市', compType: 'input' },
+  { prop: 'province', label: '省份', compType: 'input' },
+  { prop: 'postcode', label: '邮编', compType: 'input' },
+  { prop: 'company', label: '公司', compType: 'input' },
+  { prop: 'position', label: '职位', compType: 'input' },
+  { prop: 'remark', label: '备注', compType: 'input' },
 ]
 
 // 示例 1：count（前三个）
@@ -48,14 +48,14 @@ const actionConfig4: FormActionConfig = {
 
 // 示例 5：与 vIf 一起使用
 const formItems5: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'remark', label: '备注', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input', vIf: data => !!data?.email },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'remark', label: '备注', compType: 'input' },
 ]
 
 const actionConfig5: FormActionConfig = {
@@ -65,14 +65,14 @@ const actionConfig5: FormActionConfig = {
 
 // 示例 6：与 vShow 一起使用
 const formItems6: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input', vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: (data: Record<string, any>) => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vShow: data => !!data?.gender },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'remark', label: '备注', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input', vShow: data => !!data?.email },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vShow: (data: Record<string, any>) => !!data?.phone },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' }, vShow: data => !!data?.gender },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'remark', label: '备注', compType: 'input' },
 ]
 
 const actionConfig6: FormActionConfig = {
@@ -82,14 +82,14 @@ const actionConfig6: FormActionConfig = {
 
 // 示例 7：与 vIf vShow 一起使用
 const formItems7: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input' },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
-  { prop: 'phone', label: '手机号', comp: 'input', vIf: data => !!data?.email, vShow: data => !!data?.email },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone, vShow: (data: Record<string, any>) => !!data?.phone },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender, vShow: data => !!data?.gender },
-  { prop: 'address', label: '地址', comp: 'input' },
-  { prop: 'remark', label: '备注', comp: 'input' },
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
+  { prop: 'phone', label: '手机号', compType: 'input', vIf: data => !!data?.email, vShow: data => !!data?.email },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, vIf: (data: Record<string, any>) => !!data?.phone, vShow: (data: Record<string, any>) => !!data?.phone },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' }, vIf: data => !!data?.gender, vShow: data => !!data?.gender },
+  { prop: 'address', label: '地址', compType: 'input' },
+  { prop: 'remark', label: '备注', compType: 'input' },
 ]
 
 const actionConfig7: FormActionConfig = {
@@ -99,19 +99,19 @@ const actionConfig7: FormActionConfig = {
 
 // 示例 8：rowProps 和 colProps 布局配置（每行 4 个）
 const formItems8: FormItems = [
-  { prop: 'name', label: '姓名', comp: 'input', colProps: { span: 6 } },
-  { prop: 'age', label: '年龄', comp: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 6 } },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' }, colProps: { span: 6 } },
-  { prop: 'phone', label: '手机号', comp: 'input', colProps: { span: 6 } },
-  { prop: 'gender', label: '性别', comp: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 6 } },
-  { prop: 'birthday', label: '生日', comp: 'date-picker', compProps: { type: 'date' }, colProps: { span: 6 } },
-  { prop: 'address', label: '地址', comp: 'input', colProps: { span: 6 } },
-  { prop: 'city', label: '城市', comp: 'input', colProps: { span: 6 } },
-  { prop: 'province', label: '省份', comp: 'input', colProps: { span: 6 } },
-  { prop: 'postcode', label: '邮编', comp: 'input', colProps: { span: 6 } },
-  { prop: 'company', label: '公司', comp: 'input', colProps: { span: 6 } },
-  { prop: 'position', label: '职位', comp: 'input', colProps: { span: 6 } },
-  { prop: 'remark', label: '备注', comp: 'input', colProps: { span: 6 } },
+  { prop: 'name', label: '姓名', compType: 'input', colProps: { span: 6 } },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 }, colProps: { span: 6 } },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' }, colProps: { span: 6 } },
+  { prop: 'phone', label: '手机号', compType: 'input', colProps: { span: 6 } },
+  { prop: 'gender', label: '性别', compType: 'select', compProps: { options: [{ label: '男', value: 'male' }, { label: '女', value: 'female' }] }, colProps: { span: 6 } },
+  { prop: 'birthday', label: '生日', compType: 'date-picker', compProps: { type: 'date' }, colProps: { span: 6 } },
+  { prop: 'address', label: '地址', compType: 'input', colProps: { span: 6 } },
+  { prop: 'city', label: '城市', compType: 'input', colProps: { span: 6 } },
+  { prop: 'province', label: '省份', compType: 'input', colProps: { span: 6 } },
+  { prop: 'postcode', label: '邮编', compType: 'input', colProps: { span: 6 } },
+  { prop: 'company', label: '公司', compType: 'input', colProps: { span: 6 } },
+  { prop: 'position', label: '职位', compType: 'input', colProps: { span: 6 } },
+  { prop: 'remark', label: '备注', compType: 'input', colProps: { span: 6 } },
 ]
 
 const rowProps8: RowProps = {

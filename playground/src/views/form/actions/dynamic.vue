@@ -8,9 +8,9 @@ const form = ref({
 })
 
 const formItems: FormItems = [
-  { prop: 'hasData', label: '是否有数据', comp: 'switch' },
-  { prop: 'username', label: '用户名', comp: 'input' },
-  { prop: 'email', label: '邮箱', comp: 'input', compProps: { type: 'email' } },
+  { prop: 'hasData', label: '是否有数据', compType: 'switch' },
+  { prop: 'username', label: '用户名', compType: 'input' },
+  { prop: 'email', label: '邮箱', compType: 'input', compProps: { type: 'email' } },
 ]
 
 // 测试 1：根据表单数据动态控制按钮显示

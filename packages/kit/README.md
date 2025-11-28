@@ -125,7 +125,7 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
 ]
 
@@ -195,7 +195,7 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
 ]
 
@@ -316,7 +316,7 @@ const formItems: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
     ],
@@ -324,7 +324,7 @@ const formItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -358,7 +358,7 @@ const formItems: FormItems = [
   {
     prop: 'keyword',
     label: '关键词',
-    comp: 'input',
+    compType: 'input',
   },
 ]
 

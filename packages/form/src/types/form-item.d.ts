@@ -29,7 +29,7 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
  *
  * @template T - 组件类型
  * @extends {ElFormItemProps} Element Plus FormItem 组件原始 Props
- * @property {T} comp 使用的组件类型
+ * @property {T} compType 使用的组件类型
  * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象
  * @property {Condition} [vIf] 条件渲染控制，支持布尔值或接收表单数据的函数
  * @property {Condition} [vShow] 显示/隐藏控制，支持布尔值或接收表单数据的函数
@@ -38,12 +38,12 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
  */
 export interface FormItem<T extends FormItemComp = FormItemComp> extends ElFormItemProps {
   prop: string
-  comp: T
+  compType: T
   compProps?: FormItemCompPropsExtended<T>
   vIf?: Condition
   vShow?: Condition
   colProps?: ColProps
 }
 
-/** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
+/** formItems 配置类型 - 推断每一项的 compType 对应的组件类型 */
 export type FormItems = { [K in FormItemComp]: FormItem<K> }[FormItemComp][]

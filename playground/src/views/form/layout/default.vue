@@ -9,12 +9,12 @@ const defaultFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,
@@ -23,7 +23,7 @@ const defaultFormItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -31,12 +31,12 @@ const defaultFormItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'address',
     label: '地址',
-    comp: 'input',
+    compType: 'input',
   },
 ]
 
@@ -45,7 +45,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'name',
     label: '姓名',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -53,7 +53,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     colProps: {
       span: 12,
     },
@@ -65,7 +65,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -76,7 +76,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 12,
     },
@@ -84,7 +84,7 @@ const columnFormItems: FormItems = [
   {
     prop: 'address',
     label: '地址',
-    comp: 'input',
+    compType: 'input',
     colProps: {
       span: 24,
     },

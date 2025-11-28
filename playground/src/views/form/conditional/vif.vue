@@ -17,18 +17,18 @@ const formItems1: FormItems = [
   {
     prop: 'hasAccount',
     label: '已有账号',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     vIf: () => form.value.hasAccount,
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -41,7 +41,7 @@ const formItems2: FormItems = [
   {
     prop: 'accountType',
     label: '账号类型',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '个人', value: 'personal' },
@@ -52,13 +52,13 @@ const formItems2: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     vIf: data => data.accountType === 'personal',
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -67,13 +67,13 @@ const formItems2: FormItems = [
   {
     prop: 'company',
     label: '公司名称',
-    comp: 'input',
+    compType: 'input',
     vIf: data => data.accountType === 'company',
   },
   {
     prop: 'license',
     label: '营业执照号',
-    comp: 'input',
+    compType: 'input',
     vIf: data => data.accountType === 'company',
   },
 ]
@@ -83,18 +83,18 @@ const formItems3: FormItems = [
   {
     prop: 'hasAccount',
     label: '已有账号',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     vIf: data => !!data.hasAccount,
   },
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -103,7 +103,7 @@ const formItems3: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     vIf: data => !!data.hasAccount && !!data.username && !!data.email,
   },
 ]

@@ -7,12 +7,12 @@ const formItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,

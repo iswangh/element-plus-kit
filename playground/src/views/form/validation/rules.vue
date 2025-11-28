@@ -17,7 +17,7 @@ const formItems1: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
       { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
@@ -26,7 +26,7 @@ const formItems1: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -38,7 +38,7 @@ const formItems1: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入手机号', trigger: 'blur' },
       { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
@@ -51,7 +51,7 @@ const formItems2: FormItems = [
   {
     prop: 'password',
     label: '密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -89,7 +89,7 @@ const formItems2: FormItems = [
   {
     prop: 'confirmPassword',
     label: '确认密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -119,7 +119,7 @@ const formItems3: FormItems = [
   {
     prop: 'age',
     label: '年龄',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 120,
@@ -136,7 +136,7 @@ const formItems4: FormItems = [
   {
     prop: 'url',
     label: '网址',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入网址', trigger: 'blur' },
       { type: 'url', message: '请输入正确的网址格式', trigger: 'blur' },

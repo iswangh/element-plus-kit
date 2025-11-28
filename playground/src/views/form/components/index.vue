@@ -11,6 +11,7 @@ const form = ref({
   mention: '',
   // 选择类组件
   select: '',
+  selectMultiple: [],
   selectV2: '',
   cascader: [],
   treeSelect: '',
@@ -35,7 +36,7 @@ const inputFormItems: FormItems = [
   {
     prop: 'input',
     label: '输入框',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       placeholder: '请输入内容',
     },
@@ -43,7 +44,7 @@ const inputFormItems: FormItems = [
   {
     prop: 'inputNumber',
     label: '数字输入框',
-    comp: 'input-number',
+    compType: 'input-number',
     compProps: {
       min: 0,
       max: 100,
@@ -53,7 +54,7 @@ const inputFormItems: FormItems = [
   {
     prop: 'inputTag',
     label: '标签输入框',
-    comp: 'input-tag',
+    compType: 'input-tag',
     compProps: {
       placeholder: '请输入标签',
     },
@@ -61,7 +62,7 @@ const inputFormItems: FormItems = [
   {
     prop: 'autocomplete',
     label: '自动完成',
-    comp: 'autocomplete',
+    compType: 'autocomplete',
     compProps: {
       placeholder: '请输入内容',
       fetchSuggestions: (queryString: string, cb: (suggestions: any[]) => void) => {
@@ -77,13 +78,13 @@ const inputFormItems: FormItems = [
   {
     prop: 'mention',
     label: '提及',
-    comp: 'mention',
+    compType: 'mention',
     compProps: {
       placeholder: '请输入 @ 提及用户',
-      suggestions: [
-        { value: '用户1', label: '用户1' },
-        { value: '用户2', label: '用户2' },
-        { value: '用户3', label: '用户3' },
+      options: [
+        { label: '用户1', value: '用户1' },
+        { label: '用户2', value: '用户2' },
+        { label: '用户3', value: '用户3' },
       ],
     },
   },
@@ -94,7 +95,7 @@ const selectFormItems: FormItems = [
   {
     prop: 'select',
     label: '选择器',
-    comp: 'select',
+    compType: 'select',
     compProps: {
       options: [
         { label: '选项1', value: '1' },
@@ -104,9 +105,24 @@ const selectFormItems: FormItems = [
     },
   },
   {
+    prop: 'selectMultiple',
+    label: '多选选择器',
+    compType: 'select',
+    compProps: {
+      multiple: true,
+      options: [
+        { label: '选项1', value: '1' },
+        { label: '选项2', value: '2' },
+        { label: '选项3', value: '3' },
+        { label: '选项4', value: '4' },
+        { label: '选项5', value: '5' },
+      ],
+    },
+  },
+  {
     prop: 'selectV2',
     label: '虚拟列表选择器',
-    comp: 'select-v2',
+    compType: 'select-v2',
     compProps: {
       options: Array.from({ length: 100 }, (_, i) => ({
         label: `选项${i + 1}`,
@@ -117,7 +133,7 @@ const selectFormItems: FormItems = [
   {
     prop: 'cascader',
     label: '级联选择器',
-    comp: 'cascader',
+    compType: 'cascader',
     compProps: {
       options: [
         {
@@ -142,7 +158,7 @@ const selectFormItems: FormItems = [
   {
     prop: 'treeSelect',
     label: '树形选择器',
-    comp: 'tree-select',
+    compType: 'tree-select',
     compProps: {
       data: [
         {
@@ -171,7 +187,7 @@ const dateTimeFormItems: FormItems = [
   {
     prop: 'datePicker',
     label: '日期选择器',
-    comp: 'date-picker',
+    compType: 'date-picker',
     compProps: {
       type: 'date',
       placeholder: '请选择日期',
@@ -180,7 +196,7 @@ const dateTimeFormItems: FormItems = [
   {
     prop: 'datePickerPanel',
     label: '日期面板',
-    comp: 'date-picker-panel',
+    compType: 'date-picker-panel',
     compProps: {
       type: 'date',
     },
@@ -188,7 +204,7 @@ const dateTimeFormItems: FormItems = [
   {
     prop: 'timePicker',
     label: '时间选择器',
-    comp: 'time-picker',
+    compType: 'time-picker',
     compProps: {
       placeholder: '请选择时间',
     },
@@ -196,7 +212,7 @@ const dateTimeFormItems: FormItems = [
   {
     prop: 'timeSelect',
     label: '时间选择',
-    comp: 'time-select',
+    compType: 'time-select',
     compProps: {
       placeholder: '请选择时间',
     },
@@ -208,7 +224,7 @@ const otherFormItems: FormItems = [
   {
     prop: 'checkbox',
     label: '复选框组',
-    comp: 'checkbox',
+    compType: 'checkbox',
     compProps: {
       options: [
         { label: '选项1', value: '1' },
@@ -220,7 +236,7 @@ const otherFormItems: FormItems = [
   {
     prop: 'radio',
     label: '单选框组',
-    comp: 'radio',
+    compType: 'radio',
     compProps: {
       options: [
         { label: '选项1', value: '1' },
@@ -232,12 +248,12 @@ const otherFormItems: FormItems = [
   {
     prop: 'switch',
     label: '开关',
-    comp: 'switch',
+    compType: 'switch',
   },
   {
     prop: 'slider',
     label: '滑块',
-    comp: 'slider',
+    compType: 'slider',
     compProps: {
       min: 0,
       max: 100,
@@ -246,7 +262,7 @@ const otherFormItems: FormItems = [
   {
     prop: 'rate',
     label: '评分',
-    comp: 'rate',
+    compType: 'rate',
     compProps: {
       max: 5,
     },
@@ -254,17 +270,17 @@ const otherFormItems: FormItems = [
   {
     prop: 'colorPicker',
     label: '颜色选择器',
-    comp: 'color-picker',
+    compType: 'color-picker',
   },
   {
     prop: 'colorPickerPanel',
     label: '颜色面板',
-    comp: 'color-picker-panel',
+    compType: 'color-picker-panel',
   },
   {
     prop: 'transfer',
     label: '穿梭框',
-    comp: 'transfer',
+    compType: 'transfer',
     compProps: {
       data: Array.from({ length: 10 }, (_, i) => ({
         key: `${i + 1}`,

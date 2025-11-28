@@ -260,8 +260,8 @@ const slotsCache = computed(() => {
       dynamicComponentSlots.set(item.prop, fieldSlots)
     }
 
-    // 自定义组件插槽（格式：{prop}，且 comp === 'custom'）
-    if (item.comp === 'custom' && slots[item.prop]) {
+    // 自定义组件插槽（格式：{prop}，且 compType === 'custom'）
+    if (item.compType === 'custom' && slots[item.prop]) {
       customComponentSlots.set(item.prop, [{
         rawSlotName: item.prop,
         slotName: item.prop,

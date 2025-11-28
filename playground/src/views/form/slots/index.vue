@@ -16,12 +16,12 @@ const formItems1: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'password',
     label: '密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -30,7 +30,7 @@ const formItems1: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -42,7 +42,7 @@ const formItems2a: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
       { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
@@ -51,7 +51,7 @@ const formItems2a: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -63,7 +63,7 @@ const formItems2a: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入手机号', trigger: 'blur' },
       { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
@@ -76,7 +76,7 @@ const formItems2b: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
       { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
@@ -85,7 +85,7 @@ const formItems2b: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -97,7 +97,7 @@ const formItems2b: FormItems = [
   {
     prop: 'phone',
     label: '手机号',
-    comp: 'input',
+    compType: 'input',
     rules: [
       { required: true, message: '请输入手机号', trigger: 'blur' },
       { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
@@ -106,7 +106,7 @@ const formItems2b: FormItems = [
   {
     prop: 'password',
     label: '密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -118,17 +118,17 @@ const formItems2b: FormItems = [
   },
 ]
 
-// 示例 3：自定义组件插槽（comp: 'custom'）
+// 示例 3：自定义组件插槽（compType: 'custom'）
 const formItems3: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'customField',
     label: '自定义字段',
-    comp: 'custom',
+    compType: 'custom',
   },
 ]
 
@@ -137,12 +137,12 @@ const formItems4: FormItems = [
   {
     prop: 'username',
     label: '用户名',
-    comp: 'input',
+    compType: 'input',
   },
   {
     prop: 'password',
     label: '密码',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'password',
       showPassword: true,
@@ -151,7 +151,7 @@ const formItems4: FormItems = [
   {
     prop: 'email',
     label: '邮箱',
-    comp: 'input',
+    compType: 'input',
     compProps: {
       type: 'email',
     },
@@ -163,12 +163,12 @@ const formItems4: FormItems = [
   {
     prop: 'customField',
     label: '自定义字段',
-    comp: 'custom',
+    compType: 'custom',
   },
   {
     prop: 'customField2',
     label: '自定义字段2',
-    comp: 'custom',
+    compType: 'custom',
   },
 ]
 </script>
@@ -300,11 +300,11 @@ const formItems4: FormItems = [
       </el-space>
     </el-card>
 
-    <!-- 示例 3：自定义组件插槽（comp: 'custom'） -->
+    <!-- 示例 3：自定义组件插槽（compType: 'custom'） -->
     <el-card class="w-full" shadow="hover">
       <template #header>
         <h2 class="text-lg text-gray-800 font-semibold m-0">
-          示例 3：自定义组件插槽（comp: 'custom'）
+          示例 3：自定义组件插槽（compType: 'custom'）
         </h2>
       </template>
       <el-space class="w-full" direction="vertical" :size="20" fill>
