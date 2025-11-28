@@ -62,7 +62,7 @@ export interface OptionsConfig {
  * @template T 组件类型
  */
 export type InferOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? any[] | OptionsLoader | OptionsConfig
+  ? OptionsLoader | OptionsConfig | any[]
   : never
 
 /**

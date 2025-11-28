@@ -133,6 +133,7 @@ export default defineConfig({
     },
     server: {
       port: 5174,
+      host: true,
       fs: {
         // 允许访问父目录，以便访问 packages 和 playground
         allow: ['..', '../..', '../../..'],

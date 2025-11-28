@@ -19,7 +19,7 @@ export type FormItemOptions<T extends FormItemComp> = IsOptionsSupported<T> exte
  * @template T - 组件类型
  */
 export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? FormItemCompProps<T> & { options?: FormItemOptions<T> } // 支持 options 的组件：直接覆盖 options 类型为扩展类型
+  ? Omit<FormItemCompProps<T>, 'options'> & { options?: FormItemOptions<T> } // 支持 options 的组件：先排除原始 options，再添加扩展的 options 类型
   : FormItemCompProps<T> // 不支持 options 的组件：使用原始 Props 类型
 
 /**
