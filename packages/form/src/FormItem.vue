@@ -158,28 +158,37 @@ async function executeLoader(loader: OptionsLoader, formData: Record<string, any
   }
 }
 
-/**
- * 获取对象模式的 options 配置
- * @returns 对象模式配置或 null
- */
+/** 获取对象模式的 options 配置（非对象模式时返回 null） */
 function getOptionsConfig(): OptionsConfig | null {
   const options = props.formItem.compProps?.options
   return isOptionsConfig(options) ? options : null
 }
 
 /**
- * 清空当前字段的值并触发 change 事件
- * 先触发 change 事件（值为 undefined），允许用户在 change 事件中设置默认值
+ * 清空当前字段的值（仅负责把值变成 undefined，不直接 emit change）
+ *
+ * 核心思路：
+ * - 依赖字段变化时，先标记当前值为「待清空」
+ * - 真正清空放在 nextTick，给外层 @change 回调机会写入「新默认值」
+ * - 如果外层在依赖变更过程中写入了新值（hasUserValue），则不再清空，避免覆盖业务逻辑
+ * - 是否触发 change(undefined) 或 change(新值)，由后面的 watch(modelValue) 统一处理
  */
 function clearValue() {
+  // 已经是空值就不用处理了
   if (isEmpty(modelValue.value))
     return
 
-  emit('change', eventExtendedParams.value, undefined)
-
-  // 在下一个 tick 检查，如果用户在 change 事件中设置了值，则不清空
+  // 延迟到下一个 tick 再真正清空：
+  // - 先让依赖字段的 @change 回调（可能设置默认值）执行
+  // - 如果用户在回调里设置了新值（clearState.hasUserValue = true），就不再清空
+  const prev = modelValue.value
   nextTick(() => {
+    // 依赖变更过程中已经设置了新值，保持新值，不再清空
     if (clearState.changing && clearState.hasUserValue)
+      return
+
+    // 如果期间值已经被其它逻辑改掉（例如手动重置），不再重复清空
+    if (modelValue.value !== prev)
       return
 
     modelValue.value = undefined
@@ -207,9 +216,11 @@ function clearIfNotInOptions(options: any[]) {
 }
 
 /**
- * 加载 options
- * 支持函数模式和对象模式，自动处理依赖和异步加载
- * @param isDependencyChange - 是否是依赖变更触发的（依赖变更时会先清理，但允许用户在 change 事件中设置默认值）
+ * 加载 options（函数模式 / 对象模式）
+ *
+ * @param isDependencyChange - 是否由依赖字段变更触发：
+ * - true：先通过 clearValue 清空当前值，再按最新依赖重新加载 options
+ * - false：仅基于当前 formData 加载 options，并根据新 options 决定是否清理当前值
  */
 async function loadOptions(isDependencyChange = false) {
   const options = props.formItem.compProps?.options
@@ -262,10 +273,7 @@ function handleFunctionOptions() {
   loadOptions()
 }
 
-/**
- * 处理对象模式 options
- * @param config - 对象模式配置
- */
+/** 处理对象模式 options（负责 immediate / deps 等配置） */
 function handleObjectOptions(config: OptionsConfig) {
   const { immediate = false, deps = [], loader } = config
 
@@ -295,22 +303,22 @@ function handleObjectOptions(config: OptionsConfig) {
   loadOptions()
 }
 
-/** 获取 options 配置的依赖列表（排除自身并去重） */
+/** 获取 options 配置的依赖列表（排除自身并去重，用于内部 watch） */
 const optionsDeps = computed(() => {
   const config = getOptionsConfig()
   return config ? processDeps(config.deps ?? [], props.formItem.prop) : []
 })
 
-/** 获取 options 配置的 immediate 选项 */
+/** 获取 options 配置的 immediate 选项（缺省视为 false） */
 const optionsImmediate = computed(() => {
   const config = getOptionsConfig()
   return config ? (config.immediate ?? false) : false
 })
 
-/** 监听依赖变化（仅对象模式，且配置了 deps） */
+/** 监听对象模式 options 的字段依赖（仅当配置了 deps 时生效） */
 watch(
   () => {
-    // 创建对象来追踪依赖字段的值，确保 watch 能正确追踪变化
+    // 使用对象包装依赖字段，确保 watch 能正确追踪每个依赖字段的变化
     const deps = optionsDeps.value
     return Object.fromEntries(deps.map(dep => [dep, props.formData?.[dep]]))
   },
@@ -319,13 +327,13 @@ watch(
     if (!config)
       return
 
-    // 依赖变更时，先清理（允许用户在 change 事件中设置默认值），然后重新加载 options
+    // 依赖变更时：先清理当前字段值（支持在 change 中设置默认值），然后基于新依赖重新加载 options
     loadOptions(true)
   },
   { deep: true, immediate: optionsImmediate.value },
 )
 
-/** 使用 watchEffect 自动追踪外部 ref 依赖（仅处理函数模式和对象模式） */
+/** 使用 watchEffect 自动追踪 options.loader 中的外部依赖（函数模式 / 对象模式通用） */
 watchEffect(() => {
   const options = props.formItem.compProps?.options
   if (!options || Array.isArray(options))
@@ -349,9 +357,22 @@ watch(
     if (changeEventState.isUser)
       return
 
-    // 正在处理依赖变更且值不是空值时，说明用户在 change 事件中设置了值
-    if (clearState.changing && !isEmpty(newValue))
+    // 正在处理依赖变更时，需要特殊处理
+    if (clearState.changing) {
+      // 依赖变更导致值被清空：
+      // - 旧值非空，新值为空，且用户没有在 change 回调中设置新值：触发一次 change(undefined)
+      if (isEmpty(newValue)) {
+        if (!isEmpty(oldValue) && !clearState.hasUserValue)
+          emit('change', eventExtendedParams.value, undefined)
+        return
+      }
+
+      // 依赖变更过程中，用户在 change 回调中设置了新值：
+      // 只触发一次 change(新值)，并标记 hasUserValue，避免后续清空
       clearState.markValue()
+      emit('change', eventExtendedParams.value, newValue)
+      return
+    }
 
     // 值发生变化时，触发 change 事件（与 Element Plus 行为保持一致："选中值发生变化时触发"）
     // 注意：初始化时（oldValue 为 undefined）如果设置了值，也应该触发 change
