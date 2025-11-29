@@ -523,7 +523,7 @@ const onAction = (eventName: string) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems, RowProps } from '@iswangh/element-plus-kit'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -601,7 +601,7 @@ const defaultFormItems: FormItems = [
   },
 ]
 
-const rowProps: RowProps = {
+const rowProps = {
   gutter: 20,
 }
 </script>
@@ -793,7 +793,7 @@ const formItems: FormItems = [
   { prop: 'postcode', label: '邮编', compType: 'input', colProps: { span: 8 } },
 ]
 
-const rowProps: RowProps = {
+const rowProps = {
   gutter: 20,
 }
 

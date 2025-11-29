@@ -66,19 +66,4 @@ import './style/index.scss'
 export { default } from './Form.vue'
 export { default as WForm } from './Form.vue'
 
-export type {
-  Arrayable,
-  ColProps,
-  ElFormProps,
-  FormActionButtonItem,
-  FormActionButtons,
-  FormActionConfig,
-  FormExpandRule,
-  FormItem,
-  FormItemComp,
-  FormItemCompProps,
-  FormItemEventExtendedParams,
-  FormItems,
-  FormItemSlotScope,
-  RowProps,
-} from './types'
+export type { FormActionConfig, FormItemEventExtendedParams, FormItems } from './types'

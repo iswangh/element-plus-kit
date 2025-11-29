@@ -289,16 +289,8 @@ import { WForm } from '@iswangh/element-plus-kit'
 ```typescript
 import type {
   FormActionConfig,
-  FormActionButtonItem,
-  Arrayable,
-  ColProps,
-  ElFormProps,
   FormItemEventExtendedParams,
-  FormExpandRule,
-  FormItem,
   FormItems,
-  FormItemSlotScope,
-  RowProps,
 } from '@iswangh/element-plus-kit'
 ```
 

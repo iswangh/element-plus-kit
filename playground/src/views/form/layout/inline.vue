@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems, RowProps } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit-form'
 
 const form = ref({})
 const useColumnLayout = ref(false)
@@ -140,7 +140,7 @@ const columnFormItems: FormItems = [
 
 const formItems = computed(() => useColumnLayout.value ? columnFormItems : defaultFormItems)
 
-const rowProps: RowProps = {
+const rowProps = {
   gutter: 20,
 }
 </script>
