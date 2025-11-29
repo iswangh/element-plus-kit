@@ -1,7 +1,7 @@
 {
   "name": "@iswangh/element-plus-kit-form",
   "type": "module",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Element Plus Kit 表单组件包",
   "license": "Apache-2.0",
   "sideEffects": [
@@ -29,7 +29,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --build",
     "prepublishOnly": "pnpm type-check && pnpm build"
   },
   "peerDependencies": {

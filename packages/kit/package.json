@@ -1,7 +1,7 @@
 {
   "name": "@iswangh/element-plus-kit",
   "type": "module",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Element Plus Kit - 基于 Element Plus 的 Vue 3 组件集合",
   "author": "iswangh",
   "license": "Apache-2.0",
@@ -37,7 +37,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --build",
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
     "prepublishOnly": "pnpm type-check && pnpm build"
   },
