@@ -929,7 +929,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -950,7 +950,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -971,7 +971,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1017,7 +1017,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1038,7 +1038,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1089,7 +1089,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1114,7 +1114,7 @@ Options 支持表单字段依赖和外部状态依赖，可以单独使用或组
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 
@@ -1224,7 +1224,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1245,7 +1245,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态：用户类型
 const userType = ref<'admin' | 'user' | 'guest'>('user')
@@ -1329,7 +1329,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1366,7 +1366,7 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态：用户权限级别
 const permissionLevel = ref<'admin' | 'manager' | 'user'>('user')
@@ -1544,7 +1544,7 @@ const formItems: FormItems = [
   },
 ]
 
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>
@@ -1727,14 +1727,14 @@ const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
 
 | 事件名 | 说明 | 类型 |
 | --- | --- | --- |
-| change | 表单项值变化事件 | `<T extends Record<string, any>, K extends keyof T>(extendedParams: FormItemExtendedEventParams, value: T[K]) => void` |
+| change | 表单项值变化事件 | `<T extends Record<string, any>, K extends keyof T>(extendedParams: FormItemEventExtendedParams, value: T[K]) => void` |
 | action | 操作按钮点击事件 | `(eventName: string, data?: unknown) => void` |
 | search | 搜索按钮点击事件 | `() => void` |
 | reset | 重置按钮点击事件 | `(resetData: Record<string, unknown>) => void` |
 | submit | 提交按钮点击事件 | `() => void` |
 | cancel | 取消按钮点击事件 | `() => void` |
 | expand | 展开状态变化事件 | `(value: boolean) => void` |
-| `@{EventName}` | 动态组件事件（如 `@input`、`@focus`、`@blur` 等） | `(extendedParams: FormItemExtendedEventParams, ...args: any[]) => void` |
+| `@{EventName}` | 动态组件事件（如 `@input`、`@focus`、`@blur` 等） | `(extendedParams: FormItemEventExtendedParams, ...args: any[]) => void` |
 
 **注意**：
 - 动态组件的事件（例如 `change`、`input`、`focus`、`blur` 等）的第一个参数固定为 `extendedParams`（包含 `prop`、`index`、`formItem`），后续参数为原始事件参数

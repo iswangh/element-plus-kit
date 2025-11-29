@@ -12,7 +12,7 @@ import type { FormItem } from './form-item'
  * @property {number} index 表单项索引
  * @property {FormItem} formItem 表单项配置
  */
-export interface FormItemExtendedEventParams<K = string> {
+export interface FormItemEventExtendedParams<K = string> {
   prop: K
   index: number
   formItem: FormItem

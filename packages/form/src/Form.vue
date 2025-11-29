@@ -5,7 +5,7 @@
  * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
  */
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { Arrayable, ElFormProps, FormActionConfig, FormItemExtendedEventParams, FormItems, FormItemSlotScope, RowProps } from './types'
+import type { Arrayable, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotScope, RowProps } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
@@ -24,7 +24,7 @@ interface Props extends ElFormProps {
 
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: FormItemExtendedEventParams, value: T[K]): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: FormItemEventExtendedParams, value: T[K]): void
   (e: 'action', eventName: string, data?: unknown): void
   (e: 'search'): void
   (e: 'reset', resetData: Record<string, unknown>): void
@@ -456,7 +456,7 @@ watch(
             :dynamic-comp-events="dynamicCompEvents"
             :form-slots="slotsCache"
             :index="v._originalIndex ?? i"
-            @change="(extendedParams: FormItemExtendedEventParams, value: unknown) => emit('change', extendedParams, value)"
+            @change="(extendedParams: FormItemEventExtendedParams, value: unknown) => emit('change', extendedParams, value)"
           />
         </component>
       </TransitionGroup>

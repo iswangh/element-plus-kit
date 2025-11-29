@@ -87,7 +87,7 @@ import '@iswangh/element-plus-kit-form/style.css'
 | 事件名 | 说明 | 参数 |
 | --- | --- | --- |
 | validate | 表单项验证事件 | `(prop: FormItemProp, isValid: boolean, message: string)` |
-| change | 表单项值变化事件 | `(extendedParams: FormItemExtendedEventParams, value: any)` |
+| change | 表单项值变化事件 | `(extendedParams: FormItemEventExtendedParams, value: any)` |
 | action | 操作按钮点击事件 | `(eventName: string)` |
 | search | 搜索按钮点击事件 | - |
 | reset | 重置按钮点击事件 | - |
@@ -308,7 +308,7 @@ const formItems: FormItems = [
 </template>
 
 <script setup lang="ts">
-const onChange = (extendedParams: FormItemExtendedEventParams, value: any) => {
+const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
   console.log('字段变化:', extendedParams.prop, value)
 }
 

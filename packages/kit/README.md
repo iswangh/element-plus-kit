@@ -293,7 +293,7 @@ import type {
   Arrayable,
   ColProps,
   ElFormProps,
-  FormItemExtendedEventParams,
+  FormItemEventExtendedParams,
   FormExpandRule,
   FormItem,
   FormItems,

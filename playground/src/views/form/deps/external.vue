@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
 
 // 外部状态：用户类型
 const userType = ref<'admin' | 'user' | 'guest'>('user')
@@ -95,7 +95,7 @@ const formItems: FormItems = [
 
 const form = ref({})
 
-function onChange(extendedParams: FormItemExtendedEventParams, value: any) {
+function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
   console.log('onChange', extendedParams, value)
   // 当用户类型字段变化时，同步更新外部状态
   if (extendedParams.prop === 'userType')

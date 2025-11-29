@@ -77,7 +77,7 @@ export type {
   FormItem,
   FormItemComp,
   FormItemCompProps,
-  FormItemExtendedEventParams,
+  FormItemEventExtendedParams,
   FormItems,
   FormItemSlotScope,
   RowProps,

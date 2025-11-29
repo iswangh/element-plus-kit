@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItemExtendedEventParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 
@@ -10,7 +10,7 @@ const form = ref({
   gender: '',
 })
 
-const changeLog = ref<Array<{ time: string, prop: string, value: any, extendedParams: FormItemExtendedEventParams }>>([])
+const changeLog = ref<Array<{ time: string, prop: string, value: any, extendedParams: FormItemEventExtendedParams }>>([])
 
 const formItems: FormItems = [
   {
@@ -48,7 +48,7 @@ const formItems: FormItems = [
   },
 ]
 
-function onChange(extendedParams: FormItemExtendedEventParams, value: any) {
+function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
   const time = new Date().toLocaleTimeString()
   changeLog.value.unshift({
     time,
