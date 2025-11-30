@@ -28,9 +28,9 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
  * 扩展自 Element Plus 的 FormItem 组件 Props，添加了自定义配置选项
  *
  * @template T - 组件类型
- * @extends {ElFormItemProps} Element Plus FormItem 组件原始 Props
+ * @extends {ElFormItemProps} Element Plus FormItem 组件原始 Props（包含事件处理器）
  * @property {T} compType 使用的组件类型
- * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象
+ * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象（包含事件处理器，用于动态组件）
  * @property {Condition} [vIf] 条件渲染控制，支持布尔值或接收表单数据的函数
  * @property {Condition} [vShow] 显示/隐藏控制，支持布尔值或接收表单数据的函数
  *
@@ -39,7 +39,7 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
 export interface FormItem<T extends FormItemComp = FormItemComp> extends ElFormItemProps {
   prop: string
   compType: T
-  compProps?: FormItemCompPropsExtended<T>
+  compProps?: FormItemCompPropsExtended<T> // 包含事件处理器（动态组件的事件）
   vIf?: Condition
   vShow?: Condition
   colProps?: ColProps

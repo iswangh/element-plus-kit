@@ -60,7 +60,7 @@ const resolvedComp = computed(() => FORM_ITEM_COMP_MAP[props.formItem.compType] 
 const eventExtendedParams = computed(() => ({ prop: props.formItem.prop, formItem: props.formItem, index: props.index }))
 
 /**
- * 创建动态事件处理器
+ * 创建动态事件处理器（来自 WForm 标签的事件，向后兼容）
  * 扩展参数 {prop, formItem} 作为第一个参数传递给事件处理器
  *
  * ⚠️ 事件处理限制：
@@ -105,27 +105,25 @@ function onChange(event: any) {
 const processedCompProps = computed(() => {
   const defaults = COMP_DEFAULT_CONFIG.getDefaults(props.formItem)
   const compProps = props.formItem.compProps ?? {}
+  const { options, ...restCompProps } = compProps
 
-  // 只有当 compProps 中有 options 字段时，才设置 options 属性
-  const hasOptions = 'options' in compProps
-  const options = compProps.options
+  // 排除事件处理器的辅助函数
+  const excludeEvents = (obj: Record<string, any>) => Object.fromEntries(Object.entries(obj).filter(([key]) => !key.startsWith('on')))
 
-  // 从 compProps 中排除 options，避免与 resolvedOptions.value 冲突
-  const { options: _options, ...restCompProps } = compProps
+  // 提取事件处理器
+  const compEventHandlers = Object.fromEntries(Object.entries(compProps).filter(([key, value]) => key.startsWith('on') && typeof value === 'function'))
 
-  // 区分静态数组和动态选项
-  const isStaticArray = Array.isArray(options)
-  const isFunctionOrObject = typeof options === 'function' || isOptionsConfig(options)
+  const isDynamic = typeof options === 'function' || isOptionsConfig(options)
 
   return {
-    ...defaults,
-    ...restCompProps,
+    ...excludeEvents(defaults),
+    ...excludeEvents(restCompProps),
     ...dynamicEventHandlers.value,
-    ...(hasOptions && {
-      // 静态数组直接使用原始数组，动态选项使用 resolvedOptions.value
-      options: isStaticArray ? options : resolvedOptions.value,
-      // 只有动态选项才需要 loading 状态
-      ...(isFunctionOrObject && { loading: isOptionsLoading.value }),
+    ...compEventHandlers,
+    ...('options' in compProps && {
+      options: Array.isArray(options) ? options : resolvedOptions.value,
+      // 只有动态选项才需要 loading 状态(函数或对象模式)
+      ...(isDynamic && { loading: isOptionsLoading.value }),
     }),
   }
 })
