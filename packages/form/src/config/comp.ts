@@ -3,12 +3,6 @@ import type { FormItem } from '../types'
 import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 
 /**
- * 需要从 FormItem 中排除的自定义属性键名
- * 这些属性不会传递给 el-form-item 组件
- */
-export const FORM_ITEM_EXCLUDED_KEYS = ['compType', 'compProps', 'slots', 'vIf', 'vShow'] as const
-
-/**
  * 拓展的组件映射
  * 导出以便在类型文件中使用 typeof 提取类型
  */
