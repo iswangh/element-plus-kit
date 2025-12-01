@@ -251,7 +251,7 @@ const formItems: FormItems = [
 </script>
 
 <template>
-  <WForm :model="form" :form-items="formItems" label-width="100px">
+  <WForm :model="form" :form-items="formItems" label-width="180px">
     <!-- 动态组件插槽：username-prefix -->
     <template #username-prefix>
       <el-icon><User /></el-icon>
@@ -267,8 +267,8 @@ const formItems: FormItems = [
       <el-icon><Search /></el-icon>
     </template>
 
-    <!-- 表单项插槽：form-item-email-label -->
-    <template #form-item-email-label="{ formItem }">
+    <!-- 表单项插槽：form-item-label -->
+    <template #form-item-label="{ formItem }">
       <span style="color: #409eff">{{ formItem.label }}（自定义标签）</span>
     </template>
 
