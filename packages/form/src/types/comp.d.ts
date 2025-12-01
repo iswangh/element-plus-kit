@@ -86,3 +86,9 @@ export type FormItemCompInstance<T extends FormItemComp> = InstanceType<FormComp
  */
 export type FormItemCompProps<T extends FormItemComp = FormItemComp>
   = FormItemCompInstance<T>['$props']
+
+/**
+ * 根据组件类型推断对应的插槽类型
+ * @template T - 组件类型
+ */
+export type FormItemCompSlots<T extends FormItemComp> = FormItemCompInstance<T>['$slots']

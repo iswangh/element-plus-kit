@@ -5,7 +5,8 @@
  * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
  */
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { Arrayable, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotScope, RowProps } from './types'
+import type { Slot } from 'vue'
+import type { Arrayable, CompSlotsConfig, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotsConfig, FormItemSlotScope, RowProps, SlotRenderFn } from './types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
@@ -231,6 +232,12 @@ function shouldCollapseField(field: FormItems[number], fieldIndex: number): bool
 
 const slots = useSlots()
 
+interface ProcessedSlot {
+  rawSlotName: string
+  slotName: string
+  slotFn: Slot
+}
+
 /**
  * 获取动态组件对应的插槽
  * @param prefix 动态组件名称前缀
@@ -246,31 +253,106 @@ function getSlotsByPrefix(prefix: string) {
     }))
 }
 
-/** 缓存 el-form-item、动态组件和自定义组件的插槽配置 */
-const slotsCache = computed(() => {
-  const formItemSlots = getSlotsByPrefix('form-item-')
-  const dynamicComponentSlots = new Map()
-  const customComponentSlots = new Map()
+/**
+ * 将 SlotRenderFn 转换为 Slot
+ * @param slotFn SlotRenderFn 函数
+ * @returns Vue 的 Slot 函数
+ */
+function wrapSlotRenderFn(slotFn: SlotRenderFn): Slot {
+  return (...args: any[]) => {
+    const result = slotFn((args[0] ?? {}) as FormItemSlotScope)
+    return Array.isArray(result) ? result : [result]
+  }
+}
 
-  // 缓存字段插槽
-  for (const item of filteredFormItems.value) {
-    // 动态组件插槽（格式：{prop}-{slotName}）
-    const fieldSlots = getSlotsByPrefix(`${item.prop}-`)
-    if (fieldSlots.length > 0) {
-      dynamicComponentSlots.set(item.prop, fieldSlots)
-    }
+/**
+ * 合并配置插槽和模板插槽
+ * @param configSlots 配置插槽对象
+ * @param templateSlots 模板插槽数组
+ * @param rawSlotNamePrefix 原始插槽名称前缀
+ * @returns 合并后的插槽数组
+ */
+function mergeSlots(
+  configSlots: FormItemSlotsConfig | CompSlotsConfig<any> | undefined,
+  templateSlots: ProcessedSlot[],
+  rawSlotNamePrefix: string,
+): ProcessedSlot[] {
+  if (!configSlots && templateSlots.length === 0)
+    return []
 
-    // 自定义组件插槽（格式：{prop}，且 compType === 'custom'）
-    if (item.compType === 'custom' && slots[item.prop]) {
-      customComponentSlots.set(item.prop, [{
-        rawSlotName: item.prop,
-        slotName: item.prop,
-        slotFn: slots[item.prop]!,
-      }])
+  const merged: ProcessedSlot[] = []
+  const configSlotNames = new Set<string>()
+
+  // 先添加配置插槽（优先级高）
+  if (configSlots) {
+    for (const [slotName, slotFn] of Object.entries(configSlots)) {
+      if (slotFn != null) {
+        configSlotNames.add(slotName)
+        merged.push({
+          rawSlotName: `${rawSlotNamePrefix}${slotName}`,
+          slotName,
+          slotFn: wrapSlotRenderFn(slotFn),
+        })
+      }
     }
   }
 
-  return { formItemSlots, dynamicComponentSlots, customComponentSlots }
+  // 再添加模板插槽（如果配置插槽中不存在同名插槽）
+  for (const templateSlot of templateSlots) {
+    if (!configSlotNames.has(templateSlot.slotName))
+      merged.push(templateSlot)
+  }
+
+  return merged
+}
+
+/** 缓存 el-form-item、动态组件和自定义组件的插槽配置 */
+const slotsCache = computed(() => {
+  const formItemSlots = new Map<string, ProcessedSlot[]>()
+  const dynamicCompSlots = new Map<string, ProcessedSlot[]>()
+
+  const templateFormItemSlots = getSlotsByPrefix('form-item-')
+
+  for (const item of filteredFormItems.value) {
+    // FormItem 插槽：合并配置插槽和模板插槽（按字段处理）
+    const mergedFormItemSlots = mergeSlots(
+      item.slots,
+      templateFormItemSlots,
+      'form-item-',
+    )
+
+    // el-form-item 默认插槽：用于自定义组件
+    if (item.compType === 'custom') {
+      // 检查是否已有 default 插槽（来自 item.slots.default 或 #form-item-default）
+      const hasDefault = mergedFormItemSlots.some(slot => slot.slotName === 'default')
+      // 如果没有，才使用模板插槽 #{prop}
+      if (!hasDefault) {
+        const templateSlot = slots[item.prop]
+        if (templateSlot) {
+          mergedFormItemSlots.push({
+            rawSlotName: item.prop,
+            slotName: 'default',
+            slotFn: templateSlot,
+          })
+        }
+      }
+    }
+
+    if (mergedFormItemSlots.length > 0)
+      formItemSlots.set(item.prop, mergedFormItemSlots)
+
+    // 动态组件插槽：合并配置插槽和模板插槽
+    const templateFieldSlots = getSlotsByPrefix(`${item.prop}-`)
+    const mergedCompSlots = mergeSlots(
+      item.compProps?.slots,
+      templateFieldSlots,
+      `${item.prop}-`,
+    )
+    if (mergedCompSlots.length > 0)
+      dynamicCompSlots.set(item.prop, mergedCompSlots)
+  }
+
+  return { formItemSlots, dynamicCompSlots }
 })
 
 /** 判断是否渲染 el-row */

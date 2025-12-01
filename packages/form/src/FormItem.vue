@@ -15,9 +15,8 @@ interface ProcessedSlot {
 }
 
 interface FormSlots {
-  formItemSlots: ProcessedSlot[]
-  dynamicComponentSlots: Map<string, ProcessedSlot[]>
-  customComponentSlots: Map<string, ProcessedSlot[]>
+  formItemSlots: Map<string, ProcessedSlot[]> // 按字段处理的 FormItem 插槽（包含命名插槽和默认插槽）
+  dynamicCompSlots: Map<string, ProcessedSlot[]>
 }
 
 interface Props {
@@ -36,7 +35,7 @@ defineOptions({ name: 'ElementPlusKitFormItem' })
 
 const props = withDefaults(defineProps<Props>(), {
   formData: () => ({}),
-  formSlots: () => ({ formItemSlots: [], dynamicComponentSlots: new Map(), customComponentSlots: new Map() }),
+  formSlots: () => ({ formItemSlots: new Map(), dynamicCompSlots: new Map() }),
 })
 
 const emit = defineEmits<Emits>()
@@ -50,8 +49,14 @@ const formItemProps = computed(() => {
   )
 })
 
-/** 获取 el-form-item 的插槽 */
-const formItemSlots = computed(() => props.formSlots.formItemSlots)
+/** 获取 FormItem 插槽（命名插槽和默认插槽） */
+const formItemSlots = computed(() => {
+  const all = props.formSlots.formItemSlots.get(props.formItem.prop) ?? []
+  return {
+    named: all.filter(slot => slot.slotName !== 'default'),
+    default: all.find(slot => slot.slotName === 'default'),
+  }
+})
 
 /** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
 const resolvedComp = computed(() => FORM_ITEM_COMP_MAP[props.formItem.compType] || 'div')
@@ -105,7 +110,7 @@ function onChange(event: any) {
 const processedCompProps = computed(() => {
   const defaults = COMP_DEFAULT_CONFIG.getDefaults(props.formItem)
   const compProps = props.formItem.compProps ?? {}
-  const { options, ...restCompProps } = compProps
+  const { options, slots: _compSlots, ...restCompProps } = compProps
 
   // 排除事件处理器的辅助函数
   const excludeEvents = (obj: Record<string, any>) => Object.fromEntries(Object.entries(obj).filter(([key]) => !key.startsWith('on')))
@@ -128,15 +133,10 @@ const processedCompProps = computed(() => {
   }
 })
 
-/** 根据 prop 获取对应的动态组件插槽 */
-function getDynamicComponentSlots(prop: string) {
-  return props.formSlots.dynamicComponentSlots.get(prop)
-}
-
-/** 根据 prop 获取对应的自定义组件插槽 */
-function getCustomComponentSlot(prop: string) {
-  const slots = props.formSlots.customComponentSlots.get(prop)
-  return slots && slots.length > 0 && slots[0] ? slots[0].slotFn : undefined
+/** 获取动态组件插槽（已在 Form.vue 中合并配置插槽和模板插槽） */
+function getDynamicCompSlots(prop: string) {
+  const slots = props.formSlots.dynamicCompSlots.get(prop)
+  return slots && slots.length > 0 ? slots : undefined
 }
 
 /**
@@ -382,10 +382,10 @@ watch(
 
 <template>
   <ElFormItem v-bind="formItemProps">
-    <!-- el-form-item slots -->
-    <template v-for="(slot, slotIndex) in formItemSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+    <!-- el-form-item 命名插槽（label、error 等） -->
+    <template v-for="(slot, slotIndex) in formItemSlots.named" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
       <!-- 使用 span 包裹确保只有一个根元素，避免 TransitionGroup 警告 -->
-      <span v-if="slot.slotName === 'error'" class="form-item-slot-wrapper">
+      <span v-if="slot.slotName === 'error'">
         <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
       </span>
       <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
@@ -399,19 +399,17 @@ watch(
         @change="onChange"
       >
         <!-- 动态组件插槽 -->
-        <template v-for="(slot, slotIndex) in getDynamicComponentSlots(formItem.prop) ?? []" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+        <template v-for="(slot, slotIndex) in getDynamicCompSlots(formItem.prop) ?? []" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
           <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
         </template>
       </component>
     </template>
-    <!-- 自定义组件 -->
-    <template v-else>
+    <!-- 自定义组件（使用 el-form-item 默认插槽） -->
+    <template v-else-if="formItem.compType === 'custom'">
       <component
-        :is="getCustomComponentSlot(formItem.prop)!"
-        v-if="getCustomComponentSlot(formItem.prop)"
-        :value="modelValue"
-        :form="formData"
-        :form-item="formItem"
+        :is="formItemSlots.default.slotFn"
+        v-if="formItemSlots.default"
+        v-bind="{ value: modelValue, form: formData, formItem }"
       />
     </template>
   </ElFormItem>

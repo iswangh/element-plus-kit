@@ -38,6 +38,9 @@ export interface ElFormProps {
 /** Element Plus FormItem Props */
 export type ElFormItemProps = FormItemInstance['$props']
 
+/** Element Plus FormItem Slots */
+export type ElFormItemSlots = FormItemInstance['$slots']
+
 /** Element Plus Row 组件 Props */
 export type ElRowProps = InstanceType<typeof ElRow>['$props']
 

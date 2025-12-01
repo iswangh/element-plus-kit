@@ -30,9 +30,10 @@ export const formRouteMeta = {
   '/form/deps/auto-clear': { title: '智能清理', description: '选项变化时自动清理无效值', showInSidebar: true, order: 4 },
   // 插槽示例 (order: 7) - 了解插槽功能
   '/form/slots': { title: '插槽示例', showInSidebar: true, order: 8 },
-  // 可配置化示例 (order: 9) - 了解可配置化事件处理
-  '/form/events': { title: '可配置化示例', showInSidebar: true, order: 9 },
-  '/form/events/events': { title: '事件示例', description: '可配置化事件和 WForm 事件的优先级', showInSidebar: true, order: 1 },
+  // 可配置化示例 (order: 9) - 了解可配置化事件和插槽
+  '/form/configurable': { title: '可配置化示例', showInSidebar: true, order: 9 },
+  '/form/configurable/events': { title: '事件配置', description: '可配置化事件和 WForm 事件的优先级', showInSidebar: true, order: 1 },
+  '/form/configurable/slots': { title: '插槽配置', description: '可配置化插槽和模板插槽的优先级', showInSidebar: true, order: 2 },
   // 操作按钮 (order: 9) - 了解操作按钮配置（放在最后，因为依赖前面的知识）
   '/form/actions': { title: '操作按钮', showInSidebar: true, order: 9 },
   '/form/actions/expand': { title: '展开/折叠', description: '表单字段展开/折叠功能', showInSidebar: true, order: 1 },

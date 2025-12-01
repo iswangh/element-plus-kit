@@ -3,6 +3,7 @@ import type { FormItemComp, FormItemCompProps } from './comp'
 import type { ElFormItemProps } from './el'
 import type { ColProps } from './layout'
 import type { InferOptionsType, IsOptionsSupported } from './options'
+import type { CompSlotsConfig, FormItemSlotsConfig } from './scope'
 
 /**
  * 根据组件类型推断 options 类型
@@ -15,12 +16,14 @@ export type FormItemOptions<T extends FormItemComp> = IsOptionsSupported<T> exte
 
 /**
  * 根据组件类型推断 compProps 类型（扩展版本）
- * 支持扩展属性，如 options 等
+ * 支持扩展属性，如 options、slots 等
  * @template T - 组件类型
  */
-export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? Omit<FormItemCompProps<T>, 'options'> & { options?: FormItemOptions<T> } // 支持 options 的组件：先排除原始 options，再添加扩展的 options 类型
-  : FormItemCompProps<T> // 不支持 options 的组件：使用原始 Props 类型
+export type FormItemCompPropsExtended<T extends FormItemComp>
+  = (IsOptionsSupported<T> extends true
+    ? Omit<FormItemCompProps<T>, 'options'> & { options?: FormItemOptions<T> }
+    : FormItemCompProps<T>)
+  & { slots?: CompSlotsConfig<T> }
 
 /**
  * FormItem Props
@@ -30,7 +33,8 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
  * @template T - 组件类型
  * @extends {ElFormItemProps} Element Plus FormItem 组件原始 Props（包含事件处理器）
  * @property {T} compType 使用的组件类型
- * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象（包含事件处理器，用于动态组件）
+ * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象（包含事件处理器和插槽，用于动态组件）
+ * @property {FormItemSlotsConfig} [slots] FormItem 插槽配置（用于 el-form-item 的插槽）
  * @property {Condition} [vIf] 条件渲染控制，支持布尔值或接收表单数据的函数
  * @property {Condition} [vShow] 显示/隐藏控制，支持布尔值或接收表单数据的函数
  *
@@ -39,7 +43,8 @@ export type FormItemCompPropsExtended<T extends FormItemComp> = IsOptionsSupport
 export interface FormItem<T extends FormItemComp = FormItemComp> extends ElFormItemProps {
   prop: string
   compType: T
-  compProps?: FormItemCompPropsExtended<T> // 包含事件处理器（动态组件的事件）
+  compProps?: FormItemCompPropsExtended<T> // 包含事件处理器和插槽（动态组件的事件和插槽）
+  slots?: FormItemSlotsConfig // FormItem 插槽配置
   vIf?: Condition
   vShow?: Condition
   colProps?: ColProps
