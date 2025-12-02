@@ -65,7 +65,7 @@ const inputFormItems: FormItems = [
     compType: 'autocomplete',
     compProps: {
       placeholder: '请输入内容',
-      fetchSuggestions: (queryString: string, cb: (suggestions: any[]) => void) => {
+      fetchSuggestions: (queryString: string, cb: (suggestions: Record<string, unknown>[]) => void) => {
         const suggestions = [
           { value: '选项1' },
           { value: '选项2' },

@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 // ref 会自动导入，无需手动导入
 import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
@@ -52,7 +53,7 @@ const formItems: FormItems = [
   },
 ]
 
-function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
+function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
   console.log('onChange', extendedParams.prop, value)
 }
 </script>

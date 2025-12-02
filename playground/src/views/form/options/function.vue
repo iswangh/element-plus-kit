@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
@@ -41,7 +42,7 @@ const districts = [
   { label: '龙湾区', value: '4-3-2' },
 ]
 
-const form = ref<Record<string, any>>({})
+const form = ref<Record<string, unknown>>({})
 
 const formItems: FormItems = [
   {
@@ -80,7 +81,7 @@ const formItems: FormItems = [
   },
 ]
 
-function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
+function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
   console.log('onChange', extendedParams, value)
 }
 </script>

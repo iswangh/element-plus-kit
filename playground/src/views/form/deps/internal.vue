@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
@@ -92,7 +93,7 @@ const formItems: FormItems = [
 
 const form = ref({})
 
-function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
+function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
   console.log('onChange', extendedParams, value)
 }
 </script>

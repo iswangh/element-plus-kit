@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
 // ref 会自动导入，无需手动导入
@@ -128,7 +129,7 @@ const objectModeFormItems: FormItems = [
   },
 ]
 
-function onChange({ prop }: FormItemEventExtendedParams, value: any) {
+function onChange({ prop }: FormItemEventExtendedParams, value: unknown) {
   console.log('onChange', prop, value)
 
   if (prop === 'province') {
@@ -136,7 +137,7 @@ function onChange({ prop }: FormItemEventExtendedParams, value: any) {
   }
 }
 
-function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: any) {
+function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: unknown) {
   console.log('onObjectModeChange', prop, value)
 
   // 测试：当优先级变化时，如果值为 'high'，自动设置标签为 'urgent'

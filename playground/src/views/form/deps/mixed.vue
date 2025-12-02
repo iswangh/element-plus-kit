@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang="ts">
 // 不导入，依赖 unplugin-vue-components 和 unplugin-auto-import 自动导入
