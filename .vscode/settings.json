@@ -95,7 +95,7 @@
     "eslint.config.*": ".eslint*,.editorconfig, lint-staged*, commitlint*",
     "tsconfig.json": "tsconfig.*.json",
     "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-    "package.json": ".gitattributes,.gitignore,pnpm-lock.yaml,pnpm-workspace.yaml",
+    "package.json": ".gitattributes,.gitignore,pnpm-lock.yaml,pnpm-workspace.yaml,turbo.json",
     "README.md": "*.md",
     ".env": ".env*"
   },
