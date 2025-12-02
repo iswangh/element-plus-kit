@@ -290,6 +290,150 @@ const formItems: FormItems = [
 
 :::
 
+## 可配置化
+
+除了使用模板插槽和在 `WForm` 标签上监听事件，还可以在 `formItems` 配置对象中直接定义插槽和事件处理器，这种方式称为"可配置化"。
+
+### 插槽
+
+可配置化插槽支持两种类型：
+
+- **FormItem 插槽**：在配置对象的 `slots` 字段中定义，用于自定义 `el-form-item` 的插槽（如 `label`、`error` 等）
+- **动态组件插槽**：在 `compProps.slots` 字段中定义，用于自定义动态组件的插槽（如 `prefix`、`suffix` 等）
+
+**优先级**：可配置化插槽优先级高于模板插槽，如果同时定义了可配置化插槽和模板插槽，会优先使用可配置化插槽。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref, h } from 'vue'
+import { User, Lock } from '@element-plus/icons-vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+
+const form = ref({
+  username: '',
+  email: '',
+  password: '',
+})
+
+const formItems: FormItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    compType: 'input',
+    // FormItem 插槽配置
+    slots: {
+      label: (props) => h('span', { class: 'flex items-center gap-1' }, [
+        h('span', props.formItem.label),
+        h('span', { class: 'text-red-500' }, '*'),
+      ]),
+    },
+    // 动态组件插槽配置
+    compProps: {
+      placeholder: '请输入用户名',
+      slots: {
+        prefix: () => h(User, { class: 'text-gray-400' }),
+      },
+    },
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    compType: 'input',
+    compProps: {
+      type: 'email',
+      placeholder: '请输入邮箱',
+      slots: {
+        prefix: () => h('span', {}, '123'),
+        suffix: () => h('span', { class: 'text-gray-400 text-xs' }, '必填'),
+      },
+    },
+  },
+  {
+    prop: 'password',
+    label: '密码',
+    compType: 'input',
+    compProps: {
+      type: 'password',
+      showPassword: true,
+      placeholder: '请输入密码',
+      slots: {
+        prefix: () => h(Lock, { class: 'text-gray-400' }),
+      },
+    },
+  },
+]
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" label-width="80px" />
+</template>
+```
+
+:::
+
+### 事件
+
+可配置化事件支持在 `compProps` 中定义动态组件的事件处理器。
+
+- **动态组件事件**：在 `compProps` 中定义，事件名以 `on` 开头（如 `onBlur`、`onFocus`、`onInput` 等）
+- **优先级**：可配置化事件优先级高于 `WForm` 标签上的事件，如果同时定义了可配置化事件和标签事件，会优先使用可配置化事件
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItems } from '@iswangh/element-plus-kit'
+import { ElMessage } from 'element-plus'
+
+const form = ref({
+  username: '',
+  email: '',
+})
+
+const formItems: FormItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    compType: 'input',
+    compProps: {
+      placeholder: '请输入用户名',
+      // 动态组件的事件在 compProps 中定义
+      onBlur: (event: FocusEvent) => {
+        ElMessage.info('onBlur 事件触发（来自配置）')
+        console.log('onBlur 事件:', event)
+      },
+      onFocus: (event: FocusEvent) => {
+        ElMessage.info('onFocus 事件触发（来自配置）')
+        console.log('onFocus 事件:', event)
+      },
+    },
+  },
+  {
+    prop: 'email',
+    label: '邮箱',
+    compType: 'input',
+    compProps: {
+      type: 'email',
+      placeholder: '请输入邮箱',
+      onBlur: (event: FocusEvent) => {
+        ElMessage.info('onBlur 事件触发（来自配置）')
+        console.log('onBlur 事件:', event)
+      },
+    },
+  },
+]
+</script>
+
+<template>
+  <WForm :model="form" :form-items="formItems" label-width="100px" />
+</template>
+```
+
+:::
+
 ## 条件渲染
 
 使用 `vIf` 或 `vShow` 实现表单项的条件显示。两者都支持布尔值或接收表单数据的函数，函数可以通过参数访问表单数据，也可以通过闭包访问外部值。
@@ -1601,7 +1745,8 @@ const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
 | --- | --- | --- | --- |
 | prop | 表单字段名（必填） | `string` | - |
 | compType | 组件类型（必填） | `FormItemComp` | - |
-| compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compProps.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>详见 [Options 配置](#options-配置) | `FormItemCompProps<C>` | - |
+| compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compProps.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>`compProps` 还支持：<br>- `compProps.slots`：动态组件插槽配置（如 `prefix`、`suffix` 等），使用 `h()` 函数创建 VNode<br><br>详见 [Options 配置](#options-配置) 和 [可配置化](#可配置化) | `FormItemCompProps<C>` | - |
+| slots | FormItem 插槽配置，用于自定义 `el-form-item` 的插槽（如 `label`、`error` 等），使用 `h()` 函数创建 VNode。详见 [可配置化 - 插槽](#插槽) | `FormItemSlotsConfig` | - |
 | vIf | 条件渲染（v-if），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
 | vShow | 显示/隐藏（v-show），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
 | colProps | 列布局属性，详见 [`ElCol`](https://element-plus.org/zh-CN/component/layout#col-attributes) 组件属性 | `ColProps` | - |

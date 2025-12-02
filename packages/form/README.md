@@ -95,6 +95,23 @@ import '@iswangh/element-plus-kit-form/style.css'
 | cancel | 取消按钮点击事件 | - |
 | expand | 展开状态变化事件 | `(value: boolean)` |
 
+**可配置化事件**：
+- 除了在 `WForm` 标签上监听事件，还可以在 `formItems` 配置对象的 `compProps` 中定义事件处理器
+- 事件名以 `on` 开头（如 `onBlur`、`onFocus`、`onInput` 等），直接接收原始事件参数（不需要 `extendedParams`）
+- 可配置化事件优先级高于 `WForm` 标签上的事件，如果同时定义了可配置化事件和标签事件，会优先使用可配置化事件
+- 示例：
+  ```typescript
+  {
+    prop: 'username',
+    compType: 'input',
+    compProps: {
+      onBlur: (event: FocusEvent) => {
+        console.log('onBlur 事件:', event)
+      },
+    },
+  }
+  ```
+
 ### Slots
 
 | 插槽名 | 说明 | 作用域参数 |
@@ -103,6 +120,28 @@ import '@iswangh/element-plus-kit-form/style.css'
 | `form-item-{prop}` | 表单项插槽，用于自定义表单项内容 | `FormItemSlotScope` |
 | `{prop}-{slotName}` | 动态组件插槽，如 `username-prefix`、`email-suffix` | `FormItemSlotScope` |
 | `expand-toggle` | 展开/折叠按钮插槽，用于自定义按钮 | `{ expanded: boolean, toggle: (value?: boolean) => void }` |
+
+**可配置化插槽**：
+- 除了使用模板插槽，还可以在 `formItems` 配置对象中直接定义插槽
+- **FormItem 插槽**：在配置对象的 `slots` 字段中定义，用于自定义 `el-form-item` 的插槽（如 `label`、`error` 等）
+- **动态组件插槽**：在 `compProps.slots` 字段中定义，用于自定义动态组件的插槽（如 `prefix`、`suffix` 等）
+- 可配置化插槽优先级高于模板插槽，如果同时定义了可配置化插槽和模板插槽，会优先使用可配置化插槽
+- 插槽函数使用 `h()` 函数创建 VNode，接收 `FormItemSlotScope` 参数
+- 示例：
+  ```typescript
+  {
+    prop: 'username',
+    compType: 'input',
+    slots: {
+      label: props => h('span', {}, props.formItem.label),
+    },
+    compProps: {
+      slots: {
+        prefix: () => h(User),
+      },
+    },
+  }
+  ```
 
 ### FormItem 配置
 
@@ -267,7 +306,7 @@ const formItems: FormItems = [
 
 ### 自定义插槽
 
-使用插槽自定义表单项内容：
+使用模板插槽自定义表单项内容：
 
 ```vue
 <template>
@@ -278,6 +317,39 @@ const formItems: FormItems = [
   </WForm>
 </template>
 ```
+
+### 可配置化插槽
+
+除了使用模板插槽，还可以在 `formItems` 配置对象中直接定义插槽：
+
+```typescript
+import { h } from 'vue'
+import { User } from '@element-plus/icons-vue'
+
+const formItems: FormItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    compType: 'input',
+    // FormItem 插槽配置
+    slots: {
+      label: props => h('span', { class: 'flex items-center gap-1' }, [
+        h('span', props.formItem.label),
+        h('span', { class: 'text-red-500' }, '*'),
+      ]),
+    },
+    // 动态组件插槽配置
+    compProps: {
+      placeholder: '请输入用户名',
+      slots: {
+        prefix: () => h(User, { class: 'text-gray-400' }),
+      },
+    },
+  },
+]
+```
+
+**优先级**：可配置化插槽优先级高于模板插槽，如果同时定义了可配置化插槽和模板插槽，会优先使用可配置化插槽。
 
 ### 表单验证
 
@@ -296,6 +368,8 @@ const formItems: FormItems = [
 ```
 
 ### 监听事件
+
+在 `WForm` 标签上监听事件：
 
 ```vue
 <template>
@@ -317,6 +391,32 @@ const onSubmit = () => {
 }
 </script>
 ```
+
+### 可配置化事件
+
+除了在 `WForm` 标签上监听事件，还可以在 `formItems` 配置对象中直接定义事件处理器：
+
+```typescript
+const formItems: FormItems = [
+  {
+    prop: 'username',
+    label: '用户名',
+    compType: 'input',
+    compProps: {
+      placeholder: '请输入用户名',
+      // 动态组件的事件在 compProps 中定义
+      onBlur: (event: FocusEvent) => {
+        console.log('onBlur 事件:', event)
+      },
+      onFocus: (event: FocusEvent) => {
+        console.log('onFocus 事件:', event)
+      },
+    },
+  },
+]
+```
+
+**优先级**：可配置化事件优先级高于 `WForm` 标签上的事件，如果同时定义了可配置化事件和标签事件，会优先使用可配置化事件。
 
 ### 展开/折叠功能
 
