@@ -10,24 +10,74 @@ tags:
 
 # Element Plus Kit 项目开发规范
 
-> **⚠️ 重要提示**：本文档为 Element Plus Kit 项目的特定开发规范，必须与核心开发规范总纲（[`000_core-standards.mdc`](./000_core-standards.mdc)）和 Monorepo 开发规范（[`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）结合使用。
+> **⚠️ 强制要求 - 请勿忽略**
+>
+> 本文档为 Element Plus Kit 项目的特定开发规范，必须与核心开发规范总纲（[`000_core-standards.mdc`](./000_core-standards.mdc)）和 Monorepo 开发规范（[`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）结合使用。
+
+## 目录导航
+
+- [项目架构概述](#项目架构概述)
+  - [Monorepo 结构](#monorepo-结构)
+  - [包依赖关系](#包依赖关系)
+- [开发环境配置](#开发环境配置)
+  - [Node.js 版本管理](#nodejs-版本管理)
+  - [包管理器](#包管理器)
+  - [开发工具](#开发工具)
+- [包命名和导入规范](#包命名和导入规范)
+  - [包命名规范](#包命名规范)
+  - [包导入规范](#包导入规范)
+- [包依赖管理](#包依赖管理)
+  - [内部依赖](#内部依赖)
+  - [外部依赖](#外部依赖)
+  - [开发依赖](#开发依赖)
+- [包构建规范](#包构建规范)
+  - [构建命令](#构建命令)
+  - [构建配置](#构建配置)
+  - [构建产物](#构建产物)
+  - [构建前检查](#构建前检查)
+- [TypeScript 配置规范](#typescript-配置规范)
+  - [项目引用](#项目引用)
+  - [类型定义](#类型定义)
+- [代码开发规范](#代码开发规范)
+  - [Vue 组件规范](#vue-组件规范)
+  - [TypeScript 类型规范](#typescript-类型规范-1)
+  - [文件组织规范](#文件组织规范)
+  - [导出规范](#导出规范)
+- [构建和发布规范](#构建和发布规范)
+  - [构建流程](#构建流程)
+  - [发布流程](#发布流程)
+  - [版本管理](#版本管理)
+- [代码质量规范](#代码质量规范)
+  - [ESLint 规则](#eslint-规则)
+  - [Git 提交规范](#git-提交规范)
+- [文档规范](#文档规范)
+  - [包文档](#包文档)
+  - [代码注释](#代码注释)
+- [测试规范](#测试规范)
+  - [测试框架](#测试框架)
+- [性能优化规范](#性能优化规范)
+  - [构建优化](#构建优化)
+  - [运行时优化](#运行时优化)
+- [开发工作流规范](#开发工作流规范)
+  - [自动导入配置](#自动导入配置)
+- [工具和命令](#工具和命令)
 
 ## 项目架构概述
 
 ### Monorepo 结构
-- **包管理工具**：pnpm workspace（详细规范必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **包结构说明**：
+- 包管理工具：pnpm workspace（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 包结构说明：
   - `packages/core`：核心工具函数包，提供基础工具函数和类型定义（无 Vue 组件）
   - `packages/form`：表单组件包，提供表单相关组件和功能（依赖 core）
   - `packages/kit`：主包，聚合所有组件和工具，提供统一的导出入口（依赖 form 和 core）
   - `playground`：本地开发测试环境，用于开发和测试组件功能
   - `docs`：VitePress 文档站点，提供项目文档和 API 文档
-- **技术栈**：
-  - **框架**：Vue 3（Composition API）
-  - **语言**：TypeScript（严格模式）
-  - **构建工具**：Vite（库模式）
-  - **UI 框架**：Element Plus
-- **模块系统**：ES Module（`type: "module"`），支持 Tree Shaking 和按需导入
+- 技术栈：
+  - 框架：Vue 3（Composition API）
+  - 语言：TypeScript（严格模式）
+  - 构建工具：Vite（库模式）
+  - UI 框架：Element Plus
+- 模块系统：ES Module（`type: "module"`），支持 Tree Shaking 和按需导入
 
 ### 包依赖关系
 ```
@@ -44,59 +94,59 @@ kit (依赖 form 和 core)
 ## 开发环境配置
 
 ### Node.js 版本管理
-- **必须使用 Volta 管理 Node.js 版本**（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）（必须使用 `read_file` 工具逐行逐字符读取相关规则文件和 `package.json` 文件）
-- **当前版本**：Node.js 25.1.0（`package.json` 的 `volta.node` 字段）（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
-- **版本要求**：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines` 字段）（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
+- 必须使用 Volta 管理 Node.js 版本（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[Node.js 版本管理规范](./010_development-standards.mdc#nodejs-版本管理规范)章节，必须使用 `read_file` 工具逐行逐字符读取相关规则文件和 `package.json` 文件）
+- 当前版本：Node.js 25.1.0（`package.json` 的 `volta.node` 字段，必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
+- 版本要求：`^20.19.0 || >=22.12.0`（`package.json` 的 `engines` 字段，必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
 
 ### 包管理器
-- **必须使用 pnpm**：项目使用 pnpm workspace 管理 Monorepo（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **工作区配置**：`pnpm-workspace.yaml` 文件定义工作区包（`packages/*`、`playground`、`docs`）（必须使用 `read_file` 工具逐行逐字符读取 `pnpm-workspace.yaml` 文件）
+- 必须使用 pnpm：项目使用 pnpm workspace 管理 Monorepo（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 工作区配置：`pnpm-workspace.yaml` 文件定义工作区包（`packages/*`、`playground`、`docs`，必须使用 `read_file` 工具逐行逐字符读取 `pnpm-workspace.yaml` 文件）
 
 ### 开发工具
-- **代码规范**：ESLint（基于 @iswangh/eslint-config，必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **构建工具**：Vite（库模式）
-- **Git Hooks**：Husky + lint-staged（必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
-- **提交规范**：Commitlint（遵循 Conventional Commits 规范，必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
+- 代码规范：ESLint（基于 @iswangh/eslint-config，必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 构建工具：Vite（库模式）
+- Git Hooks：Husky + lint-staged（必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
+- 提交规范：Commitlint（遵循 Conventional Commits 规范，必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc)）
 
 ---
 
 ## 包命名和导入规范
 
 ### 包命名规范
-- **Scoped Package**：所有包使用 `@iswangh/element-plus-kit` 作用域
-- **命名格式**：
+- Scoped Package：所有包使用 `@iswangh/element-plus-kit` 作用域
+- 命名格式：
   - `@iswangh/element-plus-kit-core`：核心工具函数包
   - `@iswangh/element-plus-kit-form`：表单组件包
   - `@iswangh/element-plus-kit`：主包（聚合所有组件和工具，无后缀）
 
 ### 包导入规范
-- **必须使用包名导入**（强制要求）：
-  - **原则**：在代码中必须使用包名导入，禁止使用相对路径或路径别名导入其他包
-  - **优势**：提高代码可读性，明确依赖关系，便于维护和重构
-  - **正确示例**：
+- 必须使用包名导入（强制要求）：
+  - 原则：在代码中必须使用包名导入，禁止使用相对路径或路径别名导入其他包
+  - 优势：提高代码可读性，明确依赖关系，便于维护和重构
+  - 正确示例：
     ```typescript
     // ✅ 正确：使用包名导入
     import { checkCondition } from '@iswangh/element-plus-kit-core'
     import { WForm } from '@iswangh/element-plus-kit-form'
     ```
-  - **错误示例**：
+  - 错误示例：
     ```typescript
     // ❌ 错误：使用相对路径或路径别名
     import { checkCondition } from '@/core'
     import { WForm } from '../../packages/form/src/index'
     ```
-- **路径别名配置**（使用场景限制）：
-  - **类型解析**：仅在根目录 `tsconfig.app.json` 中配置路径别名，用于 TypeScript 类型解析
-  - **开发环境**：在 `playground/vite.config.ts` 中配置路径别名，用于开发时直接引用源码，支持 HMR
-  - **包内部**：禁止在包内部使用路径别名，必须使用包名导入其他包，保持导入方式一致
-  - **配置原则**：路径别名仅用于开发环境，生产构建时使用包名导入
+- 路径别名配置（使用场景限制）：
+  - 类型解析：仅在根目录 `tsconfig.app.json` 中配置路径别名，用于 TypeScript 类型解析
+  - 开发环境：在 `playground/vite.config.ts` 中配置路径别名，用于开发时直接引用源码，支持 HMR
+  - 包内部：禁止在包内部使用路径别名，必须使用包名导入其他包，保持导入方式一致
+  - 配置原则：路径别名仅用于开发环境，生产构建时使用包名导入
 
 ---
 
 ## 包依赖管理
 
 ### 内部依赖
-- **使用 `workspace:*` 协议**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）：
+- 使用 `workspace:*` 协议（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）：
   ```json
   {
     "dependencies": {
@@ -106,225 +156,225 @@ kit (依赖 form 和 core)
   ```
 
 ### 外部依赖
-- **使用 `peerDependencies` 声明**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **版本要求**：
+- 使用 `peerDependencies` 声明（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 版本要求：
   - Vue: `^3.5.23`
   - Element Plus: `^2.11.7`
-- **重要提示**：Element Plus 的全局配置应在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
+- 重要提示：Element Plus 的全局配置必须在使用 Element Plus Kit 的项目中处理，而不是在组件库包中
 
 ### 开发依赖
-- **统一放在根目录的 `devDependencies`**（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 统一放在根目录的 `devDependencies`（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 
 ---
 
 ## 包构建规范
 
 ### 构建命令
-- **单个包构建**：
-  - **命令**：`cd packages/core && pnpm build`
-  - **使用场景**：单独构建某个包，用于快速验证单个包的构建结果
-- **批量构建**：
-  - **命令**：`pnpm build:packages`（在根目录执行）
-  - **实现方式**：使用 pnpm filter 功能批量构建所有包
-  - **使用场景**：构建所有包，但不执行类型检查，用于快速构建
-- **完整构建流程**：
-  - **命令**：`pnpm build`（在根目录执行）
-  - **执行内容**：并行执行类型检查 + 构建所有包
-  - **使用场景**：发布前完整构建，确保代码质量和构建产物正确性
+- 单个包构建：
+  - 命令：`cd packages/core && pnpm build`
+  - 使用场景：单独构建某个包，用于快速验证单个包的构建结果
+- 批量构建：
+  - 命令：`pnpm build:packages`（在根目录执行）
+  - 实现方式：使用 pnpm filter 功能批量构建所有包
+  - 使用场景：构建所有包，但不执行类型检查，用于快速构建
+- 完整构建流程：
+  - 命令：`pnpm build`（在根目录执行）
+  - 执行内容：并行执行类型检查 + 构建所有包
+  - 使用场景：发布前完整构建，确保代码质量和构建产物正确性
 
 ### 构建配置
-- **构建工具**：Vite（库模式），提供快速的构建速度和现代化的构建体验
-- **类型生成**：
-  - **插件**：使用 `vite-plugin-dts` 插件自动生成类型声明文件
-  - **类型文件**：自动生成 `.d.ts` 和 `.d.ts.map` 文件，提供完整的类型支持
-  - **类型路径**：类型文件路径通过 `package.json` 的 `exports.types` 字段声明
-- **外部依赖处理**（关键配置）：
-  - **标记范围**：所有 `peerDependencies` 和内部依赖（workspace 包）都标记为 `external`
-  - **优势**：避免打包外部依赖，减少构建产物体积，提高构建速度
-  - **注意事项**：确保使用者已安装所有 `peerDependencies`，避免运行时错误
-- **样式处理**：
-  - **form 包样式**：样式文件统一输出为 `style.css`（`cssCodeSplit: false`），便于按需导入
-  - **样式导出**：通过 `package.json` 的 `exports` 字段导出样式文件（如 `./style.css`）
-  - **样式组织**：保持样式文件结构清晰，便于维护和扩展
+- 构建工具：Vite（库模式），提供快速的构建速度和现代化的构建体验
+- 类型生成：
+  - 插件：使用 `vite-plugin-dts` 插件自动生成类型声明文件
+  - 类型文件：自动生成 `.d.ts` 和 `.d.ts.map` 文件，提供完整的类型支持
+  - 类型路径：类型文件路径通过 `package.json` 的 `exports.types` 字段声明
+- 外部依赖处理（关键配置）：
+  - 标记范围：所有 `peerDependencies` 和内部依赖（workspace 包）都标记为 `external`
+  - 优势：避免打包外部依赖，减少构建产物体积，提高构建速度
+  - 注意事项：确保使用者已安装所有 `peerDependencies`，避免运行时错误
+- 样式处理：
+  - form 包样式：样式文件统一输出为 `style.css`（`cssCodeSplit: false`），便于按需导入
+  - 样式导出：通过 `package.json` 的 `exports` 字段导出样式文件（如 `./style.css`）
+  - 样式组织：保持样式文件结构清晰，便于维护和扩展
 
 ### 构建产物
-- **输出目录**：`packages/*/dist/`（已在 `.gitignore` 中排除，必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **包含文件**：`.js`、`.d.ts`、`.d.ts.map`
-- **样式文件**：`packages/form/dist/style.css`
-- **多入口支持**：kit 包支持多入口导出（`index` 和 `resolver`）
+- 输出目录：`packages/*/dist/`（已在 `.gitignore` 中排除，必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 包含文件：`.js`、`.d.ts`、`.d.ts.map`
+- 样式文件：`packages/form/dist/style.css`
+- 多入口支持：kit 包支持多入口导出（`index` 和 `resolver`）
 
 ### 构建前检查
-- **发布前自动执行 `prepublishOnly`**：自动执行构建和类型检查，确保发布前代码质量
+- 发布前自动执行 `prepublishOnly`：自动执行构建和类型检查，确保发布前代码质量
 
 ---
 
 ## TypeScript 配置规范
 
 ### 项目引用
-- **使用 TypeScript Project References** 管理包之间的类型依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **配置文件结构**：
-  - **根目录**：
+- 使用 TypeScript Project References 管理包之间的类型依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 配置文件结构：
+  - 根目录：
     - `tsconfig.app.json`：基础配置，包含共享编译器选项和路径别名（用于类型解析）
     - `tsconfig.json`：Project References 配置，仅包含 `references` 字段，引用所有包
-  - **各包**：
+  - 各包：
     - 继承 `tsconfig.app.json`，启用 `composite: true`
     - 清空继承的 `paths`（包内部不使用路径别名，必须使用包名导入）
     - 通过 `references` 字段声明依赖关系（如 form 包引用 core 包）
-  - **Playground**：
+  - Playground：
     - 继承 `tsconfig.app.json`，不启用 `composite`
     - 配置自己的 `paths`，用于开发时直接引用包源码（支持 HMR）
 
 ### 类型定义
-- **类型导出**：通过 `package.json` 的 `exports.types` 字段导出（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **类型生成**：构建时自动生成（使用 `vite-plugin-dts` 插件）
-- **类型文件位置**：`dist/` 目录
-- **路径别名**：
-  - **根目录**：`tsconfig.app.json` 中配置，用于类型解析
-  - **Playground**：`playground/tsconfig.json` 中配置，用于开发时直接引用包源码
-  - **各包**：不使用路径别名，必须使用包名导入其他包
+- 类型导出：通过 `package.json` 的 `exports.types` 字段导出（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 类型生成：构建时自动生成（使用 `vite-plugin-dts` 插件）
+- 类型文件位置：`dist/` 目录
+- 路径别名：
+  - 根目录：`tsconfig.app.json` 中配置，用于类型解析
+  - Playground：`playground/tsconfig.json` 中配置，用于开发时直接引用包源码
+  - 各包：不使用路径别名，必须使用包名导入其他包
 
 ---
 
 ## 代码开发规范
 
 ### Vue 组件规范
-- **单文件组件**：必须使用 `<script setup lang="ts">`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **组件前缀**：所有组件以 `W` 开头（如 `WForm`、`w-form`）
-- **组件命名**：使用 PascalCase（如 `WForm`、`FormItem`）
+- 单文件组件：必须使用 `<script setup lang="ts">`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 组件前缀：所有组件以 `W` 开头（如 `WForm`、`w-form`）
+- 组件命名：使用 PascalCase（如 `WForm`、`FormItem`）
 
 ### TypeScript 类型规范
-- **类型推断优先**：充分利用类型推断，避免不必要的类型注解（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **类型导出**：在包的 `src/types.ts` 或 `src/index.ts` 中统一导出类型
-- **类型命名**：使用 PascalCase（如 `FormItems`、`FormConfig`）
-- **接口优先**：优先使用 `interface` 定义对象类型（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 类型推断优先：充分利用类型推断，避免不必要的类型注解（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 类型导出：在包的 `src/types.ts` 或 `src/index.ts` 中统一导出类型
+- 类型命名：使用 PascalCase（如 `FormItems`、`FormConfig`）
+- 接口优先：优先使用 `interface` 定义对象类型（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ### 文件组织规范
-- **包目录结构**：遵循 Monorepo 通用规范（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **模块入口**：每个模块必须有 `index.ts` 作为聚合导出入口（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **文件命名**：
-  - **TypeScript 文件**：`camelCase.ts`
-  - **Vue 组件**：`PascalCase.vue`
-  - **配置文件**：`kebab-case.config.ts`
+- 包目录结构：遵循 Monorepo 通用规范（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 模块入口：每个模块必须有 `index.ts` 作为聚合导出入口（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 文件命名：
+  - TypeScript 文件：`camelCase.ts`
+  - Vue 组件：`PascalCase.vue`
+  - 配置文件：`kebab-case.config.ts`
 
 ### 导出规范
-- **统一导出**：通过 `src/index.ts` 统一导出所有公共 API（详细规范必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
-- **类型导出**：类型和值分开导出，使用 `export type` 导出类型（详细规范必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
+- 统一导出：通过 `src/index.ts` 统一导出所有公共 API（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
+- 类型导出：类型和值分开导出，使用 `export type` 导出类型（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc) 中的[导出规范](./010_development-standards.mdc#导出规范)章节）
 
 ---
 
 ## 构建和发布规范
 
 ### 构建流程
-- **开发时构建**：
-  - **单个包监听模式**：
-    - **命令**：`cd packages/core && pnpm dev`
-    - **功能**：启动单个包的 watch 模式，文件变更时自动重新构建
-    - **使用场景**：单独开发某个包时使用
-  - **批量构建**：
-    - **命令**：`pnpm build:packages`（在根目录执行）
-    - **功能**：使用 filter 批量构建所有包，但不执行类型检查
-    - **使用场景**：快速构建所有包，验证构建结果
-  - **完整开发环境**：
-    - **命令**：`pnpm dev`（在根目录执行）
-    - **功能**：并行运行包的 watch 模式和 playground，提供完整的开发环境
-    - **使用场景**：日常开发时使用，支持 HMR 和实时预览
-- **生产构建**：
-  - **命令**：`pnpm build`（在根目录执行）
-  - **功能**：并行执行类型检查 + 构建所有包，确保代码质量和构建产物正确性
-  - **使用场景**：发布前完整构建，CI/CD 流程中使用
-- **类型检查**：
-  - **命令**：`pnpm type-check`（在根目录执行）
-  - **实现方式**：使用 `vue-tsc --build` 命令，利用 TypeScript Project References 进行类型检查
-  - **使用场景**：单独执行类型检查，验证类型定义正确性
+- 开发时构建：
+  - 单个包监听模式：
+    - 命令：`cd packages/core && pnpm dev`
+    - 功能：启动单个包的 watch 模式，文件变更时自动重新构建
+    - 使用场景：单独开发某个包时使用
+  - 批量构建：
+    - 命令：`pnpm build:packages`（在根目录执行）
+    - 功能：使用 filter 批量构建所有包，但不执行类型检查
+    - 使用场景：快速构建所有包，验证构建结果
+  - 完整开发环境：
+    - 命令：`pnpm dev`（在根目录执行）
+    - 功能：并行运行包的 watch 模式和 playground，提供完整的开发环境
+    - 使用场景：日常开发时使用，支持 HMR 和实时预览
+- 生产构建：
+  - 命令：`pnpm build`（在根目录执行）
+  - 功能：并行执行类型检查 + 构建所有包，确保代码质量和构建产物正确性
+  - 使用场景：发布前完整构建，CI/CD 流程中使用
+- 类型检查：
+  - 命令：`pnpm type-check`（在根目录执行）
+  - 实现方式：使用 `vue-tsc --build` 命令，利用 TypeScript Project References 进行类型检查
+  - 使用场景：单独执行类型检查，验证类型定义正确性
 
 ### 发布流程
-- **发布顺序**（强制要求）：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[发布顺序](./021_monorepo-standards.mdc#发布顺序)和[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
-- **发布命令**（使用 Changesets）：详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节
+- 发布顺序（强制要求）：必须按照依赖顺序发布（core → form → kit），确保依赖包先发布（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[发布顺序](./021_monorepo-standards.mdc#发布顺序)和[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
+- 发布命令（使用 Changesets）：必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节
 
 ### 版本管理
-- **版本策略**：独立版本（每个包独立管理版本号）（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[版本管理](./021_monorepo-standards.mdc#版本管理)章节）
-- **版本格式**：遵循语义化版本（SemVer）（详细要求必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本管理规范](./020_engineering-standards.mdc#版本管理规范)章节）
-- **版本管理工具**：使用 Changesets 管理版本和发布流程（详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
+- 版本策略：独立版本（每个包独立管理版本号，必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[版本管理](./021_monorepo-standards.mdc#版本管理)章节）
+- 版本格式：遵循语义化版本（SemVer，必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本管理规范](./020_engineering-standards.mdc#版本管理规范)章节）
+- 版本管理工具：使用 Changesets 管理版本和发布流程（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[Changesets 发布流程](./021_monorepo-standards.mdc#changesets-发布流程)章节）
 
 ---
 
 ## 代码质量规范
 
 ### ESLint 规则
-- **基础配置**：基于 `@iswangh/eslint-config`，集成了 Vue、TypeScript 和 JSX 支持（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **配置文件**：`eslint.config.js`（使用 ESLint 9.x 扁平配置格式）
-- **项目特定规则**：
+- 基础配置：基于 `@iswangh/eslint-config`，集成了 Vue、TypeScript 和 JSX 支持（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 配置文件：`eslint.config.js`（使用 ESLint 9.x 扁平配置格式）
+- 项目特定规则：
   - 统一项目代码风格，提高代码质量和可维护性
   - 支持 Vue 3 Composition API 和 TypeScript 严格模式
   - 自动检测未使用的导入和变量
-- **命令**：
+- 命令：
   - `pnpm lint`：检查代码规范（`eslint .`）
   - `pnpm lint:fix`：自动修复代码规范问题（`eslint . --fix`）
   - `pnpm eslint:inspect`：查看 ESLint 配置（使用 `@eslint/config-inspector`）
 
 ### Git 提交规范
-- **基础配置**：基于 `@iswangh/commitlint-config`，遵循 Conventional Commits 规范（详细要求必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本控制规范](./020_engineering-standards.mdc#版本控制规范)章节）
-- **配置文件**：`commitlint.config.js`
-- **项目特定要求**：作用域（scope）建议使用包名（如 `core`、`form`、`kit`）
+- 基础配置：基于 `@iswangh/commitlint-config`，遵循 Conventional Commits 规范（必须严格遵循 [`020_engineering-standards.mdc`](./020_engineering-standards.mdc) 中的[版本控制规范](./020_engineering-standards.mdc#版本控制规范)章节）
+- 配置文件：`commitlint.config.js`
+- 项目特定要求：作用域（scope）必须使用包名（如 `core`、`form`、`kit`）
 
 ---
 
 ## 文档规范
 
 ### 包文档
-- **README.md**：每个包必须包含 README.md，说明包的功能、安装使用方法、API 文档链接和示例代码
+- README.md：每个包必须包含 README.md，说明包的功能、安装使用方法、API 文档链接和示例代码
 
 ### 代码注释
-- **JSDoc 标准**：所有公共 API 必须使用 JSDoc 注释（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- JSDoc 标准：所有公共 API 必须使用 JSDoc 注释（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ---
 
 ## 测试规范
 
 ### 测试框架
-- **测试框架**：Vitest（已配置但未使用）
-- **测试文件组织**：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **测试要求**：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 测试框架：Vitest（已配置但未使用）
+- 测试文件组织：与源文件同目录或 `__tests__` 目录，命名 `*.test.ts` 或 `*.spec.ts`（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- 测试要求：核心功能必须有单元测试，Vue 组件使用 @vue/test-utils 进行测试（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
 
 ---
 
 ## 性能优化规范
 
 ### 构建优化
-- **代码分割**：按需导入，避免全量导入（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
-- **Tree Shaking**：确保构建工具能够正确进行 Tree Shaking（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
-- **外部依赖**：使用 `external` 配置，避免打包外部依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 代码分割：按需导入，避免全量导入（必须严格遵循 [`010_development-standards.mdc`](./010_development-standards.mdc)）
+- Tree Shaking：确保构建工具能够正确进行 Tree Shaking（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
+- 外部依赖：使用 `external` 配置，避免打包外部依赖（必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc)）
 
 ### 运行时优化
-- **按需导入**：组件库支持按需导入
-- **自动导入**：支持通过 `unplugin-vue-components` 和 `unplugin-auto-import` 自动导入（详见"自动导入配置"章节）
+- 按需导入：组件库支持按需导入
+- 自动导入：支持通过 `unplugin-vue-components` 和 `unplugin-auto-import` 自动导入（详见"自动导入配置"章节）
 
 ---
 
 ## 开发工作流规范
 
-- **根目录脚本配置和开发环境**：详细要求必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[开发工作流规范](./021_monorepo-standards.mdc#开发工作流规范)章节
+- 根目录脚本配置和开发环境：必须严格遵循 [`021_monorepo-standards.mdc`](./021_monorepo-standards.mdc) 中的[开发工作流规范](./021_monorepo-standards.mdc#开发工作流规范)章节
 
 ### 自动导入配置
-- **Vue API 自动导入**：
-  - **插件**：使用 `unplugin-auto-import` 自动导入 Vue API（ref、computed、watch 等）
-  - **优势**：减少重复导入，提高开发效率，保持代码简洁
-  - **类型支持**：自动生成类型声明文件，提供完整的类型支持
-- **组件自动导入**：
-  - **插件**：使用 `unplugin-vue-components` 自动导入 Element Plus 和 Element Plus Kit 组件
-  - **优势**：无需手动导入组件，提高开发效率，减少代码量
-  - **按需导入**：支持按需导入，只导入使用的组件，减少打包体积
-- **解析器**：
-  - **提供位置**：kit 包提供 `ElementPlusKitResolver` 用于自动导入解析
-  - **功能**：自动识别 Element Plus Kit 组件，支持自动导入和类型声明
-  - **使用方式**：在 Vite 配置中使用 `ElementPlusKitResolver`，配置自动导入规则
-- **类型声明**：
-  - **生成文件**：自动生成类型声明文件（`types/auto-imports.d.ts`、`types/components.d.ts`）
-  - **类型支持**：提供完整的类型支持，包括自动导入的 API 和组件
-  - **文件位置**：类型声明文件位于项目根目录的 `types/` 目录
+- Vue API 自动导入：
+  - 插件：使用 `unplugin-auto-import` 自动导入 Vue API（ref、computed、watch 等）
+  - 优势：减少重复导入，提高开发效率，保持代码简洁
+  - 类型支持：自动生成类型声明文件，提供完整的类型支持
+- 组件自动导入：
+  - 插件：使用 `unplugin-vue-components` 自动导入 Element Plus 和 Element Plus Kit 组件
+  - 优势：无需手动导入组件，提高开发效率，减少代码量
+  - 按需导入：支持按需导入，只导入使用的组件，减少打包体积
+- 解析器：
+  - 提供位置：kit 包提供 `ElementPlusKitResolver` 用于自动导入解析
+  - 功能：自动识别 Element Plus Kit 组件，支持自动导入和类型声明
+  - 使用方式：在 Vite 配置中使用 `ElementPlusKitResolver`，配置自动导入规则
+- 类型声明：
+  - 生成文件：自动生成类型声明文件（`types/auto-imports.d.ts`、`types/components.d.ts`）
+  - 类型支持：提供完整的类型支持，包括自动导入的 API 和组件
+  - 文件位置：类型声明文件位于项目根目录的 `types/` 目录
 
 ---
 
 ## 工具和命令
 
-- **查看命令**：直接查看项目根目录和各包的 `package.json` 文件中的 `scripts` 字段获取可用命令（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）
+- 查看命令：直接查看项目根目录和各包的 `package.json` 文件中的 `scripts` 字段获取可用命令（必须使用 `read_file` 工具逐行逐字符读取 `package.json` 文件）

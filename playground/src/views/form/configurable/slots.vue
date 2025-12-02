@@ -282,6 +282,27 @@ const formItems5: FormItems = [
     },
   },
 ]
+
+// 示例 6：同时使用 form-item-default 和 custom 模板插槽
+const form6 = ref({
+  fieldWithFormItemDefault: '',
+  fieldWithCustom: '',
+})
+
+const formItems6: FormItems = [
+  {
+    prop: 'fieldWithFormItemDefault',
+    label: '字段1（使用 #form-item-default）',
+    compType: 'custom',
+    // 不定义配置插槽，使用模板插槽 #form-item-default
+  },
+  {
+    prop: 'fieldWithCustom',
+    label: '字段2（使用 #{prop}）',
+    compType: 'custom',
+    // 不定义配置插槽，使用模板插槽 #{prop}（即 #fieldWithCustom）
+  },
+]
 </script>
 
 <template>
@@ -511,6 +532,73 @@ const formItems5: FormItems = [
           :form-items="formItems5"
           label-width="150px"
         />
+      </el-space>
+    </el-card>
+
+    <!-- 示例 6：同时使用 form-item-default 和 custom 模板插槽 -->
+    <el-card class="w-full" shadow="hover">
+      <template #header>
+        <h2 class="text-lg text-gray-800 font-semibold m-0">
+          示例 6：同时使用 form-item-default 和 custom 模板插槽
+        </h2>
+      </template>
+      <el-space class="w-full" direction="vertical" :size="20" fill>
+        <el-alert type="info" :closable="false" show-icon>
+          <template #default>
+            <p class="text-sm text-gray-600 m-0">
+              说明：测试同时使用两种模板插槽方式。
+              <br>
+              <strong>字段1</strong>：使用模板插槽 <code>#form-item-default</code>，对应 <code>slots.default</code>（配置插槽）。
+              <br>
+              <strong>字段2</strong>：使用模板插槽 <code>#{prop}</code>（即 <code>#fieldWithCustom</code>），这是另一种模板插槽方式。
+              <br>
+              <strong>区别</strong>：
+              <br>
+              - <code>#form-item-default</code>：通用的 form-item default 插槽，适用于所有字段。
+              <br>
+              - <code>#{prop}</code>：特定字段的插槽，只适用于对应的字段。
+              <br>
+              <strong>优先级</strong>：如果同时定义了 <code>#form-item-default</code> 和 <code>#{prop}</code>，<code>#{prop}</code> 优先级更高。
+            </p>
+          </template>
+        </el-alert>
+        <WForm
+          :model="form6"
+          :form-items="formItems6"
+          label-width="200px"
+        >
+          <!-- 模板插槽：form-item-default（适用于所有字段） -->
+          <template #form-item-default="{ form, formItem }">
+            <div class="flex items-center gap-2">
+              <span class="text-purple-500 font-semibold">#form-item-default：</span>
+              <el-input
+                v-model="form[formItem.prop]"
+                :placeholder="`请输入${formItem.label}（#form-item-default）`"
+                clearable
+              >
+                <template #prefix>
+                  <el-icon><User /></el-icon>
+                </template>
+              </el-input>
+            </div>
+          </template>
+
+          <!-- 模板插槽：fieldWithCustom（特定字段，优先级高于 #form-item-default） -->
+          <template #fieldWithCustom="{ form }">
+            <div class="flex items-center gap-2">
+              <span class="text-indigo-500 font-semibold">#{prop}（#fieldWithCustom）：</span>
+              <el-input
+                v-model="form.fieldWithCustom"
+                placeholder="请输入字段2（#{prop}）"
+                clearable
+              >
+                <template #prefix>
+                  <el-icon><Edit /></el-icon>
+                </template>
+              </el-input>
+            </div>
+          </template>
+        </WForm>
       </el-space>
     </el-card>
   </el-space>
