@@ -3,17 +3,18 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@10.17.0",
   "license": "Apache-2.0",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
     "prepare": "husky",
-    "dev": "run-p \"dev:packages\" \"dev:playground\"",
-    "dev:packages": "pnpm --filter \"./packages/*\" dev",
-    "dev:playground": "pnpm --filter \"./playground\" dev",
-    "build:packages": "pnpm --filter \"./packages/*\" build",
-    "build": "run-p type-check build:packages",
+    "dev": "turbo run dev --filter=./packages/* --filter=./playground",
+    "dev:packages": "turbo run dev --filter=./packages/*",
+    "dev:playground": "turbo run dev --filter=./playground",
+    "build:packages": "turbo run build --filter=./packages/*",
+    "build": "turbo run build && pnpm type-check",
     "type-check": "vue-tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -21,9 +22,9 @@
     "changeset": "changeset",
     "version": "pnpm build && changeset version",
     "release": "changeset publish",
-    "docs:dev": "pnpm --filter \"./docs\" dev",
-    "docs:build": "pnpm --filter \"./docs\" build",
-    "docs:preview": "pnpm --filter \"./docs\" preview"
+    "docs:dev": "turbo run docs:dev --filter=./docs",
+    "docs:build": "turbo run docs:build --filter=./docs",
+    "docs:preview": "turbo run docs:preview --filter=./docs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
@@ -41,8 +42,8 @@
     "eslint": "^9.39.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "npm-run-all2": "^8.0.4",
     "sass": "^1.94.2",
+    "turbo": "^2.6.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vite-plugin-vue-devtools": "^8.0.5",

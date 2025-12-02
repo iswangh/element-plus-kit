@@ -51,3 +51,6 @@ packages/kit/core
 # VitePress
 docs/.vitepress/dist
 docs/.vitepress/cache
+
+# Turborepo
+.turbo

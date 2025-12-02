@@ -46,6 +46,7 @@ Element Plus Kit 是一个 Monorepo 项目，包含以下包：
 ### 开发工具
 
 - **pnpm** - 快速、节省磁盘空间的包管理器
+- **Turborepo** - 高性能 Monorepo 任务编排工具，提供智能缓存和并行执行
 - **ESLint** - 代码质量检查工具（基于 @iswangh/eslint-config）
 - **vue-tsc** - Vue 3 的 TypeScript 类型检查工具
 - **Husky** - Git Hooks 工具
@@ -85,6 +86,7 @@ element-plus-kit/
 │   └── check-branch.js   # Git 分支检查脚本（由 Changesets pre 钩子自动调用）
 ├── package.json          # 根目录包配置
 ├── pnpm-workspace.yaml   # pnpm workspace 配置
+├── turbo.json            # Turborepo 任务编排配置
 ├── tsconfig.json         # TypeScript 项目引用配置
 └── tsconfig.app.json     # TypeScript 基础配置
 ```
@@ -141,10 +143,11 @@ pnpm dev
 ```
 
 这将：
-- 并行启动所有包的 watch 模式（自动监听文件变化并重新构建）
+- 使用 Turborepo 并行启动所有包的 watch 模式（自动监听文件变化并重新构建）
 - 启动 playground 开发服务器（可在浏览器中查看和测试组件）
 
 **说明**：
+- 使用 Turborepo 进行任务编排，自动处理依赖关系和并行执行
 - Playground 通过别名直接使用包源码，支持 HMR（热模块替换）
 - 包的 watch 模式会在后台自动构建，保持 `dist` 目录同步
 - 修改包代码后，playground 会自动更新，无需手动刷新
@@ -201,6 +204,16 @@ app.mount('#app')
 pnpm build
 ```
 
+这将：
+- 使用 Turborepo 并行构建所有包（自动处理依赖关系，确保构建顺序正确）
+- 自动使用缓存，未变更的包直接使用缓存结果，大幅提升构建速度
+- 执行类型检查，确保代码质量
+
+**Turborepo 缓存说明**：
+- 首次构建：完整构建所有包
+- 后续构建：只构建变更的包，未变更的包使用缓存（FULL TURBO）
+- 缓存效果：构建时间从 18 秒降至 0.3 秒（约 60 倍提升）
+
 2. **单独构建某个包**
 
 ```bash
@@ -213,6 +226,14 @@ cd packages/form && pnpm build
 # 构建 kit 包
 cd packages/kit && pnpm build
 ```
+
+3. **批量构建所有包（不执行类型检查）**
+
+```bash
+pnpm build:packages
+```
+
+这将使用 Turborepo 并行构建所有包，但不执行类型检查，适合快速验证构建结果。
 
 3. **发布包**
 
