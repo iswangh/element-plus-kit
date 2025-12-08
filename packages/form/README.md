@@ -152,11 +152,12 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
   prop: string                    // 表单字段名（必填）
   label: string                   // 标签文本
   compType: FormItemComp              // 组件类型（必填）
-  compProps?: FormItemCompProps<C> // 组件属性配置
-  // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），compProps.options 支持三种模式：
-  // 1. 静态数组：options: [{ label: '选项1', value: '1' }]
-  // 2. 函数模式：options: (formData) => [{ label: '选项1', value: '1' }]
-  // 3. 对象模式：options: { loader: (formData) => [...], deps: ['field1'], immediate: true }
+  compProps?: FormItemCompProps<C> // 组件属性配置  // 对于支持 options 的组件（如 select、cascader、radio、checkbox 等），支持两种配置方式：
+  // 1. 静态数组：compProps.options: [{ label: '选项1', value: '1' }]
+  // 2. 动态加载（compProps.optionsLoader）：
+  //    - 函数模式：optionsLoader: (formData: Record<string, unknown>) => [{ label: '选项1', value: '1' }]
+  //    - 对象模式：optionsLoader: { loader: (formData: Record<string, unknown>) => [...], deps: ['field1'], immediate: true }
+  // 当同时配置 options 和 optionsLoader 时，optionsLoader 优先级更高
   vIf?: boolean | ((data?: any) => boolean)  // 条件渲染（v-if）
   vShow?: boolean | ((data?: any) => boolean) // 显示/隐藏（v-show）
   colProps?: ColProps             // 列布局属性（ElCol 属性）

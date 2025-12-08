@@ -1061,55 +1061,13 @@ const actionConfig: FormActionConfig = {
 
 :::
 
-## Options 配置模式
+## 选项加载器
 
-`options` 支持三种配置模式：静态数组、函数模式、对象模式。不同模式适用于不同的使用场景。
-
-### 静态模式（数组）
-
-直接使用数组配置选项，适用于选项固定的场景。
-
-:::demo
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
-
-const form = ref({})
-
-const formItems: FormItems = [
-  {
-    prop: 'province',
-    label: '省份',
-    compType: 'select',
-    compProps: {
-      // 静态模式：直接使用数组
-      options: [
-        { label: '北京市', value: '1' },
-        { label: '上海市', value: '2' },
-        { label: '广东省', value: '3' },
-        { label: '浙江省', value: '4' },
-      ],
-    },
-  },
-]
-
-const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
-  console.log('onChange', extendedParams.prop, value)
-}
-</script>
-
-<template>
-  <WForm :model="form" :form-items="formItems" @change="onChange" />
-</template>
-```
-
-:::
+选项加载器支持两种模式：函数模式和对象模式，适用于需要动态加载选项的场景。当同时配置 `options` 和 `optionsLoader` 时，`optionsLoader` 优先级更高。
 
 ### 函数模式
 
-使用函数动态加载选项，支持同步和异步。函数可以接收 `formData` 参数，也可以不接收参数。
+使用 `optionsLoader` 属性配置函数，动态加载选项，支持同步和异步。函数可以接收 `formData` 参数，也可以不接收参数。通过闭包访问外部状态时，`watchEffect` 会自动追踪依赖变化。
 
 :::demo
 
@@ -1127,7 +1085,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 函数模式：动态返回选项数组
-      options: () => {
+      optionsLoader: () => {
         // 可以在这里进行异步操作或复杂逻辑
         return [
           { label: '电子产品', value: 'electronics' },
@@ -1144,7 +1102,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 函数模式：接收 formData 参数
-      options: (formData) => {
+      optionsLoader: (formData: Record<string, unknown>) => {
         // 可以根据表单数据动态返回选项
         const category = formData.category as string | undefined
         if (category === 'electronics')
@@ -1176,7 +1134,7 @@ const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
 
 ### 对象模式
 
-使用对象配置，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。
+使用 `optionsLoader` 属性配置对象，支持 `loader`、`deps`、`immediate` 等选项。`loader` 是加载选项的函数，`deps` 用于声明表单字段依赖，`immediate` 控制是否立即加载。
 
 :::demo
 
@@ -1194,7 +1152,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：基础用法
-      options: {
+      optionsLoader: {
         loader: () => {
           // 可以在这里进行异步操作
           return [
@@ -1213,8 +1171,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           // 可以根据表单数据动态返回选项
           const priority = formData.priority as string | undefined
           if (priority === 'high')
@@ -1248,7 +1206,7 @@ const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
 
 ## 选项依赖
 
-Options 支持表单字段依赖和外部状态依赖，可以单独使用或组合使用。
+`optionsLoader` 支持表单字段依赖和外部状态依赖，可以单独使用或组合使用。当配置了 `deps` 时，内部依赖通过 `watch` 监听；外部依赖通过闭包访问，`watchEffect` 会自动追踪。
 
 ### 表单字段依赖
 
@@ -1338,8 +1296,8 @@ const formItems: FormItems = [
     label: '城市',
     compType: 'select',
     compProps: {
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const province = formData.province as string | undefined
           if (!province)
             return []
@@ -1355,8 +1313,8 @@ const formItems: FormItems = [
     label: '区县',
     compType: 'select',
     compProps: {
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const city = formData.city as string | undefined
           if (!city)
             return []
@@ -1433,7 +1391,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
-      options: () => {
+      optionsLoader: () => {
         // 通过闭包访问外部 ref：userType
         if (userType.value === 'admin')
           return adminOptions
@@ -1449,7 +1407,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部状态依赖）
-      options: () => {
+      optionsLoader: () => {
         // 通过闭包访问外部 ref：userType（外部状态依赖，watchEffect 会自动追踪）
         if (userType.value === 'admin')
           return [
@@ -1639,8 +1597,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：依赖部门字段（表单字段依赖）
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const dept = formData.department as string | undefined
           if (!dept)
             return []
@@ -1668,8 +1626,8 @@ const formItems: FormItems = [
     compProps: {
       // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
       // 注意：配置了 deps 后，表单字段依赖通过 watch 监听，外部状态依赖通过 watchEffect 追踪（在 loader 中访问）
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const dept = formData.department as string | undefined
           const role = formData.role as string | undefined
 
@@ -1746,7 +1704,7 @@ const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
 | --- | --- | --- | --- |
 | prop | 表单字段名（必填） | `string` | - |
 | compType | 组件类型（必填） | `FormItemComp` | - |
-| compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），`compProps.options` 支持三种模式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 函数模式：`options: (formData) => [{ label: '选项1', value: '1' }]`<br>3. 对象模式：`options: { loader: (formData) => [...], deps: ['field1'], immediate: true }`<br><br>`compProps` 还支持：<br>- `compProps.slots`：动态组件插槽配置（如 `prefix`、`suffix` 等），使用 `h()` 函数创建 VNode<br><br>详见 [Options 配置](#options-配置) 和 [可配置化](#可配置化) | `FormItemCompProps<C>` | - |
+| compProps | 组件属性配置，根据组件类型自动推断。<br>对于支持 options 的组件（如 select、cascader、radio、checkbox 等），支持两种配置方式：<br>1. 静态数组：`options: [{ label: '选项1', value: '1' }]`<br>2. 动态加载（`optionsLoader`）：<br>   - 函数模式：`optionsLoader: (formData: Record<string, unknown>) => [{ label: '选项1', value: '1' }]`<br>   - 对象模式：`optionsLoader: { loader: (formData: Record<string, unknown>) => [...], deps: ['field1'], immediate: true }`<br>当同时配置 `options` 和 `optionsLoader` 时，`optionsLoader` 优先级更高。<br><br>`compProps` 还支持：<br>- `compProps.slots`：动态组件插槽配置（如 `prefix`、`suffix` 等），使用 `h()` 函数创建 VNode<br><br>详见 [选项加载器](#选项加载器) 和 [可配置化](#可配置化) | `FormItemCompProps<C>` | - |
 | slots | FormItem 插槽配置，用于自定义 `el-form-item` 的插槽（如 `label`、`error` 等），使用 `h()` 函数创建 VNode。详见 [可配置化 - 插槽](#插槽) | `FormItemSlotsConfig` | - |
 | vIf | 条件渲染（v-if），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
 | vShow | 显示/隐藏（v-show），支持布尔值或接收表单数据的函数。函数可以依赖表单内部值或外部状态 | `boolean \| ((data: Record<string, any>) => boolean)` | `true` |
@@ -1783,21 +1741,32 @@ const onChange = (extendedParams: FormItemEventExtendedParams, value: any) => {
 
 ##### Options 配置
 
-`compProps.options` 支持三种配置模式，适用于不同的使用场景。
+对于支持 options 的组件（如 select、cascader、radio、checkbox 等），支持两种配置方式：
+
+**1. 静态数组（`compProps.options`）**
+
+直接使用数组配置选项，适用于选项固定的场景。
+
+| 类型 | 说明 |
+| --- | --- |
+| `FormItemCompProps<T>['options']` | 对应组件的 options 属性类型（如 `ElSelect` 的 `Array<SelectOption>`、`ElCascader` 的 `Array<CascaderOption>` 等） |
+
+**2. 动态加载（`compProps.optionsLoader`）**
+
+支持函数模式和对象模式，适用于需要动态加载选项的场景。当同时配置 `options` 和 `optionsLoader` 时，`optionsLoader` 优先级更高。
 
 | 模式 | 类型 | 说明 |
 | --- | --- | --- |
-| **静态** | `any[]` | 直接使用数组配置选项，适用于选项固定的场景 |
-| **函数** | `(formData: Record<string, any>) => any[] \| Promise<any[]>` | 支持同步和异步函数，通过闭包访问外部依赖（包括 `form` ref），执行时机为**初始化**和**依赖变更** |
-| **对象** | `OptionsConfig` | 通过 `loader`、`immediate`、`deps` 配置选项加载行为 |
+| **函数** | `(formData: Record<string, unknown>) => any[] \| Promise<any[]>` | 支持同步和异步函数，通过闭包访问外部依赖（包括 `form` ref），执行时机为**初始化**和**依赖变更** |
+| **对象** | `OptionsLoaderConfig` | 通过 `loader`、`immediate`、`deps` 配置选项加载行为 |
 
 **对象模式配置项**：
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `loader` | 选项加载器函数，支持同步和异步 | `(formData: Record<string, any>) => any[] \| Promise<any[]>` | - |
+| `loader` | 选项加载器函数，支持同步和异步 | `(formData: Record<string, unknown>) => any[] \| Promise<any[]>` | - |
 | `immediate` | 是否立即加载 | `boolean` | `false` |
-| `deps` | 表单字段依赖列表 | `string[]` | `[]` |
+| `deps` | 表单字段依赖列表，当依赖字段变化时自动重新加载选项 | `string[]` | `[]` |
 
 #### rowProps 配置
 
