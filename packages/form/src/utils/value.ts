@@ -69,11 +69,9 @@ export function checkValueInOptions(params: CheckValueInOptionsParams): boolean 
 
   // 如果当前值是数组（如 checkbox），检查数组中的每个值是否都在选项中
   if (Array.isArray(modelValue)) {
-    if (modelValue.length === 0)
-      return true
-    return modelValue.every(v => optionValues.includes(v))
+    return modelValue.length === 0 ? true : modelValue.every(v => optionValues.includes(v))
   }
 
   // 单个值：检查当前值是否在选项中
-  return optionValues.includes(modelValue)
+  return optionValues.includes(modelValue) // 单个值：检查当前值是否在选项中
 }

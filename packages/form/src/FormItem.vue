@@ -44,9 +44,7 @@ const modelValue = defineModel()
 
 /** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
 const formItemProps = computed(() => {
-  return Object.fromEntries(
-    Object.entries(props.formItem).filter(([key]) => !FORM_ITEM_EXCLUDED_KEYS.includes(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
-  )
+  return Object.fromEntries(Object.entries(props.formItem).filter(([key]) => !FORM_ITEM_EXCLUDED_KEYS.includes(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])))
 })
 
 /** 获取 FormItem 插槽（命名插槽和默认插槽） */

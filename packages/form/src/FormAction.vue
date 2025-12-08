@@ -36,10 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 /** 处理后的动作组件属性（合并默认配置和用户自定义配置） */
-const processedActionProps = computed(() => ({
-  ...props,
-  config: { ...FORM_ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) },
-}))
+const processedActionProps = computed(() => ({ ...props, config: { ...FORM_ACTION_DEFAULT_CONFIG.getDefaults(props.inline, props.config) } }))
 
 /**
  * 标准化后的按钮列表

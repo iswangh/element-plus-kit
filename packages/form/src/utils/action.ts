@@ -8,7 +8,5 @@ import type { FormActionButtons } from '../types'
  * @returns 是否包含该事件名
  */
 export function hasButtonEvent(buttons: FormActionButtons[] | string[] | undefined, eventName: string): boolean {
-  if (!buttons)
-    return false
-  return buttons.some(v => (typeof v === 'string' ? v === eventName : v.eventName === eventName))
+  return !buttons ? false : buttons.some(v => (typeof v === 'string' ? v === eventName : v.eventName === eventName))
 }

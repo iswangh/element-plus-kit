@@ -85,18 +85,14 @@ function isEventAttribute(key: string, value: unknown): boolean {
  * useAttrs 会自动过滤掉 defineEmits 中定义的事件
  */
 const dynamicCompEvents = computed(() => {
-  return Object.fromEntries(
-    Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value)),
-  ) as Record<string, (prop: string, ...args: unknown[]) => void>
+  return Object.fromEntries(Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value))) as Record<string, (prop: string, ...args: unknown[]) => void>
 })
 
 /** 提取并合并 form 属性 */
 const mergedAttrs = computed(() => {
   const { formItems: _f, actionConfig: _a, rowProps: _r, ...rest } = props
 
-  const filteredAttrs = Object.fromEntries(
-    Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)),
-  )
+  const filteredAttrs = Object.fromEntries(Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)))
 
   return { ...rest, ...DEFAULT_FORM_PROPS, ...filteredAttrs }
 })
@@ -110,11 +106,7 @@ watch(isExpanded, value => emit('expand', value))
 /**
  * 判断是否启用展开/折叠功能（通过 actionConfig.buttons 是否包含 'expand' 来判断）
  */
-const expandEnabled = computed(() => {
-  if (!mergedAttrs.value.inline)
-    return false
-  return hasButtonEvent(props.actionConfig?.buttons, 'expand')
-})
+const expandEnabled = computed(() => !mergedAttrs.value.inline ? false : hasButtonEvent(props.actionConfig?.buttons, 'expand'))
 
 /**
  * 是否启用鼠标悬停自动展开功能
@@ -481,10 +473,11 @@ defineExpose({
   resetFields: (props?: Arrayable<FormItemProp>) => formRef.value?.resetFields?.(props),
   clearValidate: (props?: Arrayable<FormItemProp>) => formRef.value?.clearValidate?.(props),
   scrollToField: (prop: FormItemProp) => formRef.value?.scrollToField?.(prop),
-  // 展开/折叠控制方法
+  /** 展开/折叠状态 */
   get expanded() {
     return isExpanded.value
   },
+  /** 切换或设置展开/折叠状态 */
   toggleExpand,
 })
 
@@ -495,11 +488,7 @@ const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
 onMounted(() => recordInitialValues())
 
 // 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
-watch(
-  [() => props.formItems, () => props.actionConfig?.expand],
-  debouncedRecordInitialValues,
-  { deep: true },
-)
+watch([() => props.formItems, () => props.actionConfig?.expand], debouncedRecordInitialValues, { deep: true })
 </script>
 
 <template>
