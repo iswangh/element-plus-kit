@@ -130,8 +130,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：依赖部门字段（内部依赖）
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const dept = formData.department as string | undefined
           if (!dept)
             return []
@@ -160,8 +160,8 @@ const formItems: FormItems = [
     compProps: {
       // 对象模式：同时依赖外部状态（permissionLevel）和表单字段（department, role）
       // 注意：配置了 deps 后，内部依赖通过 watch 监听，外部依赖通过 watchEffect 追踪（在 loader 中访问）
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const dept = formData.department as string | undefined
           const role = formData.role as string | undefined
 
@@ -204,7 +204,7 @@ function onChange(extendedParams: FormItemEventExtendedParams, value: any) {
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             测试同时依赖内部依赖（表单字段）和外部依赖（外部 ref）的场景<br>
-            部门：静态模式 | 角色：对象模式（deps: ['department']，内部依赖） | 功能权限：对象模式（deps: ['department', 'role']，内部依赖 + 闭包访问 permissionLevel，外部依赖）
+            部门：静态模式（options 数组） | 角色：对象模式（optionsLoader，deps: ['department']，内部依赖） | 功能权限：对象模式（optionsLoader，deps: ['department', 'role']，内部依赖 + 闭包访问 permissionLevel，外部依赖）
           </p>
         </template>
       </el-alert>

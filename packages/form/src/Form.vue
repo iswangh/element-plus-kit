@@ -105,12 +105,7 @@ const mergedAttrs = computed(() => {
 const isExpanded = defineModel<boolean>('expanded', { default: false })
 
 // 监听 isExpanded 变化，同步触发 expand 事件
-watch(
-  isExpanded,
-  (value) => {
-    emit('expand', value)
-  },
-)
+watch(isExpanded, value => emit('expand', value))
 
 /**
  * 判断是否启用展开/折叠功能（通过 actionConfig.buttons 是否包含 'expand' 来判断）

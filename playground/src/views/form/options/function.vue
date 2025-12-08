@@ -58,7 +58,7 @@ const formItems: FormItems = [
     label: '城市',
     compType: 'select',
     compProps: {
-      options: () => {
+      optionsLoader: () => {
         const province = form.value.province as string | undefined
         if (!province)
           return []
@@ -71,7 +71,7 @@ const formItems: FormItems = [
     label: '区县',
     compType: 'select',
     compProps: {
-      options: () => {
+      optionsLoader: () => {
         const city = form.value.city as string | undefined
         if (!city)
           return []
@@ -102,7 +102,7 @@ function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             使用函数模式动态加载选项：<br>
-            省份：静态模式（数组） | 城市：函数模式（闭包访问 form.value.province） | 区县：函数模式（闭包访问 form.value.city）
+            省份：静态模式（options 数组） | 城市：函数模式（optionsLoader，闭包访问 form.value.province） | 区县：函数模式（optionsLoader，闭包访问 form.value.city）
           </p>
         </template>
       </el-alert>

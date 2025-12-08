@@ -1,5 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
-import type { OptionsConfig } from '../types'
+import type { OptionsLoaderConfig } from '../types'
 
 /**
  * 处理依赖列表：排除自身并去重
@@ -27,10 +27,10 @@ export function getDepsValues(deps: string[], formData: Record<string, any>, cur
 }
 
 /**
- * 检查是否为对象模式的 options 配置
- * @param options - 待检查的选项配置
- * @returns 是否为对象模式配置
+ * 检查是否为对象模式的 optionsLoader 配置
+ * @param value - 待检查的值
+ * @returns 是否为 OptionsLoaderConfig 类型
  */
-export function isOptionsConfig(options: any): options is OptionsConfig {
-  return options && typeof options === 'object' && typeof options.loader === 'function'
+export function isOptionsConfig(value: any): value is OptionsLoaderConfig {
+  return value && typeof value === 'object' && typeof value.loader === 'function'
 }

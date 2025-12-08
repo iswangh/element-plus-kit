@@ -57,8 +57,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：使用 deps 配置内部依赖
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const province = formData.province as string | undefined
           if (!province)
             return []
@@ -76,8 +76,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：依赖省市，使用 deps 配置内部依赖
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const city = formData.city as string | undefined
           if (!city)
             return []
@@ -114,7 +114,7 @@ function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             使用对象模式的 <code class="example-code">deps</code> 配置来声明内部依赖（表单字段）<br>
-            省份：静态模式（数组） | 城市：对象模式（deps: ['province']） | 区县：对象模式（deps: ['province', 'city']）
+            省份：静态模式（options 数组） | 城市：对象模式（optionsLoader，deps: ['province']） | 区县：对象模式（optionsLoader，deps: ['province', 'city']）
           </p>
         </template>
       </el-alert>

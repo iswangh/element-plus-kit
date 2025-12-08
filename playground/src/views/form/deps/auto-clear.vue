@@ -42,8 +42,8 @@ const formItems: FormItems = [
     label: '城市',
     compType: 'select',
     compProps: {
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const province = formData.province as string | undefined
           if (!province)
             return []
@@ -59,9 +59,9 @@ const formItems: FormItems = [
     label: '自定义城市',
     compType: 'select',
     compProps: {
-      // 对象模式：autoClear 为 false，用户自己处理值的设置逻辑
-      options: {
-        loader: (formData) => {
+      // 对象模式：用户自己处理值的设置逻辑
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           const province = formData.province as string | undefined
           if (!province)
             return []
@@ -86,7 +86,7 @@ const objectModeFormItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：基础用法
-      options: {
+      optionsLoader: {
         loader: () => {
           // 可以在这里进行异步操作
           return [
@@ -107,8 +107,8 @@ const objectModeFormItems: FormItems = [
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
       // 注意：当优先级变化时，如果标签的当前值（如 'normal' 或 'minor'）在新的选项中存在，
       // 组件会保留该值，不会自动清理。如果需要强制清理，需要手动设置 form.value.tags = undefined
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           // 可以根据表单数据动态返回选项
           const priority = formData.priority as string | undefined
           if (priority === 'high') {
@@ -166,8 +166,8 @@ function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: unknow
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             测试自动清理功能：<br>
-            <strong>城市（自动清理）</strong>：依赖变化时，如果当前值不在新的选项中，自动清除值<br>
-            <strong>城市（自定义处理）</strong>：同样支持自动清理，但用户可以在 change 事件中设置默认值（如果值在新的选项中，会被保留）<br>
+            <strong>城市（自动清理）</strong>：依赖变化时，如果当前值不在新的选项中，自动清除值（使用 optionsLoader）<br>
+            <strong>城市（自定义处理）</strong>：同样支持自动清理，但用户可以在 change 事件中设置默认值（如果值在新的选项中，会被保留，使用 optionsLoader）<br>
             <strong>业务需求示例</strong>：当省份值为 '1' 时，自动设置城市（自定义处理）为 '1-1'（如果 '1-1' 在新的选项中，会被保留）
           </p>
         </template>
@@ -229,7 +229,7 @@ function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: unknow
       >
         <template #default>
           <p class="text-sm text-gray-600 m-0">
-            <strong>对象模式</strong>：使用对象配置，支持 <code>loader</code>、<code>deps</code>、<code>immediate</code> 等选项。<br>
+            <strong>对象模式</strong>：使用对象配置（optionsLoader），支持 <code>loader</code>、<code>deps</code>、<code>immediate</code> 等选项。<br>
             <strong>依赖变更特别注意</strong>：<br>
             • 当依赖字段变化导致选项更新时，组件会<strong>检查</strong>当前值是否在新的选项中<br>
             • <strong>如果当前值在新的选项中存在</strong>：保留当前值，<strong>不会自动清理</strong><br>

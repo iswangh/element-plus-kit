@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { Slot } from 'vue'
-import type { FormItem, FormItemEventExtendedParams, OptionsConfig, OptionsLoader } from './types'
+import type { FormItem, FormItemEventExtendedParams, OptionsLoaderConfig, OptionsLoaderFn } from './types'
 import { ElFormItem } from 'element-plus'
 import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useChangeEventState, useClearState } from './composables'
@@ -85,7 +85,7 @@ const dynamicEventHandlers = computed(() => {
 const resolvedOptions = ref<any[]>([])
 
 /** options 加载状态 */
-const isOptionsLoading = ref(false)
+const loadOptionsLoading = ref(false)
 
 // Change 事件状态管理（仅用于防止重复触发 change 事件）
 const changeEventState = useChangeEventState()
@@ -106,11 +106,35 @@ function onChange(event: any) {
   })
 }
 
+/**
+ * 获取最终的 options 值
+ * 处理静态 options 和动态 optionsLoader 的优先级逻辑
+ * @returns 最终的 options 值，如果未配置则返回 undefined
+ */
+function getResolvedOptions() {
+  const compProps = props.formItem.compProps ?? {}
+  const { options } = compProps
+  const hasOptions = 'options' in compProps
+  const hasOptionsLoader = 'optionsLoader' in compProps
+
+  // 如果配置了 optionsLoader（动态加载），优先使用动态加载的结果
+  if (hasOptionsLoader) {
+    // 已加载完成（有数据）或加载失败/未开始（空数组）：使用动态加载的结果
+    if (resolvedOptions.value.length > 0 || !loadOptionsLoading.value)
+      return resolvedOptions.value
+    // 加载中时，如果有静态 options 则使用作为初始值，提供更好的用户体验
+    return hasOptions ? options : []
+  }
+
+  // 没有 optionsLoader，使用静态数组
+  return hasOptions ? options : undefined
+}
+
 /** 处理后的组件属性（包含默认值和用户配置） */
 const processedCompProps = computed(() => {
   const defaults = COMP_DEFAULT_CONFIG.getDefaults(props.formItem)
   const compProps = props.formItem.compProps ?? {}
-  const { options, slots: _compSlots, ...restCompProps } = compProps
+  const { optionsLoader, slots: _compSlots, ...restCompProps } = compProps
 
   // 排除事件处理器的辅助函数
   const excludeEvents = (obj: Record<string, any>) => Object.fromEntries(Object.entries(obj).filter(([key]) => !key.startsWith('on')))
@@ -118,18 +142,23 @@ const processedCompProps = computed(() => {
   // 提取事件处理器
   const compEventHandlers = Object.fromEntries(Object.entries(compProps).filter(([key, value]) => key.startsWith('on') && typeof value === 'function'))
 
-  const isDynamic = typeof options === 'function' || isOptionsConfig(options)
+  // 判断是否有动态加载器（用于判断是否需要 loading 状态）
+  const hasOptionsLoader = 'optionsLoader' in compProps
+  const isDynamic = hasOptionsLoader && (typeof optionsLoader === 'function' || isOptionsConfig(optionsLoader))
+
+  // 排除事件处理器的属性
+  const excludedDefaults = excludeEvents(defaults)
+  const excludedRestCompProps = excludeEvents(restCompProps)
+
+  // 获取最终的 options 值
+  const _resolvedOptions = getResolvedOptions()
 
   return {
-    ...excludeEvents(defaults),
-    ...excludeEvents(restCompProps),
+    ...excludedDefaults,
+    ...excludedRestCompProps,
     ...dynamicEventHandlers.value,
     ...compEventHandlers,
-    ...('options' in compProps && {
-      options: Array.isArray(options) ? options : resolvedOptions.value,
-      // 只有动态选项才需要 loading 状态(函数或对象模式)
-      ...(isDynamic && { loading: isOptionsLoading.value }),
-    }),
+    ...(_resolvedOptions != null && { options: _resolvedOptions, ...(isDynamic && { loading: loadOptionsLoading.value }) }),
   }
 })
 
@@ -140,12 +169,12 @@ function getDynamicCompSlots(prop: string) {
 }
 
 /**
- * 执行 loader 函数（支持同步和异步）
+ * 执行 optionsLoader 函数（支持同步和异步）
  * @param loader - 选项加载器函数
  * @param formData - 表单数据
  * @returns 选项数组
  */
-async function executeLoader(loader: OptionsLoader, formData: Record<string, any>) {
+async function executeOptionsLoader(loader: OptionsLoaderFn, formData: Record<string, any>) {
   try {
     const result = await loader(formData)
     return Array.isArray(result) ? result : []
@@ -156,10 +185,10 @@ async function executeLoader(loader: OptionsLoader, formData: Record<string, any
   }
 }
 
-/** 获取对象模式的 options 配置（非对象模式时返回 null） */
-function getOptionsConfig(): OptionsConfig | null {
-  const options = props.formItem.compProps?.options
-  return isOptionsConfig(options) ? options : null
+/** 获取对象模式的 optionsLoader 配置（非对象模式时返回 null） */
+function getOptionsLoaderConfig(): OptionsLoaderConfig | null {
+  const optionsLoader = props.formItem.compProps?.optionsLoader
+  return isOptionsConfig(optionsLoader) ? optionsLoader : null
 }
 
 /**
@@ -221,9 +250,9 @@ function clearIfNotInOptions(options: any[]) {
  * - false：仅基于当前 formData 加载 options，并根据新 options 决定是否清理当前值
  */
 async function loadOptions(isDependencyChange = false) {
-  const options = props.formItem.compProps?.options
-  // 静态模式（数组）或空值：不需要处理
-  if (!options || Array.isArray(options))
+  const optionsLoader = props.formItem.compProps?.optionsLoader
+  // optionsLoader 为空时不需要处理（静态数组不会调用此函数）
+  if (!optionsLoader)
     return
 
   // 依赖变更时，先清理（允许用户在 change 事件中设置默认值）
@@ -234,23 +263,26 @@ async function loadOptions(isDependencyChange = false) {
     await nextTick()
   }
 
-  isOptionsLoading.value = true
+  loadOptionsLoading.value = true
   try {
+    const formData = props.formData ?? {}
+
     let loadedOptions: any[]
 
-    // 函数模式
-    if (typeof options === 'function') {
-      loadedOptions = await executeLoader(options, props.formData ?? {})
-    }
-    // 对象模式
-    else if (isOptionsConfig(options)) {
-      const { loader, deps = [] } = options
-      const formData = props.formData ?? {}
-      const depsValues = getDepsValues(deps, formData, props.formItem.prop)
-      loadedOptions = await executeLoader(loader, { ...formData, ...depsValues })
-    }
-    else {
-      return
+    // 根据 optionsLoader 类型选择处理方式
+    const loaderType = typeof optionsLoader === 'function' ? 'function' : isOptionsConfig(optionsLoader) ? 'config' : 'unknown'
+    switch (loaderType) {
+      case 'function':
+        loadedOptions = await executeOptionsLoader(optionsLoader, formData)
+        break
+      case 'config': {
+        const { loader, deps = [] } = optionsLoader
+        const depsValues = getDepsValues(deps, formData, props.formItem.prop)
+        loadedOptions = await executeOptionsLoader(loader, { ...formData, ...depsValues })
+        break
+      }
+      default:
+        return
     }
 
     resolvedOptions.value = loadedOptions
@@ -260,60 +292,25 @@ async function loadOptions(isDependencyChange = false) {
       clearIfNotInOptions(loadedOptions)
   }
   finally {
-    isOptionsLoading.value = false
+    loadOptionsLoading.value = false
     if (isDependencyChange)
       clearState.end()
   }
 }
 
-/** 处理函数模式 options */
-function handleFunctionOptions() {
-  loadOptions()
-}
-
-/** 处理对象模式 options（负责 immediate / deps 等配置） */
-function handleObjectOptions(config: OptionsConfig) {
-  const { immediate = false, deps = [], loader } = config
-
-  // 配置了 deps 时，内部依赖通过 watch 监听，外部依赖（通过闭包访问）通过 watchEffect 追踪
-  // 注意：内部依赖变化时，watch 会触发 loadOptions，这里只处理外部依赖变化的情况
-  if (deps.length > 0) {
-    // 追踪外部依赖：同步调用 loader 函数来追踪外部 ref（watchEffect 会追踪 loader 中访问的外部 ref）
-    // 注意：这里只用于追踪依赖，不处理返回值
-    const formData = props.formData ?? {}
-    const depsValues = getDepsValues(deps, formData, props.formItem.prop)
-    try {
-      loader({ ...formData, ...depsValues })
-    }
-    catch {
-      // 忽略错误，这里只用于追踪依赖
-    }
-    if (immediate)
-      loadOptions()
-    return
-  }
-
-  // immediate 为 false 且没有 deps 时，不自动加载（等待依赖变化）
-  if (!immediate)
-    return
-
-  // 执行 loader 时会自动追踪外部 ref（没有 deps 时）
-  loadOptions()
-}
-
-/** 获取 options 配置的依赖列表（排除自身并去重，用于内部 watch） */
+/** 获取 optionsLoader 配置的依赖列表（排除自身并去重，用于内部 watch） */
 const optionsDeps = computed(() => {
-  const config = getOptionsConfig()
+  const config = getOptionsLoaderConfig()
   return config ? processDeps(config.deps ?? [], props.formItem.prop) : []
 })
 
-/** 获取 options 配置的 immediate 选项（缺省视为 false） */
+/** 获取 optionsLoader 配置的 immediate 选项（缺省视为 false） */
 const optionsImmediate = computed(() => {
-  const config = getOptionsConfig()
+  const config = getOptionsLoaderConfig()
   return config ? (config.immediate ?? false) : false
 })
 
-/** 监听对象模式 options 的字段依赖（仅当配置了 deps 时生效） */
+/** 监听对象模式 optionsLoader 的字段依赖（仅当配置了 deps 时生效） */
 watch(
   () => {
     // 使用对象包装依赖字段，确保 watch 能正确追踪每个依赖字段的变化
@@ -321,7 +318,7 @@ watch(
     return Object.fromEntries(deps.map(dep => [dep, props.formData?.[dep]]))
   },
   () => {
-    const config = getOptionsConfig()
+    const config = getOptionsLoaderConfig()
     if (!config)
       return
 
@@ -331,19 +328,50 @@ watch(
   { deep: true, immediate: optionsImmediate.value },
 )
 
-/** 使用 watchEffect 自动追踪 options.loader 中的外部依赖（函数模式 / 对象模式通用） */
+/** 使用 watchEffect 自动追踪 optionsLoader 中的外部依赖（函数模式 / 对象模式通用） */
 watchEffect(() => {
-  const options = props.formItem.compProps?.options
-  if (!options || Array.isArray(options))
+  const optionsLoader = props.formItem.compProps?.optionsLoader
+  if (!optionsLoader)
     return
 
-  // 函数模式：自动追踪外部 ref
-  if (typeof options === 'function')
-    return handleFunctionOptions()
+  // 函数模式：直接调用 loadOptions，watchEffect 会自动追踪 loadOptions 内部调用的 loader 中访问的外部 ref
+  if (typeof optionsLoader === 'function')
+    return loadOptions()
 
   // 对象模式：根据 immediate 和 deps 决定是否自动加载
-  if (isOptionsConfig(options)) {
-    handleObjectOptions(options)
+  if (isOptionsConfig(optionsLoader)) {
+    const { immediate = false, deps = [] } = optionsLoader
+
+    // 配置了 deps 时，内部依赖通过 watch 监听，外部依赖（通过闭包访问）通过 watchEffect 追踪
+    // 注意：内部依赖变化时，watch 会触发 loadOptions，这里只处理外部依赖变化的情况
+    if (deps.length > 0) {
+      // 有 deps 时，如果 immediate 为 true，直接调用 loadOptions（watchEffect 会自动追踪 loadOptions 内部调用的 loader）
+      // 如果 immediate 为 false，只调用 loader 来追踪外部依赖（不处理返回值，不加载数据）
+      if (immediate) {
+        loadOptions()
+      }
+      else {
+        // immediate 为 false 时，只追踪外部依赖，不加载数据
+        const { loader } = optionsLoader
+        const formData = props.formData ?? {}
+        const depsValues = getDepsValues(deps, formData, props.formItem.prop)
+        try {
+          // 调用 loader 来触发 watchEffect 的依赖追踪（不处理返回值）
+          loader({ ...formData, ...depsValues })
+        }
+        catch {
+        // 忽略错误，这里只用于追踪依赖
+        }
+      }
+      return
+    }
+
+    // immediate 为 false 且没有 deps 时，不自动加载（等待依赖变化）
+    if (!immediate)
+      return
+
+    // 没有 deps 时，直接调用 loadOptions，watchEffect 会自动追踪 loadOptions 内部调用的 loader 中访问的外部 ref
+    loadOptions()
   }
 })
 

@@ -6,46 +6,27 @@ import type { FormItemComp, FormItemCompProps } from './comp'
  * 通过检查组件实例的 $props 中是否包含 'options' 来判断
  * @template T 组件类型
  */
-type HasOptionsProp<T extends FormItemComp> = 'options' extends keyof FormItemCompProps<T>
+export type HasOptionsProp<T extends FormItemComp> = 'options' extends keyof FormItemCompProps<T>
   ? true
   : false
 
 /**
- * 判断组件是否支持 options 属性
- * 动态从组件类型定义中判断，不硬编码组件名称
- * @template T 组件类型
- */
-export type IsOptionsSupported<T extends FormItemComp> = HasOptionsProp<T>
-
-/**
- * 支持 options 属性的组件类型
- * 通过类型系统自动提取，不硬编码
- */
-export type OptionsSupportedComp = FormItemComp extends infer T
-  ? T extends FormItemComp
-    ? IsOptionsSupported<T> extends true
-      ? T
-      : never
-    : never
-  : never
-
-/**
- * Options 加载器函数类型
+ * OptionsLoader 函数类型
  * @param formData 表单数据（外部依赖通过闭包访问）
  * @returns 返回选项数组（支持同步和异步）
  */
-export type OptionsLoader = (formData: Record<string, any>) => any[] | Promise<any[]>
+export type OptionsLoaderFn = (formData: Record<string, any>) => any[] | Promise<any[]>
 
 /**
- * Options 对象模式配置
+ * OptionsLoader 对象模式配置
  */
-export interface OptionsConfig {
+export interface OptionsLoaderConfig {
   /**
    * 选项加载器函数
    * @param formData 表单数据（外部依赖通过闭包访问）
    * @returns 返回选项数组（支持同步和异步）
    */
-  loader: OptionsLoader
+  loader: OptionsLoaderFn
   /**
    * 是否立即加载（默认 false，需要显式设置为 true 才会立即加载）
    */
@@ -58,18 +39,7 @@ export interface OptionsConfig {
 }
 
 /**
- * 根据组件类型推断 options 类型
- * @template T 组件类型
+ * OptionsLoader 类型（支持函数和对象模式）
+ * 外部应使用此类型，而不是直接使用 OptionsLoaderFn 或 OptionsLoaderConfig
  */
-export type InferOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? OptionsLoader | OptionsConfig | any[]
-  : never
-
-/**
- * 获取组件原始的 options 类型
- * 从组件实例的 $props 中提取 options 属性的类型
- * @template T 组件类型
- */
-export type GetCompOptionsType<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? FormItemCompProps<T>['options']
-  : never
+export type OptionsLoaderType = OptionsLoaderFn | OptionsLoaderConfig

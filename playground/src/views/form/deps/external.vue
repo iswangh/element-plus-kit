@@ -44,7 +44,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 函数模式：通过闭包访问外部 ref（外部依赖）
-      options: () => {
+      optionsLoader: () => {
         // 通过闭包访问外部 ref：userType
         // 注意：这里访问的是外部的 userType，而不是表单数据中的 userType
         if (userType.value === 'admin')
@@ -61,8 +61,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：同时依赖外部 ref（userType）和表单字段（menu）
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           // 通过闭包访问外部 ref：userType（外部依赖，watchEffect 会自动追踪）
           // 通过 formData 访问表单字段：menu（内部依赖，通过 deps 配置）
           const menu = formData.menu as string | undefined
@@ -120,7 +120,7 @@ function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             通过闭包访问外部 ref（<code class="example-code">userType</code>）作为外部依赖<br>
-            用户类型：静态模式 | 菜单选项：函数模式（闭包访问 <code class="example-code">userType</code>） | 操作选项：对象模式（闭包访问 <code class="example-code">userType</code> 和表单数据）
+            用户类型：静态模式（options 数组） | 菜单选项：函数模式（optionsLoader，闭包访问 <code class="example-code">userType</code>） | 操作选项：对象模式（optionsLoader，闭包访问 <code class="example-code">userType</code> 和表单数据）
           </p>
         </template>
       </el-alert>

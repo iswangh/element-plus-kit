@@ -12,7 +12,7 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：基础用法
-      options: {
+      optionsLoader: {
         loader: () => {
           // 可以在这里进行异步操作
           return [
@@ -31,8 +31,8 @@ const formItems: FormItems = [
     compType: 'select',
     compProps: {
       // 对象模式：接收 formData 参数，使用 deps 配置表单字段依赖
-      options: {
-        loader: (formData) => {
+      optionsLoader: {
+        loader: (formData: Record<string, unknown>) => {
           // 可以根据表单数据动态返回选项
           const priority = formData.priority as string | undefined
           if (priority === 'high') {
@@ -74,7 +74,7 @@ function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
         <template #default>
           <p class="text-sm text-gray-600 m-0">
             使用对象模式配置选项加载：<br>
-            优先级：对象模式（immediate: true） | 标签：对象模式（deps: ['priority'], immediate: true）
+            优先级：对象模式（optionsLoader，immediate: true） | 标签：对象模式（optionsLoader，deps: ['priority'], immediate: true）
           </p>
         </template>
       </el-alert>

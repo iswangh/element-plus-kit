@@ -2,26 +2,17 @@ import type { Condition } from './common'
 import type { FormItemComp, FormItemCompProps } from './comp'
 import type { ElFormItemProps } from './el'
 import type { ColProps } from './layout'
-import type { InferOptionsType, IsOptionsSupported } from './options'
+import type { HasOptionsProp, OptionsLoaderType } from './options'
 import type { CompSlotsConfig, FormItemSlotsConfig } from './scope'
 
 /**
- * 根据组件类型推断 options 类型
- * 只有支持 options 的组件才会扩展 options 类型
- * @template T - 组件类型
- */
-export type FormItemOptions<T extends FormItemComp> = IsOptionsSupported<T> extends true
-  ? InferOptionsType<T>
-  : never
-
-/**
  * 根据组件类型推断 compProps 类型（扩展版本）
- * 支持扩展属性，如 options、slots 等
+ * 支持扩展属性，如 options、optionsLoader、slots 等
  * @template T - 组件类型
  */
 export type FormItemCompPropsExtended<T extends FormItemComp>
-  = (IsOptionsSupported<T> extends true
-    ? Omit<FormItemCompProps<T>, 'options'> & { options?: FormItemOptions<T> }
+  = (HasOptionsProp<T> extends true
+    ? FormItemCompProps<T> & { optionsLoader?: OptionsLoaderType }
     : FormItemCompProps<T>)
   & { slots?: CompSlotsConfig<T> }
 
