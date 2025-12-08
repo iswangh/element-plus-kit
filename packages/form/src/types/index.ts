@@ -1,8 +1,0 @@
-export type * from './action'
-export type * from './common'
-export type * from './comp'
-export type * from './el'
-export type * from './form-item'
-export type * from './layout'
-export type * from './options'
-export type * from './scope'
