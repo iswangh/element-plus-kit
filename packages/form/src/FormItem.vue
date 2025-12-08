@@ -81,11 +81,33 @@ const dynamicEventHandlers = computed(() => {
   )
 })
 
-/** 解析后的 options 值 */
-const resolvedOptions = ref<any[]>([])
+/** 动态加载的 options 值（仅存储通过 optionsLoader 加载的结果） */
+const loadedOptions = ref<any[]>([])
 
 /** options 加载状态 */
 const loadOptionsLoading = ref(false)
+
+/** 解析后的 options 值（统一处理静态 options 和动态 optionsLoader 的优先级逻辑） */
+const resolvedOptions = computed(() => {
+  const compProps = props.formItem.compProps ?? {}
+  const { options } = compProps
+  const hasOptions = 'options' in compProps
+  const hasOptionsLoader = 'optionsLoader' in compProps
+
+  // 如果配置了 optionsLoader（动态加载），优先使用动态加载的结果
+  if (hasOptionsLoader) {
+    // 已加载完成（有数据）或加载失败/未开始（空数组）：使用动态加载的结果
+    if (loadedOptions.value.length > 0 || !loadOptionsLoading.value)
+      return loadedOptions.value
+    // 加载中时，如果有静态 options 则使用作为初始值，提供更好的用户体验
+    // 如果配置了 options 属性，即使值为 undefined，也应该返回空数组（表示有配置但为空）
+    return hasOptions ? (options ?? []) : []
+  }
+
+  // 没有 optionsLoader，使用静态数组
+  // 如果配置了 options 属性，即使值为 undefined，也应该返回空数组（表示有配置但为空）
+  return hasOptions ? (options ?? []) : undefined
+})
 
 // Change 事件状态管理（仅用于防止重复触发 change 事件）
 const changeEventState = useChangeEventState()
@@ -104,30 +126,6 @@ function onChange(event: any) {
   nextTick(() => {
     changeEventState.end()
   })
-}
-
-/**
- * 获取最终的 options 值
- * 处理静态 options 和动态 optionsLoader 的优先级逻辑
- * @returns 最终的 options 值，如果未配置则返回 undefined
- */
-function getResolvedOptions() {
-  const compProps = props.formItem.compProps ?? {}
-  const { options } = compProps
-  const hasOptions = 'options' in compProps
-  const hasOptionsLoader = 'optionsLoader' in compProps
-
-  // 如果配置了 optionsLoader（动态加载），优先使用动态加载的结果
-  if (hasOptionsLoader) {
-    // 已加载完成（有数据）或加载失败/未开始（空数组）：使用动态加载的结果
-    if (resolvedOptions.value.length > 0 || !loadOptionsLoading.value)
-      return resolvedOptions.value
-    // 加载中时，如果有静态 options 则使用作为初始值，提供更好的用户体验
-    return hasOptions ? options : []
-  }
-
-  // 没有 optionsLoader，使用静态数组
-  return hasOptions ? options : undefined
 }
 
 /** 处理后的组件属性（包含默认值和用户配置） */
@@ -150,15 +148,12 @@ const processedCompProps = computed(() => {
   const excludedDefaults = excludeEvents(defaults)
   const excludedRestCompProps = excludeEvents(restCompProps)
 
-  // 获取最终的 options 值
-  const _resolvedOptions = getResolvedOptions()
-
   return {
     ...excludedDefaults,
     ...excludedRestCompProps,
     ...dynamicEventHandlers.value,
     ...compEventHandlers,
-    ...(_resolvedOptions != null && { options: _resolvedOptions, ...(isDynamic && { loading: loadOptionsLoading.value }) }),
+    ...(resolvedOptions.value != null && { options: resolvedOptions.value, ...(isDynamic && { loading: loadOptionsLoading.value }) }),
   }
 })
 
@@ -267,29 +262,29 @@ async function loadOptions(isDependencyChange = false) {
   try {
     const formData = props.formData ?? {}
 
-    let loadedOptions: any[]
+    let result: any[]
 
     // 根据 optionsLoader 类型选择处理方式
     const loaderType = typeof optionsLoader === 'function' ? 'function' : isOptionsConfig(optionsLoader) ? 'config' : 'unknown'
     switch (loaderType) {
       case 'function':
-        loadedOptions = await executeOptionsLoader(optionsLoader, formData)
+        result = await executeOptionsLoader(optionsLoader, formData)
         break
       case 'config': {
         const { loader, deps = [] } = optionsLoader
         const depsValues = getDepsValues(deps, formData, props.formItem.prop)
-        loadedOptions = await executeOptionsLoader(loader, { ...formData, ...depsValues })
+        result = await executeOptionsLoader(loader, { ...formData, ...depsValues })
         break
       }
       default:
         return
     }
 
-    resolvedOptions.value = loadedOptions
+    loadedOptions.value = result
 
     // 依赖变更时已清理过，不再清理（允许用户在 change 事件中设置的值）
     if (!isDependencyChange)
-      clearIfNotInOptions(loadedOptions)
+      clearIfNotInOptions(result)
   }
   finally {
     loadOptionsLoading.value = false

@@ -129,10 +129,10 @@ const objectModeFormItems: FormItems = [
   },
 ]
 
-function onChange({ prop }: FormItemEventExtendedParams, value: unknown) {
-  console.log('onChange', prop, value)
+function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
+  console.log('onChange', extendedParams, value)
 
-  if (prop === 'province') {
+  if (extendedParams.prop === 'province') {
     form.value.cityCustom = value === '1' ? '1-1' : undefined
   }
 }
