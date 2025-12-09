@@ -21,6 +21,7 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # 确保只在 main 分支上运行
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     environment:
@@ -31,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Get Node.js version from package.json
         id: node-version

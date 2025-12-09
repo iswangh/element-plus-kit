@@ -3,15 +3,36 @@ name: CI
 on:
   push:
     branches: [main, dev]
+    paths:
+      - 'packages/**'
+      - 'docs/**'
+      - 'playground/**'
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - turbo.json
+      - .github/workflows/ci.yml
   pull_request:
     branches: [main, dev]
+    paths:
+      - 'packages/**'
+      - 'docs/**'
+      - 'playground/**'
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - turbo.json
+      - .github/workflows/ci.yml
 
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Get Node.js version from package.json
         id: node-version
@@ -40,10 +61,13 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-latest
-    needs: lint-and-test
+    timeout-minutes: 15
+    # 与 lint-and-test 并行执行，不依赖其结果
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Get Node.js version from package.json
         id: node-version
