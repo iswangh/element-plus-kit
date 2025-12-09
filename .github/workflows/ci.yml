@@ -41,6 +41,9 @@ jobs:
       - name: Setup Node.js via Volta
         uses: volta-cli/action@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js cache
         uses: actions/setup-node@v4
         with:
@@ -75,6 +78,9 @@ jobs:
 
       - name: Setup Node.js via Volta
         uses: volta-cli/action@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js cache
         uses: actions/setup-node@v4
