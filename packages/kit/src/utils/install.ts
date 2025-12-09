@@ -16,6 +16,4 @@ export function install(app: App) {
 /**
  * 默认导出安装函数
  */
-export default {
-  install,
-}
+export default { install }
