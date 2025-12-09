@@ -57,14 +57,13 @@ nr version
 ```
 
 这个命令会：
-- 自动检查分支（通过 Changesets pre 钩子，必须在 main 或 master 分支）
 - 读取 `.changeset/` 目录下的变更集文件
 - 自动更新包的版本号（根据变更类型）
 - 自动更新内部依赖版本（如果被依赖包版本变化）
 - 生成或更新 CHANGELOG.md
 - 删除已处理的变更集文件
 
-**注意**：分支检查已集成到 Changesets 的 pre 钩子中，无需手动检查。
+**注意**：分支检查已集成到 Changesets 的 pre 钩子中（使用 `@iswangh/script` 包），无需手动检查。
 
 ### 4. 提交版本更新
 
@@ -91,13 +90,12 @@ nr release
 ```
 
 这个命令会：
-- 自动检查分支（通过 Changesets pre 钩子，必须在 main 或 master 分支）
 - 按依赖顺序发布到 npm（core → form → kit）
 - 每个包的 `prepublishOnly` 钩子会自动执行构建和类型检查
 - 自动处理内部依赖版本更新
 
 **注意**：
-- 分支检查已集成到 Changesets 的 pre 钩子中，无需手动检查
+- 分支检查已集成到 Changesets 的 pre 钩子中（使用 `@iswangh/script` 包），无需手动检查
 - 构建由每个包的 `prepublishOnly` 钩子自动执行，无需在 `release` 命令中手动构建
 
 ## 📝 完整发布流程示例

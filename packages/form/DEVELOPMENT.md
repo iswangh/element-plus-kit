@@ -415,8 +415,6 @@ npm run build
 
 #### 发布
 
-发布前会自动检查当前 Git 分支（通过 Changesets pre 钩子），只能在 `main` 或 `master` 分支上发布：
-
 使用根目录的发布命令（**推荐**）：
 
 ```bash
@@ -425,12 +423,13 @@ pnpm release
 ```
 
 **自动执行流程**：
-1. **分支检查**：通过 Changesets pre 钩子检查当前分支是否为 `main` 或 `master`
-2. **发布**：按依赖顺序发布包（core → form → kit）
-3. **构建和类型检查**：每个包的 `prepublishOnly` 钩子自动执行构建和类型检查
-4. **发布到 npm**：如果所有检查通过，自动发布到 npm
+1. **发布**：按依赖顺序发布包（core → form → kit）
+2. **构建和类型检查**：每个包的 `prepublishOnly` 钩子自动执行构建和类型检查
+3. **发布到 npm**：如果所有检查通过，自动发布到 npm
 
-**注意**：版本更新应在发布前通过 `pnpm version` 命令完成。
+**注意**：
+- 版本更新应在发布前通过 `pnpm version` 命令完成
+- 分支检查已集成到 Changesets 的 pre 钩子中（使用 `@iswangh/script` 包），执行 `pnpm version` 或 `pnpm release` 时会自动检查当前分支是否为 `main` 或 `master`
 
 **手动执行**（不推荐，仅用于测试）：
 
@@ -444,7 +443,7 @@ pnpm build
 # 手动类型检查
 pnpm type-check
 
-# 直接发布（不推荐，会跳过分支检查）
+# 直接发布（不推荐，会跳过 Changesets 的发布流程）
 npm publish
 ```
 

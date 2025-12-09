@@ -12,7 +12,7 @@
     "element-plus-kit-docs"
   ],
   "pre": {
-    "version": "node scripts/check-branch.js",
-    "publish": "node scripts/check-branch.js"
+    "version": "npx @iswangh/script check-branch",
+    "publish": "npx @iswangh/script check-branch"
   }
 }

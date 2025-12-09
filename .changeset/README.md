@@ -84,7 +84,6 @@ nr release
 ```
 
 这个命令会：
-- 检查分支（必须在 main 或 master 分支，通过 Changesets pre 钩子）
 - 发布到 npm（每个包的 `prepublishOnly` 钩子会自动执行构建和类型检查）
 - 自动处理依赖顺序（core → form → kit）
 
@@ -121,8 +120,8 @@ pnpm release
 - **updateInternalDependencies**: `"patch"` - 内部依赖更新策略
 - **ignore**: `["element-plus-kit-playground", "element-plus-kit-docs"]` - 忽略的包（不发布）
 - **pre**: 预执行钩子
-  - **version**: 在 `changeset version` 执行前自动检查分支
-  - **publish**: 在 `changeset publish` 执行前自动检查分支
+  - **version**: 在 `changeset version` 执行前自动检查分支（使用 `@iswangh/script` 包）
+  - **publish**: 在 `changeset publish` 执行前自动检查分支（使用 `@iswangh/script` 包）
 
 ### 分支检查机制
 
@@ -132,9 +131,9 @@ Changesets 通过 pre 钩子自动检查分支：
 - 如果分支不正确，会阻止执行并提示错误信息
 
 **实现方式**：
-- 直接在 `config.json` 的 `pre` 钩子中调用 `scripts/check-branch.js`
-- 复用 `scripts/` 目录中的脚本，统一管理，便于维护
-- 简化了文件结构，减少了中间层
+- 使用 `@iswangh/script` 包提供的 `check-branch` 命令
+- 通过 `npx @iswangh/script check-branch` 调用，无需安装依赖
+- 默认允许 `main` 和 `master` 分支
 
 ## 📚 更多信息
 

@@ -258,6 +258,34 @@
 
 ---
 
+### 10. `pre`
+
+```json
+"pre": {
+  "version": "npx @iswangh/script check-branch",
+  "publish": "npx @iswangh/script check-branch"
+}
+```
+
+**作用**：
+- 定义在 Changesets 命令执行前自动运行的脚本
+- 用于执行前置检查或准备工作
+
+**可选值**：
+- `version`：在 `changeset version` 执行前运行的命令
+- `publish`：在 `changeset publish` 执行前运行的命令
+
+**当前项目**：
+- 使用 `@iswangh/script` 包提供的 `check-branch` 命令
+- 在 `version` 和 `publish` 执行前自动检查当前分支是否为 `main` 或 `master`
+- 如果分支不正确，会阻止执行并提示错误信息
+
+**实现方式**：
+- 通过 `npx @iswangh/script check-branch` 调用，无需安装依赖
+- 默认允许 `main` 和 `master` 分支
+
+---
+
 ## 📊 配置总结
 
 | 配置项 | 当前值 | 说明 |
@@ -270,7 +298,8 @@
 | `access` | `"public"` | 公开发布 |
 | `baseBranch` | `"main"` | 主分支 |
 | `updateInternalDependencies` | `"patch"` | 内部依赖更新策略 |
-| `ignore` | `[]` | 不忽略任何包（private 包自动忽略） |
+| `ignore` | `["element-plus-kit-playground", "element-plus-kit-docs"]` | 忽略的包（不发布） |
+| `pre` | `{"version": "npx @iswangh/script check-branch", "publish": "npx @iswangh/script check-branch"}` | 预执行钩子（分支检查） |
 
 ## 🔄 版本策略对比
 
