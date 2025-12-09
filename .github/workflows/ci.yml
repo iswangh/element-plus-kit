@@ -13,13 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Get Node.js version from package.json
+        id: node-version
+        run: echo "version=$(jq -r '.volta.node' package.json)" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js via Volta
+        uses: volta-cli/action@v4
+
+      - name: Setup Node.js cache
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          node-version: ${{ steps.node-version.outputs.version }}
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -40,13 +45,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Get Node.js version from package.json
+        id: node-version
+        run: echo "version=$(jq -r '.volta.node' package.json)" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js via Volta
+        uses: volta-cli/action@v4
+
+      - name: Setup Node.js cache
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          node-version: ${{ steps.node-version.outputs.version }}
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
