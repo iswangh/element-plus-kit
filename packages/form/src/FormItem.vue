@@ -252,8 +252,6 @@ async function loadOptions(isDependencyChange = false) {
   if (isDependencyChange) {
     clearState.start()
     clearValue()
-    // 等待清理完成，确保用户在 change 事件中设置的值不会被后续清理
-    await nextTick()
   }
 
   loadOptionsLoading.value = true
@@ -338,13 +336,8 @@ watchEffect(() => {
     // 配置了 deps 时，内部依赖通过 watch 监听，外部依赖（通过闭包访问）通过 watchEffect 追踪
     // 注意：内部依赖变化时，watch 会触发 loadOptions，这里只处理外部依赖变化的情况
     if (deps.length > 0) {
-      // 有 deps 时，如果 immediate 为 true，直接调用 loadOptions（watchEffect 会自动追踪 loadOptions 内部调用的 loader）
-      // 如果 immediate 为 false，只调用 loader 来追踪外部依赖（不处理返回值，不加载数据）
-      if (immediate) {
-        loadOptions()
-      }
-      else {
-        // immediate 为 false 时，只追踪外部依赖，不加载数据
+      // immediate 为 false 时，只追踪外部依赖，不加载数据
+      if (!immediate) {
         const { loader } = optionsLoader
         const formData = props.formData ?? {}
         const depsValues = getDepsValues(deps, formData, props.formItem.prop)
@@ -353,17 +346,20 @@ watchEffect(() => {
           loader({ ...formData, ...depsValues })
         }
         catch {
-        // 忽略错误，这里只用于追踪依赖
+          // 忽略错误，这里只用于追踪依赖
         }
+        return
       }
-      return
+      // immediate 为 true 时，直接调用 loadOptions（watchEffect 会自动追踪 loadOptions 内部调用的 loader）
+      return loadOptions()
     }
 
-    // immediate 为 false 且没有 deps 时，不自动加载（等待依赖变化）
+    // 没有 deps 时，根据 immediate 决定是否加载
+    // immediate 为 false 时，不自动加载（等待依赖变化）
     if (!immediate)
       return
 
-    // 没有 deps 时，直接调用 loadOptions，watchEffect 会自动追踪 loadOptions 内部调用的 loader 中访问的外部 ref
+    // immediate 为 true 时，直接调用 loadOptions，watchEffect 会自动追踪 loadOptions 内部调用的 loader 中访问的外部 ref
     loadOptions()
   }
 })
