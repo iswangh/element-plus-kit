@@ -282,6 +282,10 @@ async function loadOptions(isDependencyChange = false) {
     if (!isDependencyChange)
       clearIfNotInOptions(result)
   }
+  catch (error) {
+    // 捕获错误，避免未处理的 Promise rejection 导致页面无法加载
+    console.error(`[FormItem] 加载字段 "${props.formItem.prop}" 的选项失败:`, error)
+  }
   finally {
     loadOptionsLoading.value = false
     if (isDependencyChange)
