@@ -205,22 +205,32 @@ function getOptionsLoaderConfig(): OptionsLoaderConfig | null {
  * - 是否触发 change(undefined) 或 change(新值)，由后面的 watch(modelValue) 统一处理
  */
 function clearValue() {
-  // 已经是空值就不用处理了
   if (isEmpty(modelValue.value))
     return
 
-  // 延迟到下一个 tick 再真正清空：
-  // - 先让依赖字段的 @change 回调（可能设置默认值）执行
-  // - 如果用户在回调里设置了新值（clearState.hasUserValue = true），就不再清空
   const prev = modelValue.value
   nextTick(() => {
-    // 依赖变更过程中已经设置了新值，保持新值，不再清空
-    if (clearState.changing && clearState.hasUserValue)
+    // 用户在 change 事件中设置了新值，保留
+    if (clearState.hasUserValue)
       return
 
-    // 如果期间值已经被其它逻辑改掉（例如手动重置），不再重复清空
+    // 异步加载完成后，值应该保留（在 loadOptions 中已标记）
+    if (clearState.shouldKeepValue)
+      return
+
+    // 值已被其它逻辑修改，不再重复清空
     if (modelValue.value !== prev)
       return
+
+    // 异步加载中，等待加载完成后在 loadOptions 中处理
+    if (clearState.changing && loadOptionsLoading.value)
+      return
+
+    // 异步加载已完成，检查值是否在新的选项中（兜底检查）
+    if (!loadOptionsLoading.value && loadedOptions.value.length > 0) {
+      if (checkValueInOptions({ modelValue: modelValue.value, options: loadedOptions.value, formItem: props.formItem }))
+        return
+    }
 
     modelValue.value = undefined
   })
@@ -232,15 +242,11 @@ function clearValue() {
  * @param options - 选项数组
  */
 function clearIfNotInOptions(options: any[]) {
-  const { formItem } = props
-
-  // 输入类组件允许输入任意文本，不需要自动清理
-  const compTypeCategory = COMP_DEFAULT_CONFIG.getCompType(formItem.compType)
+  const compTypeCategory = COMP_DEFAULT_CONFIG.getCompType(props.formItem.compType)
   if (compTypeCategory === 'input')
     return
 
-  // 如果当前值在新的选项中存在，不需要清理
-  if (checkValueInOptions({ modelValue: modelValue.value, options, formItem }))
+  if (checkValueInOptions({ modelValue: modelValue.value, options, formItem: props.formItem }))
     return
 
   clearValue()
@@ -255,11 +261,9 @@ function clearIfNotInOptions(options: any[]) {
  */
 async function loadOptions(isDependencyChange = false) {
   const optionsLoader = props.formItem.compProps?.optionsLoader
-  // optionsLoader 为空时不需要处理（静态数组不会调用此函数）
   if (!optionsLoader)
     return
 
-  // 依赖变更时，先清理（允许用户在 change 事件中设置默认值）
   if (isDependencyChange) {
     clearState.start()
     clearValue()
@@ -268,10 +272,8 @@ async function loadOptions(isDependencyChange = false) {
   loadOptionsLoading.value = true
   try {
     const formData = props.formData ?? {}
-
     let result: any[]
 
-    // 根据 optionsLoader 类型选择处理方式
     const loaderType = typeof optionsLoader === 'function' ? 'function' : isOptionsConfig(optionsLoader) ? 'config' : 'unknown'
     switch (loaderType) {
       case 'function':
@@ -289,12 +291,21 @@ async function loadOptions(isDependencyChange = false) {
 
     loadedOptions.value = result
 
-    // 依赖变更时已清理过，不再清理（允许用户在 change 事件中设置的值）
-    if (!isDependencyChange)
+    if (!isDependencyChange) {
       clearIfNotInOptions(result)
+    }
+    else {
+      const shouldKeepValue = clearState.hasUserValue || checkValueInOptions({ modelValue: modelValue.value, options: result, formItem: props.formItem })
+      if (shouldKeepValue) {
+        // 标记应该保留值，阻止 clearValue 的 nextTick 回调清理值
+        clearState.markShouldKeepValue()
+      }
+      else {
+        modelValue.value = undefined
+      }
+    }
   }
   catch (error) {
-    // 捕获错误，避免未处理的 Promise rejection 导致页面无法加载
     console.error(`[FormItem] 加载字段 "${props.formItem.prop}" 的选项失败:`, error)
   }
   finally {
