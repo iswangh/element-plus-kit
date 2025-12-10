@@ -61,7 +61,8 @@ const formItems: FormItems = [
     compProps: {
       // 对象模式：用户自己处理值的设置逻辑
       optionsLoader: {
-        loader: (formData: Record<string, unknown>) => {
+        loader: async (formData: Record<string, unknown>) => {
+          await new Promise(resolve => setTimeout(resolve, 5000))
           const province = formData.province as string | undefined
           if (!province)
             return []
@@ -129,12 +130,19 @@ const objectModeFormItems: FormItems = [
   },
 ]
 
-function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
+const formRef = useTemplateRef<typeof WForm>('formRef')
+
+async function onChange(extendedParams: FormItemEventExtendedParams, value: unknown) {
   console.log('onChange', extendedParams, value)
 
   if (extendedParams.prop === 'province') {
     form.value.cityCustom = value === '1' ? '1-1' : undefined
   }
+
+  const getResolvedFormItems = await formRef.value?.getResolvedFormItems?.(['province', 'cityCustom'])
+  console.log('getResolvedFormItems', getResolvedFormItems)
+  const getResolvedOptions = await formRef.value?.getResolvedOptions?.(['province', 'cityCustom'])
+  console.log('getResolvedOptions', getResolvedOptions)
 }
 
 function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: unknown) {
@@ -202,7 +210,7 @@ function onObjectModeChange({ prop }: FormItemEventExtendedParams, value: unknow
           </ol>
         </template>
       </el-alert>
-      <w-form :model="form" :form-items="formItems" @change="onChange" />
+      <w-form ref="formRef" :model="form" :form-items="formItems" @change="onChange" />
       <el-card class="w-full" shadow="never">
         <template #header>
           <h3 class="text-base text-gray-800 font-semibold m-0">

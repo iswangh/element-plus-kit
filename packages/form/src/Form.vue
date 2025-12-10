@@ -11,6 +11,7 @@ import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
 import { useAutoExpandOnHover } from './composables'
+import { useResolveFormItems } from './composables/useResolveFormItems'
 import { DEFAULT_FORM_PROPS } from './config'
 import { DEFAULT_SCROLL_OPTIONS } from './config/scroll'
 import FormAction from './FormAction.vue'
@@ -462,6 +463,21 @@ function onValidate(prop: FormItemProp, isValid: boolean, message: string) {
   emit('validate', prop, isValid, message)
 }
 
+// 创建稳定的防抖函数引用，避免在 watch 中重复创建
+const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
+
+// 组件挂载时记录初始值
+onMounted(() => recordInitialValues())
+
+// 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
+watch([() => props.formItems, () => props.actionConfig?.expand], debouncedRecordInitialValues, { deep: true })
+
+/** FormItem 组件实例的 Map（key 为 prop） */
+const formItemRefs = new Map<string, InstanceType<typeof FormItemComp>>()
+
+/** 解析表单项的组合函数 */
+const { getResolvedFormItems, getResolvedOptions } = useResolveFormItems(props.formItems, formItemRefs)
+
 defineExpose({
   // element-plus form exposes
   get fields() {
@@ -479,16 +495,11 @@ defineExpose({
   },
   /** 切换或设置展开/折叠状态 */
   toggleExpand,
+  /** 获取解析后的表单项 */
+  getResolvedFormItems,
+  /** 获取解析后的表单项 options */
+  getResolvedOptions,
 })
-
-// 创建稳定的防抖函数引用，避免在 watch 中重复创建
-const debouncedRecordInitialValues = debounce(recordInitialValues, 100)
-
-// 组件挂载时记录初始值
-onMounted(() => recordInitialValues())
-
-// 监听 formItems 或 expand 配置变化，重新记录初始值（使用防抖优化）
-watch([() => props.formItems, () => props.actionConfig?.expand], debouncedRecordInitialValues, { deep: true })
 </script>
 
 <template>
@@ -516,6 +527,7 @@ watch([() => props.formItems, () => props.actionConfig?.expand], debouncedRecord
           v-bind="v.colProps"
         >
           <FormItemComp
+            :ref="el => el ? formItemRefs.set(v.prop, el as InstanceType<typeof FormItemComp>) : formItemRefs.delete(v.prop)"
             v-model="model[v.prop]"
             :form-item="v"
             :form-data="model"

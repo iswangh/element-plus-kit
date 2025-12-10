@@ -6,7 +6,7 @@ import { ElFormItem } from 'element-plus'
 import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useChangeEventState, useClearState } from './composables'
 import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
-import { checkValueInOptions, getDepsValues, isEmpty, isOptionsConfig, processDeps } from './utils'
+import { checkValueInOptions, cloneDeep, getDepsValues, isEmpty, isOptionsConfig, processDeps } from './utils'
 
 interface ProcessedSlot {
   rawSlotName: string
@@ -105,6 +105,17 @@ const resolvedOptions = computed(() => {
   // 没有 optionsLoader，使用静态数组
   // 如果配置了 options 属性，即使值为 undefined，也应该返回空数组（表示有配置但为空）
   return hasOptions ? (options ?? []) : undefined
+})
+
+/** 解析后的 formItem（compProps.options 已赋值） */
+const resolvedFormItem = computed(() => {
+  return {
+    ...props.formItem,
+    compProps: {
+      ...props.formItem.compProps,
+      options: cloneDeep(resolvedOptions.value) ?? [],
+    },
+  }
 })
 
 // Change 事件状态管理（仅用于防止重复触发 change 事件）
@@ -399,6 +410,54 @@ watch(
       emit('change', eventExtendedParams.value, newValue)
   },
 )
+
+/**
+ * 等待 options 加载完成
+ *
+ * @returns Promise，当 loadOptionsLoading 变为 false 时 resolve
+ */
+async function waitForOptions(): Promise<void> {
+  if (!loadOptionsLoading.value)
+    return
+
+  await new Promise<void>((resolve) => {
+    const stopWatcher = watch(
+      () => loadOptionsLoading.value,
+      (loading) => {
+        if (!loading) {
+          stopWatcher()
+          resolve()
+        }
+      },
+      { immediate: true },
+    )
+  })
+}
+
+/**
+ * 获取解析后的 formItem（等待 options 加载完成）
+ *
+ * @returns Promise<FormItem>，resolve 时返回解析后的 formItem（compProps.options 已赋值）
+ *
+ * @example
+ * ```typescript
+ * const formItemRef = ref()
+ *
+ * async function onChange(extendedParams, value) {
+ *   if (extendedParams.prop === 'province') {
+ *     // 获取城市字段的解析后的 formItem（等待 options 加载完成）
+ *     const formItem = await formItemRef.value?.getResolvedFormItem?.()
+ *     // formItem.compProps.options 已包含解析后的 options
+ *   }
+ * }
+ * ```
+ */
+async function getResolvedFormItem(): Promise<FormItem> {
+  await waitForOptions()
+  return cloneDeep(resolvedFormItem.value)
+}
+
+defineExpose({ getResolvedFormItem })
 </script>
 
 <template>

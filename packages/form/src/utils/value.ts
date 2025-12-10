@@ -64,7 +64,7 @@ export function checkValueInOptions(params: CheckValueInOptionsParams): boolean 
 
   // 提取选项值数组（支持对象格式 { value, label } 和原始值格式）
   const optionValues = options.map((option) => {
-    return typeof option === 'object' && option !== null ? option.value : option
+    return typeof option === 'object' && option != null ? option.value : option
   })
 
   // 如果当前值是数组（如 checkbox），检查数组中的每个值是否都在选项中
