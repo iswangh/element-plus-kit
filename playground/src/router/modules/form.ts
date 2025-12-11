@@ -20,14 +20,7 @@ export const formRouteMeta = {
   '/form/conditional/mixed': { title: '混合使用', description: 'vIf 和 vShow 混合使用', showInSidebar: true, order: 3 },
   // 选项示例 (order: 5) - 了解如何配置选项数据
   '/form/options': { title: '选项示例', showInSidebar: true, order: 5 },
-  '/form/options/function': { title: '函数模式', description: '使用函数加载选项', showInSidebar: true, order: 1 },
-  '/form/options/object': { title: '对象模式', description: '使用对象配置加载选项', showInSidebar: true, order: 2 },
-  // 依赖示例 (order: 6) - 了解选项依赖功能
-  '/form/deps': { title: '依赖示例', showInSidebar: true, order: 6 },
-  '/form/deps/internal': { title: '内部依赖', description: '选项依赖表单内部字段', showInSidebar: true, order: 1 },
-  '/form/deps/external': { title: '外部依赖', description: '选项依赖外部状态', showInSidebar: true, order: 2 },
-  '/form/deps/mixed': { title: '混合依赖', description: '选项依赖内部和外部状态', showInSidebar: true, order: 3 },
-  '/form/deps/auto-clear': { title: '智能清理', description: '选项变化时自动清理无效值', showInSidebar: true, order: 4 },
+  '/form/options/static': { title: '静态模式', description: '使用静态 options 数组配置选项', showInSidebar: true, order: 1 },
   // 插槽示例 (order: 7) - 了解插槽功能
   '/form/slots': { title: '插槽示例', showInSidebar: true, order: 8 },
   // 可配置化示例 (order: 9) - 了解可配置化事件和插槽
