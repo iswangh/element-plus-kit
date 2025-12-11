@@ -63,7 +63,10 @@ import 'element-plus/es/components/transfer/style/css'
 // 导入 WForm 组件的自定义样式
 import './style/index.scss'
 
+// 导出组合式函数
+export * from './composables'
 export { default } from './Form.vue'
+
 export { default as WForm } from './Form.vue'
 
 export type { FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotScope } from './types'

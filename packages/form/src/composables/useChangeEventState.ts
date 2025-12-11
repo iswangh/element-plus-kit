@@ -3,22 +3,22 @@
  * 用于区分不同类型的值变化，防止重复触发 change 事件
  */
 export function useChangeEventState() {
-  let isUser = false
+  let isUserInteractionDuring = false
 
   return {
-    /** 是否用户交互 */
-    get isUser() {
-      return isUser
+    /** 是否在用户交互期间 */
+    get isUserInteractionDuring() {
+      return isUserInteractionDuring
     },
 
     /** 开始用户交互 */
     start() {
-      isUser = true
+      isUserInteractionDuring = true
     },
 
     /** 结束用户交互（在 nextTick 中调用） */
     end() {
-      isUser = false
+      isUserInteractionDuring = false
     },
   }
 }

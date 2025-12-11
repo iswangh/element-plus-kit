@@ -21,6 +21,7 @@ export const formRouteMeta = {
   // 选项示例 (order: 5) - 了解如何配置选项数据
   '/form/options': { title: '选项示例', showInSidebar: true, order: 5 },
   '/form/options/static': { title: '静态模式', description: '使用静态 options 数组配置选项', showInSidebar: true, order: 1 },
+  '/form/options/use-load-options': { title: '选项加载', description: '使用 useLoadOptions 组合式函数手动加载选项', showInSidebar: true, order: 2 },
   // 插槽示例 (order: 7) - 了解插槽功能
   '/form/slots': { title: '插槽示例', showInSidebar: true, order: 8 },
   // 可配置化示例 (order: 9) - 了解可配置化事件和插槽

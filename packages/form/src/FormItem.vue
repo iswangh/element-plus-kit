@@ -89,9 +89,7 @@ function onChange(event: any) {
   changeEventState.start()
   emit('change', eventExtendedParams.value, event)
   // 在下一个 tick 时重置标志，避免影响 watch modelValue 的判断
-  nextTick(() => {
-    changeEventState.end()
-  })
+  nextTick(() => changeEventState.end())
 }
 
 /** 处理后的组件属性（包含默认值和用户配置） */
@@ -129,7 +127,7 @@ watch(
   () => modelValue.value,
   (newValue, oldValue) => {
     // 用户交互已在 @change 中处理，不需要重复触发
-    if (changeEventState.isUser)
+    if (changeEventState.isUserInteractionDuring)
       return
 
     // 值发生变化时，触发 change 事件（与 Element Plus 行为保持一致："选中值发生变化时触发"）

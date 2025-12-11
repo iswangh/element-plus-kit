@@ -8,6 +8,6 @@
 export type * from './types'
 // 导出工具函数（安装函数和 Resolver）
 export { default, ElementPlusKitResolver, install } from './utils'
-// 导出 Form 组件
+// 导出 Form 组件和组合式函数
 // 使用包名导入，这是 Monorepo 的标准做法，pnpm workspace 会自动解析
-export { WForm } from '@iswangh/element-plus-kit-form'
+export { useLoadOptions, WForm } from '@iswangh/element-plus-kit-form'
