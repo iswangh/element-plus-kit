@@ -14,7 +14,7 @@
     "dev:packages": "turbo run dev --filter=./packages/*",
     "dev:playground": "turbo run dev --filter=./playground",
     "build:packages": "turbo run build --filter=./packages/*",
-    "build": "turbo run build && pnpm type-check",
+    "build": "pnpm build:packages && pnpm type-check",
     "type-check": "vue-tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
