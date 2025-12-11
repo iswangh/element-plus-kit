@@ -1158,11 +1158,13 @@ const formItems = ref<FormItems>([
     compProps: {
       placeholder: '请选择城市',
       options: [],
-      // 异步 optionsLoader（模拟 1 秒延迟）
+      // 异步 optionsLoader（模拟 2 秒延迟）
       optionsLoader: async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000))
         const province = form.value.province
-        return province ? cities.filter(city => city.value.startsWith(`${province}-`)) : []
+        if (!province)
+          return []
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        return cities.filter(city => city.value.startsWith(`${province}-`))
       },
     },
   },
@@ -1173,11 +1175,13 @@ const formItems = ref<FormItems>([
     compProps: {
       placeholder: '请选择区县',
       options: [],
-      // 异步 optionsLoader（模拟 1 秒延迟）
+      // 异步 optionsLoader（模拟 2 秒延迟）
       optionsLoader: async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000))
         const city = form.value.city
-        return city ? districts.filter(district => district.value.startsWith(`${city}-`)) : []
+        if (!city)
+          return []
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        return districts.filter(district => district.value.startsWith(`${city}-`))
       },
     },
   },

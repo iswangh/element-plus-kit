@@ -96,11 +96,13 @@ const formItems2 = ref<FormItems>([
     compProps: {
       placeholder: '请选择城市',
       options: [],
-      // 异步 optionsLoader（模拟 5 秒延迟）
+      // 异步 optionsLoader（模拟 2 秒延迟）
       optionsLoader: async () => {
-        await new Promise(resolve => setTimeout(resolve, 5000))
         const province = form2.value.province
-        return province ? cities.filter(city => city.value.startsWith(`${province}-`)) : []
+        if (!province)
+          return []
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        return cities.filter(city => city.value.startsWith(`${province}-`))
       },
     },
   },
@@ -111,11 +113,13 @@ const formItems2 = ref<FormItems>([
     compProps: {
       placeholder: '请选择区县',
       options: [],
-      // 异步 optionsLoader（模拟 5 秒延迟）
+      // 异步 optionsLoader（模拟 2 秒延迟）
       optionsLoader: async () => {
-        await new Promise(resolve => setTimeout(resolve, 5000))
         const city = form2.value.city
-        return city ? districts.filter(district => district.value.startsWith(`${city}-`)) : []
+        if (!city)
+          return []
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        return districts.filter(district => district.value.startsWith(`${city}-`))
       },
     },
   },
@@ -184,7 +188,7 @@ async function onChange2(extendedParams: FormItemEventExtendedParams) {
     <el-card class="w-full" shadow="hover">
       <template #header>
         <div class="flex items-center justify-between">
-          <span class="text-lg font-semibold">异步函数（模拟 5 秒延迟）</span>
+          <span class="text-lg font-semibold">异步函数（模拟 2 秒延迟）</span>
           <el-tag v-if="loading2" type="info" size="small">
             加载中...
           </el-tag>
@@ -194,7 +198,7 @@ async function onChange2(extendedParams: FormItemEventExtendedParams) {
       <div class="space-y-4">
         <div class="rounded-lg bg-gray-50 p-4">
           <div class="mb-4 text-sm text-gray-600">
-            <strong>说明</strong>：使用 <code class="example-code">useLoadOptions</code> 组合式函数手动加载选项，<code class="example-code">optionsLoader</code> 为异步函数（模拟 5 秒延迟）。
+            <strong>说明</strong>：使用 <code class="example-code">useLoadOptions</code> 组合式函数手动加载选项，<code class="example-code">optionsLoader</code> 为异步函数（模拟 2 秒延迟）。
           </div>
           <div class="mb-4 text-sm text-gray-600">
             <strong>特点</strong>：
