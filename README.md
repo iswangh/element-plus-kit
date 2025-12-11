@@ -202,9 +202,12 @@ pnpm build
 ```
 
 这将：
+- 先执行 `pnpm build:packages` 构建所有包（只构建 `packages/` 目录下的包，不包含 `playground`）
 - 使用 Turborepo 并行构建所有包（自动处理依赖关系，确保构建顺序正确）
 - 自动使用缓存，未变更的包直接使用缓存结果，大幅提升构建速度
-- 执行类型检查，确保代码质量
+- 然后执行 `pnpm type-check` 进行类型检查，确保代码质量
+
+**重要说明**：`pnpm build` 只构建 `packages/` 目录下的包（core、form、kit），不包含 `playground`（开发测试环境）和 `docs`（文档站点）。
 
 **Turborepo 缓存说明**：
 - 首次构建：完整构建所有包
@@ -230,7 +233,7 @@ cd packages/kit && pnpm build
 pnpm build:packages
 ```
 
-这将使用 Turborepo 并行构建所有包，但不执行类型检查，适合快速验证构建结果。
+这将使用 Turborepo 并行构建所有包（只构建 `packages/` 目录下的包，不包含 `playground`），但不执行类型检查，适合快速验证构建结果。
 
 3. **发布包**
 

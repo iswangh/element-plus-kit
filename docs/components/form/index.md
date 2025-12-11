@@ -11,6 +11,7 @@
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({
@@ -215,6 +216,7 @@ const formItems: FormItems = [
 <script setup lang="ts">
 import { ref } from 'vue'
 import { User, Lock, Search } from '@element-plus/icons-vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -310,6 +312,7 @@ const formItems: FormItems = [
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({
@@ -386,8 +389,9 @@ const formItems: FormItems = [
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FormItems } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
+import { WForm } from '@iswangh/element-plus-kit'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({
   username: '',
@@ -449,6 +453,7 @@ const formItems: FormItems = [
 import { ref } from 'vue'
 import { Document, InfoFilled, Setting } from '@element-plus/icons-vue'
 import type { FormRules } from 'element-plus'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 // 外部状态
@@ -610,6 +615,7 @@ const rules: FormRules = {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems, FormActionConfig } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -668,6 +674,7 @@ const onAction = (eventName: string) => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -793,6 +800,7 @@ const rowProps = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -836,6 +844,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -878,6 +887,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -921,6 +931,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems, RowProps } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -973,6 +984,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -1019,6 +1031,7 @@ const actionConfig: FormActionConfig = {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { WForm } from '@iswangh/element-plus-kit'
 import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
@@ -1063,12 +1076,153 @@ const actionConfig: FormActionConfig = {
 
 ## 选项加载器
 
-选项加载器通过 `compProps.optionsLoader` 进行配置，结合 `useLoadOptions` 使用。用于加载动态的 options
+选项加载器用于动态加载选项数据，通过 `compProps.optionsLoader` 配置加载函数，结合 `useLoadOptions` 组合式函数进行调用。支持同步和异步两种方式，适用于级联选择、接口请求等场景。
 
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
+import { useLoadOptions, WForm } from '@iswangh/element-plus-kit'
+
+// 省市区数据
+const provinces = [
+  { label: '广东省', value: '1' },
+  { label: '江苏省', value: '2' },
+  { label: '浙江省', value: '3' },
+]
+
+const cities = [
+  { label: '广州市', value: '1-1' },
+  { label: '深圳市', value: '1-2' },
+  { label: '珠海市', value: '1-3' },
+  { label: '南京市', value: '2-1' },
+  { label: '苏州市', value: '2-2' },
+  { label: '无锡市', value: '2-3' },
+  { label: '杭州市', value: '3-1' },
+  { label: '宁波市', value: '3-2' },
+  { label: '温州市', value: '3-3' },
+]
+
+const districts = [
+  { label: '天河区', value: '1-1-1' },
+  { label: '越秀区', value: '1-1-2' },
+  { label: '海珠区', value: '1-1-3' },
+  { label: '南山区', value: '1-2-1' },
+  { label: '福田区', value: '1-2-2' },
+  { label: '罗湖区', value: '1-2-3' },
+  { label: '香洲区', value: '1-3-1' },
+  { label: '斗门区', value: '1-3-2' },
+  { label: '金湾区', value: '1-3-3' },
+  { label: '玄武区', value: '2-1-1' },
+  { label: '秦淮区', value: '2-1-2' },
+  { label: '建邺区', value: '2-1-3' },
+  { label: '虎丘区', value: '2-2-1' },
+  { label: '吴中区', value: '2-2-2' },
+  { label: '相城区', value: '2-2-3' },
+  { label: '梁溪区', value: '2-3-1' },
+  { label: '锡山区', value: '2-3-2' },
+  { label: '惠山区', value: '2-3-3' },
+  { label: '西湖区', value: '3-1-1' },
+  { label: '上城区', value: '3-1-2' },
+  { label: '下城区', value: '3-1-3' },
+  { label: '海曙区', value: '3-2-1' },
+  { label: '江北区', value: '3-2-2' },
+  { label: '北仑区', value: '3-2-3' },
+  { label: '鹿城区', value: '3-3-1' },
+  { label: '龙湾区', value: '3-3-2' },
+  { label: '瓯海区', value: '3-3-3' },
+]
+
+const form = ref<{
+  province?: string
+  city?: string
+  district?: string
+}>({})
+
+const formItems = ref<FormItems>([
+  {
+    prop: 'province',
+    label: '省份',
+    compType: 'select',
+    compProps: {
+      placeholder: '请选择省份',
+      options: provinces,
+    },
+  },
+  {
+    prop: 'city',
+    label: '城市',
+    compType: 'select',
+    compProps: {
+      placeholder: '请选择城市',
+      options: [],
+      // 异步 optionsLoader（模拟 1 秒延迟）
+      optionsLoader: async () => {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        const province = form.value.province
+        return province ? cities.filter(city => city.value.startsWith(`${province}-`)) : []
+      },
+    },
+  },
+  {
+    prop: 'district',
+    label: '区县',
+    compType: 'select',
+    compProps: {
+      placeholder: '请选择区县',
+      options: [],
+      // 异步 optionsLoader（模拟 1 秒延迟）
+      optionsLoader: async () => {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        const city = form.value.city
+        return city ? districts.filter(district => district.value.startsWith(`${city}-`)) : []
+      },
+    },
+  },
+])
+
+const { loadOptions, loading, getOptions } = useLoadOptions(formItems.value, form.value)
+
+async function onChange(extendedParams: FormItemEventExtendedParams) {
+  // 当省份变化时，加载城市选项，清空城市和区县
+  if (extendedParams.prop === 'province') {
+    form.value.city = undefined
+    form.value.district = undefined
+    await loadOptions('city')
+  }
+
+  // 当城市变化时，加载区县选项，清空区县
+  if (extendedParams.prop === 'city') {
+    form.value.district = undefined
+    await loadOptions('district')
+  }
+
+  console.log('getOptions', getOptions())
+}
+</script>
+
+<template>
+  <div class="space-y-4">
+    <div v-if="loading" class="text-sm text-gray-500">
+      加载中...
+    </div>
+    <WForm
+      :model="form"
+      :form-items="formItems"
+      label-width="100px"
+      @change="onChange"
+    />
+  </div>
+</template>
+```
+
+:::
 
 ## API
 
-### Attributes
+### 属性
 
 支持 [`ElForm`](https://element-plus.org/zh-CN/component/form#form-attributes) 所有的属性。
 
@@ -1144,9 +1298,9 @@ const actionConfig: FormActionConfig = {
 
 **2. 动态加载（`compProps.optionsLoader`）**
 
-| 模式 | 类型 | 说明 |
-| --- | --- | --- |
-| **函数** | `(formData: Record<string, unknown>) => any[] \| Promise<any[]>` | 支持同步和异步函数，通过闭包访问外部依赖，结合 `useLoadOptions` 组合式函数进行自定义调用 |
+| 类型 | 说明 |
+| --- | --- |
+| `(formData: Record<string, unknown>) => any[] \| Promise<any[]>` | 支持同步和异步函数，通过闭包访问外部依赖，结合 `useLoadOptions` 组合式函数进行自定义调用 |
 
 #### rowProps 配置
 
@@ -1214,7 +1368,7 @@ const actionConfig: FormActionConfig = {
 | scrollOnToggle | 是否在展开/收起后自动滚动到表单中心 | `boolean` | `false` |
 | scrollIntoViewOptions | 自定义滚动选项（仅在 `scrollOnToggle` 为 `true` 时生效），详见 [`scrollIntoViewOptions`](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView) 文档 | `ScrollIntoViewOptions` | `{ behavior: 'smooth', block: 'center', inline: 'nearest' }` |
 
-### Events
+### 事件
 
 支持 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-events) 所有的事件。
 
@@ -1236,7 +1390,7 @@ const actionConfig: FormActionConfig = {
 - 预设事件（`@submit`、`@cancel`、`@search`、`@reset`、`@expand`）是为了方便使用而提供的。当点击这些预设按钮时，组件会先触发对应的事件，然后还会统一触发一次 `@action` 事件
 - **不建议同时监听 `@action` 和预设事件**，因为会导致重复处理。如果必须混用，则不能在 `@action` 事件中处理 `eventName` 为这 5 个预设按钮名称（`submit`、`cancel`、`search`、`reset`、`expand`）的逻辑
 
-### Slots
+### 插槽
 
 | 插槽名 | 说明 | 作用域参数 |
 | --- | --- | --- |
@@ -1253,7 +1407,7 @@ const actionConfig: FormActionConfig = {
 | `form` | 表单数据对象 | `Record<string, any>` |
 | `formItem` | 表单项配置对象 | `FormItem` |
 
-### Methods
+### 方法
 
 支持 [`ElForm`](https://element-plus.org/zh-CN/component/form.html#form-methods) 所有的方法。
 
@@ -1263,3 +1417,42 @@ const actionConfig: FormActionConfig = {
 | --- | --- | --- | --- |
 | `expanded` | 获取当前展开状态（getter） | - | `boolean` |
 | `toggleExpand` | 切换或设置展开/折叠状态 | `(value?: boolean)` | - |
+
+### 组合式函数
+
+#### useLoadOptions
+
+`useLoadOptions` 组合式函数用于动态加载选项数据，结合 `compProps.optionsLoader` 使用。
+
+**函数签名**：
+```typescript
+function useLoadOptions(
+  formItems: FormItems,
+  formData: Record<string, any>
+): {
+  loadOptions: (props?: string | string[]) => Promise<void>
+  loading: Ref<boolean>
+  getOptions: (props?: string | string[]) => any[] | Array<{prop: string, options: any[]}>
+}
+```
+
+**返回值**：
+
+| 参数 | 说明 | 类型 |
+| --- | --- | --- |
+| `loadOptions` | 加载选项的函数 | ``(props?: string \| string[]) => Promise<void>`` |
+| `loading` | 加载状态（响应式） | ``Ref<boolean>`` |
+| `getOptions` | 获取选项的函数 | ``(props?: string \| string[]) => any[] \| Array<{prop: string, options: any[]}>`` |
+
+**`loadOptions` 使用方式**：
+- `loadOptions('fieldName')` - 加载单个字段的选项
+- `loadOptions(['field1', 'field2'])` - 加载多个字段的选项
+- `loadOptions()` - 加载所有有 `optionsLoader` 的字段
+
+**`getOptions` 使用方式**：
+- `getOptions('fieldName')` - 获取单个字段的选项，返回 `any[]`
+- `getOptions(['field1', 'field2'])` - 获取多个字段的选项，返回 `Array<{prop: string, options: any[]}>`
+- `getOptions()` - 获取所有字段的选项，返回 `Array<{prop: string, options: any[]}>`
+
+**使用示例**：
+详见 [选项加载器](#选项加载器) 章节。

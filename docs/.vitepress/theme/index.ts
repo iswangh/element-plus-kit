@@ -1,5 +1,5 @@
+/* eslint-disable ts/no-explicit-any */
 import type { Theme } from 'vitepress'
-import ElementPlusKit from '@iswangh/element-plus-kit'
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { useData } from 'vitepress'
@@ -22,13 +22,10 @@ export default {
   enhanceApp(ctx) {
     DefaultTheme.enhanceApp(ctx)
     // 注册 Element Plus（配置中文语言）
-    ctx.app.use(ElementPlus, {
-      locale: zhCn,
-    })
-    // 注册 Element Plus Kit
-    ctx.app.use(ElementPlusKit)
+    // 注意：demo 块中使用的 el-card、el-icon、el-text 等组件需要全局注册
+    ctx.app.use(ElementPlus as any, { locale: zhCn })
     // 注册 vitepress-theme-demoblock 组件
-    useComponents(ctx.app)
+    useComponents(ctx.app as any)
   },
   setup() {
     // 获取 VitePress 的主题状态
