@@ -1,5 +1,16 @@
 # @iswangh/element-plus-kit
 
+## 0.3.0
+
+### Minor Changes
+
+- 重构 optionsLoader ,修改为用户使用 useLoadOptions 自主调用 loader
+
+### Patch Changes
+
+- Updated dependencies
+  - @iswangh/element-plus-kit-form@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes

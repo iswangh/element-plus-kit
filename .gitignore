@@ -54,3 +54,6 @@ docs/.vitepress/cache
 
 # Turborepo
 .turbo
+
+# npm config (contains sensitive tokens)
+.npmrc
