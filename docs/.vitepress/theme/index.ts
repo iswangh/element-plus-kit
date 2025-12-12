@@ -33,6 +33,10 @@ export default {
 
     // 同步 Element Plus 的暗色模式
     const updateElementPlusTheme = () => {
+      // 检查是否在浏览器环境（SSR 时 document 不存在）
+      if (typeof document === 'undefined')
+        return
+
       const html = document.documentElement
       if (isDark.value) {
         html.classList.add('dark')
