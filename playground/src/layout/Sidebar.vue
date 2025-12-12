@@ -2,7 +2,7 @@
 import type { PropType } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
 import router from '@/router'
-import { formRouteMeta } from '@/router/modules'
+import { formRouteMeta, tagRouteMeta } from '@/router/modules'
 
 const route = useRoute()
 
@@ -70,6 +70,11 @@ function getRouteTitle(path: string): string | undefined {
   const formMeta = formRouteMeta[path as keyof typeof formRouteMeta]
   if (formMeta)
     return formMeta.title
+
+  // 从 tagRouteMeta 中查找
+  const tagMeta = tagRouteMeta[path as keyof typeof tagRouteMeta]
+  if (tagMeta)
+    return tagMeta.title
 
   // 从路由中查找
   const route = router.getRoutes().find(r => getFullPath(r) === path)

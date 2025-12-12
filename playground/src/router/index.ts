@@ -6,7 +6,7 @@
 // 类型导入需要手动导入（类型导入不影响运行时）
 import type { RouteRecordRaw } from 'vue-router'
 // createRouter、createWebHistory 会自动导入，无需手动导入
-import { formRouteMeta } from './modules'
+import { formRouteMeta, tagRouteMeta } from './modules'
 
 /**
  * 路由元信息类型
@@ -25,6 +25,7 @@ const routeMetaMap: Record<string, RouteMetaConfig> = {
   '/': { title: '首页', showInSidebar: true },
   '/error/404': { title: '404 - 页面未找到', showInSidebar: false },
   ...formRouteMeta,
+  ...tagRouteMeta,
 }
 
 /**

@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 // 使用包名导入，这是 Monorepo 的标准做法，pnpm workspace 会自动解析
 import { WForm } from '@iswangh/element-plus-kit-form'
+import { WTag } from '@iswangh/element-plus-kit-tag'
 
 /**
  * Element Plus Kit 全局安装函数
@@ -9,6 +10,7 @@ import { WForm } from '@iswangh/element-plus-kit-form'
  */
 export function install(app: App) {
   app.component('WForm', WForm)
+  app.component('WTag', WTag)
   // 未来添加其他组件
   // app.component('WTable', WTable)
 }

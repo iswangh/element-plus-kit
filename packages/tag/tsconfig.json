@@ -1,0 +1,31 @@
+{
+  // 继承根目录的基础 TypeScript 配置
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    // 启用复合项目模式，支持 TypeScript Project References
+    "composite": true,
+    // 增量编译信息文件路径
+    "tsBuildInfoFile": "../../node_modules/.tmp/packages-tag.tsbuildinfo",
+    // 基础路径：当前包目录
+    "baseUrl": ".",
+    // 根目录：src 目录
+    "rootDir": "./src",
+    // 路径别名：清空继承的 paths，tag 包不依赖其他内部包
+    "paths": {},
+    // 生成类型声明文件（.d.ts）
+    "declaration": true,
+    // 生成类型声明文件的 source map
+    "declarationMap": true,
+    // 允许输出文件（构建时需要）
+    "noEmit": false,
+    // 输出目录：dist
+    "outDir": "./dist"
+  },
+  // Vue 编译器选项
+  "vueCompilerOptions": {
+    // Vue 版本：3（Vue 3）
+    "target": 3
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

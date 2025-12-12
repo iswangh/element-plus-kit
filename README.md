@@ -353,23 +353,6 @@ pnpm dev:playground
 pnpm release
 ```
 
-## 📚 文档
-
-- **在线文档**: [https://iswangh.github.io/element-plus-kit/](https://iswangh.github.io/element-plus-kit/)
-- **使用指南**: 查看各包的 README.md
-  - [主包文档](./packages/kit/README.md)
-  - [Form 组件文档](./packages/form/README.md)
-  - [核心工具包文档](./packages/core/README.md)
-- **VitePress 文档**: 查看 `docs/` 目录
-  - [快速开始指南](./docs/guide/getting-started.md)
-  - [安装指南](./docs/guide/installation.md)
-  - [Form 组件文档](./docs/components/form/index.md)
-- **开发文档**: 查看 `docs/development/` 目录
-  - [开发文档索引](./docs/development/index.md)
-  - [Changesets 使用指南](./docs/development/changesets/)
-  - [Changesets 配置说明](./docs/development/changesets/config.md)
-  - [VitePress 自动部署文档](./docs/development/vitepress/deployment.md)
-
 ## 🤝 贡献指南
 
 欢迎贡献代码！请遵循以下步骤：

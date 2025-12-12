@@ -6,6 +6,7 @@ import type { ComponentResolver } from 'unplugin-vue-components/types'
  */
 const COMPONENT_MAP: Record<string, string> = {
   form: 'element-plus-kit-form',
+  tag: 'element-plus-kit-tag',
   // 未来扩展
   // table: 'element-plus-kit-table',
 }
