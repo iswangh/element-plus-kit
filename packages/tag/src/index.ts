@@ -28,3 +28,5 @@ import 'element-plus/es/components/tag/style/css'
 export { default } from './Tag.vue'
 
 export { default as WTag } from './Tag.vue'
+
+export type { TagOption } from './types'

@@ -1,3 +1,3 @@
-import type { TagProps } from 'element-plus'
+import type { ElTag } from 'element-plus'
 
-export type ElTagProps = TagProps
+export type ElTagProps = InstanceType<typeof ElTag>['$props']
