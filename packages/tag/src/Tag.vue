@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TagProps, TagValue } from './types'
+import type { TagOption, TagProps, TagSlotScope, TagValue } from './types'
 import type { MatchResult } from './utils'
 import { ElTag } from 'element-plus'
 import { computed, useAttrs, useSlots } from 'vue'
@@ -72,10 +72,6 @@ function getTagProps(match: MatchResult) {
 
 /** 获取单个标签的显示文本 */
 function getTagDisplayText(value: TagValue, match: MatchResult | null, index: number): string | null {
-  // 优先级：插槽 > label > options + value 匹配 > value 本身 > 空
-  if (hasDefaultSlot.value)
-    return null // 使用插槽内容
-
   // 如果提供了 label，直接使用（仅第一个标签时）
   if (props.label && index === 0)
     return props.label
@@ -91,11 +87,8 @@ function getTagDisplayText(value: TagValue, match: MatchResult | null, index: nu
   return null
 }
 
-/** 获取所有标签的显示文本（用逗号连接） */
-const displayText = computed(() => {
-  if (hasDefaultSlot.value)
-    return null // 使用插槽内容
-
+/** 计算标签显示文本（不检查插槽状态） */
+const computedLabel = computed(() => {
   // 如果提供了 label，直接使用
   if (props.label)
     return props.label
@@ -103,15 +96,27 @@ const displayText = computed(() => {
   // 获取所有标签的显示文本
   const texts = matches.value
     .map((item, index) => getTagDisplayText(item.value, item.match, index))
-    .filter((text): text is string => text !== null)
+    .filter(text => text != null) as string[]
 
   // 使用自定义分隔符连接
   return texts.length > 0 ? texts.join(props.separator) : null
 })
+
+/** 获取所有标签的显示文本（用逗号连接） */
+const displayText = computed(() => hasDefaultSlot.value ? null : computedLabel.value)
+
+/** 插槽作用域数据 */
+const slotScope = computed<TagSlotScope>(() => ({
+  value: props.value,
+  label: computedLabel.value,
+  options: matches.value.map(item => item.match.option).filter((option): option is TagOption => option != null),
+}))
 </script>
 
 <template>
   <ElTag v-bind="getTagProps(matches[0]?.match ?? defaultMatch)">
-    <slot>{{ displayText }} </slot>
+    <slot v-bind="slotScope">
+      {{ displayText }}
+    </slot>
   </ElTag>
 </template>

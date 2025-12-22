@@ -1,9 +1,5 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
-/**
- * @file Form.vue
- * @description 表单组件，支持动态配置、展开/折叠、条件渲染等功能
- */
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { Slot } from 'vue'
 import type { Arrayable, CompSlotsConfig, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotsConfig, FormItemSlotScope, RowProps, SlotRenderFn } from './types'

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TagOption } from '@iswangh/element-plus-kit-tag'
 import { WTag } from '@iswangh/element-plus-kit'
+import { ref } from 'vue'
 
 // 示例 1: options + value 的使用
 const options1: TagOption[] = [
@@ -22,11 +23,24 @@ const options2: TagOption[] = [
 const value2 = ref('success')
 
 // 示例 3: options + value + looseMatch 对比示例
-const options3: TagOption[] = [
-  { label: '数字1', value: 1 },
+// 场景 1: 数字 1 匹配字符串 '1'
+const options3Scene1: TagOption[] = [
   { label: '字符串1', value: '1' },
-  { label: '布尔true', value: true },
+]
+
+// 场景 2: 字符串 '1' 匹配数字 1
+const options3Scene2: TagOption[] = [
+  { label: '数字1', value: 1 },
+]
+
+// 场景 3: 布尔值 true 匹配字符串 'true'
+const options3Scene3: TagOption[] = [
   { label: '字符串true', value: 'true' },
+]
+
+// 场景 4: 字符串 'true' 匹配布尔值 true
+const options3Scene4: TagOption[] = [
+  { label: '布尔true', value: true },
 ]
 
 // 示例 4: options + value + props 传入 name id 的使用
@@ -146,6 +160,66 @@ const valueBooleanStringFalse = ref('false')
             <WTag :options="options2" value="danger" />
           </el-space>
         </div>
+        <div>
+          <h3 class="text-base text-gray-700 font-medium mb-2">
+            作用域插槽（使用 value、label、options）
+          </h3>
+          <el-space wrap direction="vertical" :size="12" class="w-full" fill>
+            <div>
+              <p class="text-sm text-gray-600 mb-2">
+                单个值：
+              </p>
+              <el-space wrap>
+                <WTag :options="options2" :value="value2">
+                  <template #default="{ label, options }">
+                    <span v-if="options.length > 0">
+                      ✅ {{ label }} (匹配到 {{ options.length }} 个选项)
+                    </span>
+                    <span v-else>
+                      ❌ {{ label }} (匹配失败)
+                    </span>
+                  </template>
+                </WTag>
+                <WTag :options="options2" value="unknown">
+                  <template #default="{ label, options }">
+                    <span v-if="options.length > 0">
+                      ✅ {{ label }} (匹配成功)
+                    </span>
+                    <span v-else>
+                      ❌ {{ label }} (匹配失败)
+                    </span>
+                  </template>
+                </WTag>
+              </el-space>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600 mb-2">
+                数组值：
+              </p>
+              <WTag :options="options2" :value="['success', 'warning', 'danger']">
+                <template #default="{ value, label, options }">
+                  <span>
+                    <template v-if="Array.isArray(value)">
+                      {{ value.length }} 个值：{{ label }}
+                      <span class="text-gray-400 ml-2">
+                        (匹配到 {{ options.length }} 个选项)
+                      </span>
+                    </template>
+                    <template v-else>
+                      {{ label }}
+                      <span v-if="options.length > 0" class="text-green-600 ml-2">
+                        ✅ 匹配成功
+                      </span>
+                      <span v-else class="text-red-600 ml-2">
+                        ❌ 匹配失败
+                      </span>
+                    </template>
+                  </span>
+                </template>
+              </WTag>
+            </div>
+          </el-space>
+        </div>
       </el-space>
     </el-card>
 
@@ -170,12 +244,9 @@ const valueBooleanStringFalse = ref('false')
           </template>
         </el-alert>
         <div>
-          <h3 class="text-base text-gray-700 font-medium mb-3">
-            并排对比
-          </h3>
-          <el-space wrap direction="vertical" :size="16" class="w-full">
+          <el-space direction="vertical" :size="16" class="w-full" fill>
             <!-- 场景 1: 数字 1 匹配字符串 '1' -->
-            <div class="border border-gray-200 rounded p-4">
+            <div class="border border-gray-200 rounded p-4 w-full">
               <div class="text-sm font-medium text-gray-700 mb-3">
                 场景 1：值 = <code class="px-1 py-0.5 bg-gray-100 rounded">数字 1</code>，选项值 = <code class="px-1 py-0.5 bg-gray-100 rounded">字符串 '1'</code>
               </div>
@@ -188,7 +259,7 @@ const valueBooleanStringFalse = ref('false')
                     <div class="text-sm text-gray-600 mb-2">
                       可以匹配，显示标签：
                     </div>
-                    <WTag :options="options3" :value="1" />
+                    <WTag :options="options3Scene1" :value="1" />
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -197,15 +268,15 @@ const valueBooleanStringFalse = ref('false')
                       ❌ 严格匹配（looseMatch: false）
                     </div>
                     <div class="text-sm text-gray-600 mb-2">
-                      无法匹配，显示传入的值：
+                      无法匹配，回显值：
                     </div>
-                    <WTag :options="options3" :value="1" :loose-match="false" />
+                    <WTag :options="options3Scene1" :value="1" :loose-match="false" />
                   </div>
                 </el-col>
               </el-row>
             </div>
             <!-- 场景 2: 字符串 '1' 匹配数字 1 -->
-            <div class="border border-gray-200 rounded p-4">
+            <div class="border border-gray-200 rounded p-4 w-full">
               <div class="text-sm font-medium text-gray-700 mb-3">
                 场景 2：值 = <code class="px-1 py-0.5 bg-gray-100 rounded">字符串 '1'</code>，选项值 = <code class="px-1 py-0.5 bg-gray-100 rounded">数字 1</code>
               </div>
@@ -218,7 +289,7 @@ const valueBooleanStringFalse = ref('false')
                     <div class="text-sm text-gray-600 mb-2">
                       可以匹配，显示标签：
                     </div>
-                    <WTag :options="options3" value="1" />
+                    <WTag :options="options3Scene2" value="1" />
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -227,15 +298,15 @@ const valueBooleanStringFalse = ref('false')
                       ❌ 严格匹配（looseMatch: false）
                     </div>
                     <div class="text-sm text-gray-600 mb-2">
-                      无法匹配，显示传入的值：
+                      无法匹配，回显值：
                     </div>
-                    <WTag :options="options3" value="1" :loose-match="false" />
+                    <WTag :options="options3Scene2" value="1" :loose-match="false" />
                   </div>
                 </el-col>
               </el-row>
             </div>
             <!-- 场景 3: 布尔值 true 匹配字符串 'true' -->
-            <div class="border border-gray-200 rounded p-4">
+            <div class="border border-gray-200 rounded p-4 w-full">
               <div class="text-sm font-medium text-gray-700 mb-3">
                 场景 3：值 = <code class="px-1 py-0.5 bg-gray-100 rounded">布尔值 true</code>，选项值 = <code class="px-1 py-0.5 bg-gray-100 rounded">字符串 'true'</code>
               </div>
@@ -248,7 +319,7 @@ const valueBooleanStringFalse = ref('false')
                     <div class="text-sm text-gray-600 mb-2">
                       可以匹配，显示标签：
                     </div>
-                    <WTag :options="options3" :value="true" />
+                    <WTag :options="options3Scene3" :value="true" />
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -257,15 +328,15 @@ const valueBooleanStringFalse = ref('false')
                       ❌ 严格匹配（looseMatch: false）
                     </div>
                     <div class="text-sm text-gray-600 mb-2">
-                      无法匹配，显示传入的值：
+                      无法匹配，回显值：
                     </div>
-                    <WTag :options="options3" :value="true" :loose-match="false" />
+                    <WTag :options="options3Scene3" :value="true" :loose-match="false" />
                   </div>
                 </el-col>
               </el-row>
             </div>
             <!-- 场景 4: 字符串 'true' 匹配布尔值 true -->
-            <div class="border border-gray-200 rounded p-4">
+            <div class="border border-gray-200 rounded p-4 w-full">
               <div class="text-sm font-medium text-gray-700 mb-3">
                 场景 4：值 = <code class="px-1 py-0.5 bg-gray-100 rounded">字符串 'true'</code>，选项值 = <code class="px-1 py-0.5 bg-gray-100 rounded">布尔值 true</code>
               </div>
@@ -278,7 +349,7 @@ const valueBooleanStringFalse = ref('false')
                     <div class="text-sm text-gray-600 mb-2">
                       可以匹配，显示标签：
                     </div>
-                    <WTag :options="options3" value="true" />
+                    <WTag :options="options3Scene4" value="true" />
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -287,9 +358,9 @@ const valueBooleanStringFalse = ref('false')
                       ❌ 严格匹配（looseMatch: false）
                     </div>
                     <div class="text-sm text-gray-600 mb-2">
-                      无法匹配，显示传入的值：
+                      无法匹配，回显值：
                     </div>
-                    <WTag :options="options3" value="true" :loose-match="false" />
+                    <WTag :options="options3Scene4" value="true" :loose-match="false" />
                   </div>
                 </el-col>
               </el-row>

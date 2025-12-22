@@ -58,6 +58,7 @@ export default defineConfig({
           text: '组件',
           items: [
             { text: 'Form 表单', link: '/components/form/' },
+            { text: 'Tag 标签', link: '/components/tag/' },
           ],
         },
       ],
