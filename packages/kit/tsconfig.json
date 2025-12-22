@@ -12,7 +12,7 @@
     "rootDir": "./src",
     // 路径别名：清空继承的 paths
     "paths": {},
-    // 生成类型声明文件（.d.ts）
+    // 增加类型递归深度限制，解决 Excessive stack depth 错误
     "declaration": true,
     // 生成类型声明文件的 source map
     "declarationMap": true,
@@ -26,6 +26,11 @@
     {
       "path": "../form",
       // 不前置输出：kit 包不包含 form 包的代码
+      "prepend": false
+    },
+    {
+      "path": "../tag",
+      // 不前置输出：kit 包不包含 tag 包的代码
       "prepend": false
     }
   ],

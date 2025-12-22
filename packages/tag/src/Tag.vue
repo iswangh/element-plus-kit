@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import type { TagOption, TagProps, TagSlotScope, TagValue } from './types'
+import type { ElTagProps, TagFieldProps, TagOption, TagSlotScope, TagValue } from './types'
 import type { MatchResult } from './utils'
 import { ElTag } from 'element-plus'
 import { computed, useAttrs, useSlots } from 'vue'
 import { matchOption } from './utils'
 
+interface Props extends ElTagProps {
+
+  /** 标签文本（优先级高于 options + value 匹配） */
+  label?: string
+  /** 选项列表（用于根据 value 匹配标签文本） */
+  options?: TagOption[]
+  /** 当前值（用于从 options 中匹配对应的选项，支持单个值或数组） */
+  value?: TagValue | TagValue[]
+  /** 字段映射配置（用于自定义 options 中的字段名） */
+  props?: TagFieldProps
+  /** 是否宽松匹配（默认 true，会将布尔值和字符串 'true'/'false' 互相匹配） */
+  looseMatch?: boolean
+  /** 数组值渲染时的分隔符（默认 ', '） */
+  separator?: string
+}
+
 defineOptions({ name: 'WTag' })
 
-const props = withDefaults(defineProps<TagProps>(), {
+const props = withDefaults(defineProps<Props>(), {
   props: () => ({ label: 'label', value: 'value' }),
   looseMatch: true,
   separator: ', ',

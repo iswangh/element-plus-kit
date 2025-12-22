@@ -29,4 +29,4 @@ export { default } from './Tag.vue'
 
 export { default as WTag } from './Tag.vue'
 
-export type { TagFieldProps, TagOption, TagProps, TagSlotScope, TagValue } from './types'
+export type { TagFieldProps, TagOption, TagSlotScope, TagValue } from './types'

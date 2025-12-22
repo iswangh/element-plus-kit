@@ -1,11 +1,22 @@
+/* eslint-disable ts/no-explicit-any */
 import type { ElTagProps } from './el'
-import type { TagFieldProps } from './field'
-import type { TagOption } from './option'
 
 /**
  * 标签值类型
  */
 export type TagValue = string | number | boolean | null | undefined
+
+/**
+ * 字段映射配置
+ * 用于指定 options 中的字段名
+ * 与 Element Plus 保持一致，使用 props 命名
+ */
+export interface TagFieldProps {
+  /** 标签文本字段名，默认为 'label' */
+  label?: string
+  /** 标签值字段名，默认为 'value' */
+  value?: string
+}
 
 /**
  * 标签插槽作用域参数
@@ -27,19 +38,15 @@ export interface TagSlotScope {
 }
 
 /**
- * WTag 组件 Props
+ * 标签选项类型
  */
-export interface TagProps extends /* @vue-ignore */ Partial<ElTagProps> {
-  /** 标签文本（优先级高于 options + value 匹配） */
+export interface TagOption {
+  /** 标签文本（如果使用默认字段映射） */
   label?: string
-  /** 选项列表（用于根据 value 匹配标签文本） */
-  options?: TagOption[]
-  /** 当前值（用于从 options 中匹配对应的选项，支持单个值或数组） */
-  value?: TagValue | TagValue[]
-  /** 字段映射配置（用于自定义 options 中的字段名） */
-  props?: TagFieldProps
-  /** 是否宽松匹配（默认 true，会将布尔值和字符串 'true'/'false' 互相匹配） */
-  looseMatch?: boolean
-  /** 数组值渲染时的分隔符（默认 ', '） */
-  separator?: string
+  /** 标签值（如果使用默认字段映射） */
+  value?: unknown
+  /** 标签属性（传递给 ElTag 的属性） */
+  tagProps?: ElTagProps
+  /** 允许其他自定义字段 */
+  [key: string]: any
 }
