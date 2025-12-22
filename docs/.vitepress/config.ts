@@ -142,7 +142,25 @@ export default defineConfig({
     },
     optimizeDeps: {
       // 预构建依赖，提升开发体验
-      include: ['element-plus', 'vue', '@iswangh/element-plus-kit'],
+      include: [
+        'element-plus',
+        'vue',
+        '@iswangh/element-plus-kit',
+        '@iswangh/element-plus-kit-tag',
+        '@iswangh/element-plus-kit-form',
+      ],
+      // 强制预构建，避免开发环境中的模块解析问题
+      force: false,
+    },
+    // SSR 配置：确保组件在服务端和客户端都能正确渲染
+    ssr: {
+      // 将内部包标记为需要 SSR 处理，避免开发环境中的模块解析问题
+      noExternal: [
+        '@iswangh/element-plus-kit',
+        '@iswangh/element-plus-kit-tag',
+        '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-core',
+      ],
     },
   },
   // 构建结束钩子 - 生成站点地图
