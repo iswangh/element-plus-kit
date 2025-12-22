@@ -194,6 +194,8 @@ const values = ref([1, 2, 3])
 
 当使用插槽时，插槽内容优先级最高，会覆盖 `label` 和 `options + value` 匹配的结果。
 
+### 默认插槽
+
 :::demo
 
 ```vue
@@ -222,6 +224,88 @@ const value = ref('success')
     <WTag :options="options" value="success" />
     <WTag :options="options" value="warning" />
     <WTag :options="options" value="danger" />
+  </el-space>
+</template>
+```
+
+:::
+
+### 作用域插槽
+
+插槽提供了作用域参数，可以访问当前值、匹配的标签文本和匹配到的选项对象，用于自定义渲染。
+
+:::demo
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { WTag } from '@iswangh/element-plus-kit'
+import type { TagOption } from '@iswangh/element-plus-kit-tag'
+
+const options: TagOption[] = [
+  { label: '成功', value: 'success', tagProps: { type: 'success' as const } },
+  { label: '警告', value: 'warning', tagProps: { type: 'warning' as const } },
+  { label: '危险', value: 'danger', tagProps: { type: 'danger' as const } },
+]
+
+const value = ref('success')
+</script>
+
+<template>
+  <el-space wrap direction="vertical" :size="12" class="w-full" fill>
+    <div>
+      <p class="text-sm text-gray-600 mb-2">
+        单个值：
+      </p>
+      <el-space wrap>
+        <WTag :options="options" :value="value">
+          <template #default="{ label, options }">
+            <span v-if="options.length > 0">
+              ✅ {{ label }} (匹配到 {{ options.length }} 个选项)
+            </span>
+            <span v-else>
+              ❌ {{ label }} (匹配失败)
+            </span>
+          </template>
+        </WTag>
+        <WTag :options="options" value="unknown">
+          <template #default="{ label, options }">
+            <span v-if="options.length > 0">
+              ✅ {{ label }} (匹配成功)
+            </span>
+            <span v-else>
+              ❌ {{ label }} (匹配失败)
+            </span>
+          </template>
+        </WTag>
+      </el-space>
+    </div>
+    <div>
+      <p class="text-sm text-gray-600 mb-2">
+        数组值：
+      </p>
+      <WTag :options="options" :value="['success', 'warning', 'danger']">
+        <template #default="{ value, label, options }">
+          <span>
+            <template v-if="Array.isArray(value)">
+              {{ value.length }} 个值：{{ label }}
+              <span class="text-gray-400 ml-2">
+                (匹配到 {{ options.length }} 个选项)
+              </span>
+            </template>
+            <template v-else>
+              {{ label }}
+              <span v-if="options.length > 0" class="text-green-600 ml-2">
+                ✅ 匹配成功
+              </span>
+              <span v-else class="text-red-600 ml-2">
+                ❌ 匹配失败
+              </span>
+            </template>
+          </span>
+        </template>
+      </WTag>
+    </div>
   </el-space>
 </template>
 ```
@@ -540,6 +624,12 @@ const value = ref('success')
 
 ### 插槽
 
-| 插槽名 | 说明 |
-| --- | --- |
-| default | 标签内容（优先级最高，会覆盖 label 和 options + value 匹配的结果） |
+| 插槽名 | 说明 | 参数 |
+| --- | --- | --- |
+| default | 标签内容（优先级最高，会覆盖 label 和 options + value 匹配的结果） | `{ value: TagValue \| TagValue[], label: string \| null, options: TagOption[] }` |
+
+**插槽参数说明**：
+
+- `value`: 当前值（可能是单个值或数组）
+- `label`: 匹配到的标签文本（单个值直接返回，数组值用分隔符拼接）
+- `options`: 所有匹配到的选项对象数组
