@@ -205,9 +205,9 @@ import { WTag } from '@iswangh/element-plus-kit'
 import type { TagOption } from '@iswangh/element-plus-kit-tag'
 
 const options: TagOption[] = [
-  { label: '成功', value: 'success', tagProps: { type: 'success' as const } },
-  { label: '警告', value: 'warning', tagProps: { type: 'warning' as const } },
-  { label: '危险', value: 'danger', tagProps: { type: 'danger' as const } },
+  { label: '成功', value: 'success', tagProps: { type: 'success' } },
+  { label: '警告', value: 'warning', tagProps: { type: 'warning' } },
+  { label: '危险', value: 'danger', tagProps: { type: 'danger' } },
 ]
 
 const value = ref('success')
@@ -243,9 +243,9 @@ import { WTag } from '@iswangh/element-plus-kit'
 import type { TagOption } from '@iswangh/element-plus-kit-tag'
 
 const options: TagOption[] = [
-  { label: '成功', value: 'success', tagProps: { type: 'success' as const } },
-  { label: '警告', value: 'warning', tagProps: { type: 'warning' as const } },
-  { label: '危险', value: 'danger', tagProps: { type: 'danger' as const } },
+  { label: '成功', value: 'success', tagProps: { type: 'success' } },
+  { label: '警告', value: 'warning', tagProps: { type: 'warning' } },
+  { label: '危险', value: 'danger', tagProps: { type: 'danger' } },
 ]
 
 const value = ref('success')
