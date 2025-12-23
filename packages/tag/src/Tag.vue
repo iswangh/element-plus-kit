@@ -5,7 +5,7 @@ import { ElTag } from 'element-plus'
 import { computed, useAttrs, useSlots } from 'vue'
 import { matchOption } from './utils'
 
-interface Props extends ElTagProps {
+interface Props extends /* @vue-ignore */ ElTagProps {
 
   /** 标签文本（优先级高于 options + value 匹配） */
   label?: string

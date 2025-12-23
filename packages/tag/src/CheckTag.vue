@@ -5,16 +5,16 @@ import { ElCheckTag, ElSpace } from 'element-plus'
 import { computed, useAttrs } from 'vue'
 
 interface Props extends /* @vue-ignore */ ElCheckTagProps {
+  /** 选项列表 */
+  options: CheckTagOption[]
   /** 是否多选（默认 false，单选） */
   multiple?: boolean
-  /** 选项列表 */
-  options?: CheckTagOption[]
   /** 当前值（单选：TagValue，多选：TagValue[]） */
   modelValue?: TagValue | TagValue[]
   /** 字段映射配置 */
   props?: TagFieldProps
-  /** Space 组件配置 */
-  spaceConfig?: Partial<ElSpaceProps>
+  /** Space 组件属性 */
+  spaceProps?: Partial<ElSpaceProps>
 }
 
 defineOptions({ name: 'WCheckTag' })
@@ -46,8 +46,6 @@ const validatedSingleValue = computed(() => {
   const val = singleValue.value
   if (val == null)
     return null
-  if (!props.options)
-    return null
   const isValid = props.options.some((opt) => {
     const optValue = opt[props.props?.value || 'value']
     return optValue === val
@@ -60,11 +58,9 @@ const multipleValues = computed(() => {
   if (!props.multiple)
     return []
   const valueArray = Array.isArray(props.modelValue) ? props.modelValue : []
-  if (!props.options)
-    return []
   // 过滤掉不在 options 中的值
   return valueArray.filter((v) => {
-    return props.options!.some((opt) => {
+    return props.options.some((opt) => {
       const optValue = opt[props.props?.value || 'value']
       return optValue === v
     })
@@ -121,14 +117,6 @@ function handleTagClick(option: CheckTagOption, optionValue: TagValue) {
   }
 }
 
-/** 处理 ElCheckTag 的 onChange 事件（组件内部使用） */
-function handleCheckTagChange(option: CheckTagOption, optionValue: TagValue) {
-  // ElCheckTag 的 change 事件在点击时触发，checked 是新的状态
-  // 我们不需要使用 checked 参数，因为我们自己管理状态
-  // 直接触发点击处理逻辑
-  handleTagClick(option, optionValue)
-}
-
 /** 获取选项的显示文本 */
 function getOptionLabel(option: CheckTagOption): string {
   const labelKey = props.props?.label || 'label'
@@ -143,15 +131,31 @@ function getOptionValue(option: CheckTagOption): TagValue {
   return value as TagValue
 }
 
+/** 获取选项的 key（用于 v-for） */
+function getOptionKey(option: CheckTagOption, index: number): PropertyKey {
+  const value = getOptionValue(option)
+  // Vue 的 key 需要是 PropertyKey（string | number | symbol），不能是 boolean
+  // 将值转换为字符串，如果为 null/undefined，使用 index
+  if (value == null)
+    return index
+  if (typeof value === 'boolean')
+    return String(value)
+  if (typeof value === 'string' || typeof value === 'number')
+    return value
+  return String(value)
+}
+
 /** 获取传递给 ElCheckTag 的属性 */
 function getCheckTagProps(option: CheckTagOption) {
   const baseProps = { ...attrs, ...props }
-  // 排除 CheckTag 组件特有的 props
-  const { multiple: _multiple, options: _options, modelValue: _modelValue, props: _fieldProps, onChange: _onChange, ...elCheckTagProps } = baseProps
+  // 排除 CheckTag 组件特有的 props 和 key（key 由 v-for 单独处理）
+  const { multiple: _multiple, options: _options, modelValue: _modelValue, props: _fieldProps, onChange: _onChange, key: _key, ...elCheckTagProps } = baseProps
 
   // 合并选项中的 tagProps（选项级别的属性优先级更高）
+  // 同时排除 tagProps 中的 key
   if (option.tagProps) {
-    return { ...elCheckTagProps, ...option.tagProps }
+    const { key: _tagKey, ...tagPropsWithoutKey } = option.tagProps
+    return { ...elCheckTagProps, ...tagPropsWithoutKey }
   }
 
   return elCheckTagProps
@@ -159,17 +163,14 @@ function getCheckTagProps(option: CheckTagOption) {
 </script>
 
 <template>
-  <ElSpace v-bind="props.spaceConfig">
+  <ElSpace v-bind="props.spaceProps">
     <ElCheckTag
-      v-for="(option, index) in (options || [])"
-      :key="`${getOptionValue(option)}-${index}`"
+      v-for="(option, index) in options"
+      :key="getOptionKey(option, index)"
       v-bind="getCheckTagProps(option)"
       :checked="isChecked(getOptionValue(option))"
       :disabled="props.disabled || option.disabled"
-      @change="(checked: boolean) => {
-        const optionValue = getOptionValue(option)
-        handleCheckTagChange(option, optionValue)
-      }"
+      @change="() => handleTagClick(option, getOptionValue(option))"
     >
       {{ getOptionLabel(option) }}
     </ElCheckTag>
