@@ -150,8 +150,6 @@ export default defineConfig({
         '@iswangh/element-plus-kit-tag',
         '@iswangh/element-plus-kit-form',
       ],
-      // 强制预构建，避免开发环境中的模块解析问题
-      force: false,
     },
     // SSR 配置：确保组件在服务端和客户端都能正确渲染
     ssr: {
