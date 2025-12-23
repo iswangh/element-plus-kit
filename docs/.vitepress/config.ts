@@ -59,6 +59,7 @@ export default defineConfig({
           items: [
             { text: 'Form 表单', link: '/components/form/' },
             { text: 'Tag 标签', link: '/components/tag/' },
+            { text: 'CheckTag 可选标签', link: '/components/check-tag/' },
           ],
         },
       ],
