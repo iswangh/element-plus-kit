@@ -1,6 +1,6 @@
 export const formRouteMeta = {
-  // Form 父菜单（不在侧边栏显示，仅用于获取中文标题）
-  '/form': { title: '表单组件', showInSidebar: false },
+  // Form 父菜单（不在侧边栏显示，仅用于获取中文标题，但需要 order 值用于排序）
+  '/form': { title: '表单组件', showInSidebar: false, order: 1 },
   // 基础示例 (order: 1) - 入门必看
   '/form/basic': { title: '基础示例', showInSidebar: true, order: 1 },
   '/form/basic/auto': { title: '自动导入', description: '使用 unplugin-vue-components 自动导入组件', showInSidebar: true, order: 1 },

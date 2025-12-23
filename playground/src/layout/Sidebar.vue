@@ -2,9 +2,31 @@
 import type { PropType } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
 import router from '@/router'
-import { formRouteMeta, tagRouteMeta } from '@/router/modules'
+import { checkTagRouteMeta, formRouteMeta, tagRouteMeta } from '@/router/modules'
 
 const route = useRoute()
+
+/**
+ * 获取路由元信息（包括 order 值）
+ */
+function getRouteMeta(path: string) {
+  // 从 checkTagRouteMeta 中查找
+  const checkTagMeta = checkTagRouteMeta[path as keyof typeof checkTagRouteMeta]
+  if (checkTagMeta)
+    return checkTagMeta
+
+  // 从 formRouteMeta 中查找
+  const formMeta = formRouteMeta[path as keyof typeof formRouteMeta]
+  if (formMeta)
+    return formMeta
+
+  // 从 tagRouteMeta 中查找
+  const tagMeta = tagRouteMeta[path as keyof typeof tagRouteMeta]
+  if (tagMeta)
+    return tagMeta
+
+  return undefined
+}
 
 /**
  * 侧边栏菜单项类型
@@ -66,15 +88,9 @@ const menuItems = computed(() => {
  * 获取路由元信息中的中文标题
  */
 function getRouteTitle(path: string): string | undefined {
-  // 从 formRouteMeta 中查找
-  const formMeta = formRouteMeta[path as keyof typeof formRouteMeta]
-  if (formMeta)
-    return formMeta.title
-
-  // 从 tagRouteMeta 中查找
-  const tagMeta = tagRouteMeta[path as keyof typeof tagRouteMeta]
-  if (tagMeta)
-    return tagMeta.title
+  const meta = getRouteMeta(path)
+  if (meta)
+    return meta.title
 
   // 从路由中查找
   const route = router.getRoutes().find(r => getFullPath(r) === path)
@@ -95,19 +111,24 @@ function ensureParentMenu(
   if (existing)
     return existing
 
-  // 优先从路由元信息中获取中文标题，其次从路由中获取，最后使用路径转换
+  // 优先从路由元信息中获取中文标题和 order 值，其次从路由中获取，最后使用路径转换
+  const parentRoute = routes.find(r => getFullPath(r) === parentPath)
+  const parentMeta = getRouteMeta(parentPath)
   const parentLabel = getRouteTitle(parentPath)
-    || routes.find(r => getFullPath(r) === parentPath)?.meta?.title as string | undefined
+    || parentRoute?.meta?.title as string | undefined
     || parentPath.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || parentPath
+  // 获取父菜单的 order 值（优先从路由元信息中获取，其次从路由中获取）
+  const parentOrder = (parentMeta && 'order' in parentMeta ? parentMeta.order : undefined) ?? (parentRoute?.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER
 
   const parentParts = parentPath.split('/').filter(Boolean)
 
-  // 创建父菜单
-  const newParentMenu: MenuItemType = {
+  // 创建父菜单（添加 order 属性用于后续排序）
+  const newParentMenu: MenuItemType & { order?: number } = {
     key: `parent-${parentPath}`,
     label: parentLabel,
     path: parentPath,
     children: [],
+    order: parentOrder,
   }
 
   // 如果父菜单还有父菜单，递归创建
@@ -174,7 +195,7 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
     const fullPathA = getFullPath(a)
     const fullPathB = getFullPath(b)
 
-    // 首页始终在第一位
+    // 首页始终在第一位（order 为 0）
     if (fullPathA === '/')
       return -1
     if (fullPathB === '/')
@@ -222,9 +243,22 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
 
     // 查找父菜单
     if (pathParts.length === 1) {
-      // 一级菜单
-      rootMenus.push(menuItem)
-      menuMap.set(fullPath, menuItem)
+      // 一级菜单：检查是否已经作为父菜单存在
+      const existing = menuMap.get(fullPath)
+      if (existing) {
+        // 如果已存在，更新菜单项（保留已有的 children）
+        existing.key = menuItem.key
+        existing.label = menuLabel
+        existing.path = fullPath
+        // 保留已有的 children，不覆盖
+        if (!existing.children)
+          existing.children = []
+      }
+      else {
+        // 如果不存在，添加新的一级菜单
+        rootMenus.push(menuItem)
+        menuMap.set(fullPath, menuItem)
+      }
     }
     else {
       // 多级菜单，查找或创建父菜单
@@ -239,6 +273,29 @@ function buildMenuTree(routes: RouteRecordNormalized[]): MenuItemType[] {
       menuMap.set(fullPath, menuItem)
     }
   }
+
+  // 对 rootMenus 进行排序（确保父菜单也按 order 排序）
+  rootMenus.sort((a, b) => {
+    // 首页始终在第一位
+    if (a.path === '/')
+      return -1
+    if (b.path === '/')
+      return 1
+
+    const routeA = routes.find(r => getFullPath(r) === a.path)
+    const routeB = routes.find(r => getFullPath(r) === b.path)
+    // 优先使用菜单项的 order 属性（如果是 ensureParentMenu 创建的），其次从路由元信息中获取，最后使用路由的 order
+    const metaA = getRouteMeta(a.path)
+    const metaB = getRouteMeta(b.path)
+    // 首页的 order 为 0，确保排在第一位
+    const orderA = a.path === '/' ? 0 : ((a as MenuItemType & { order?: number }).order ?? (metaA && 'order' in metaA ? (metaA as { order: number }).order : undefined) ?? (routeA?.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER)
+    const orderB = b.path === '/' ? 0 : ((b as MenuItemType & { order?: number }).order ?? (metaB && 'order' in metaB ? (metaB as { order: number }).order : undefined) ?? (routeB?.meta?.order as number | undefined) ?? Number.MAX_SAFE_INTEGER)
+
+    if (orderA !== orderB)
+      return orderA - orderB
+
+    return a.path.localeCompare(b.path)
+  })
 
   // 对每个菜单的 children 进行排序
   function sortMenuChildren(menus: MenuItemType[]) {

@@ -12,4 +12,4 @@ export { default, ElementPlusKitResolver, install } from './utils'
 // 使用包名导入，这是 Monorepo 的标准做法，pnpm workspace 会自动解析
 export { useLoadOptions, WForm } from '@iswangh/element-plus-kit-form'
 // 导出 Tag 组件
-export { WTag } from '@iswangh/element-plus-kit-tag'
+export { WCheckTag, WTag } from '@iswangh/element-plus-kit-tag'

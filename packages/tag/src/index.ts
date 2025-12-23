@@ -23,10 +23,13 @@
 // Element Plus Tag 组件样式
 // ============================================
 import 'element-plus/es/components/tag/style/css'
+// Element Plus CheckTag 组件样式
+import 'element-plus/es/components/check-tag/style/css'
+// Element Plus Space 组件样式
+import 'element-plus/es/components/space/style/css'
 
-// 导出 WTag 组件
-export { default } from './Tag.vue'
+export { default as WCheckTag } from './CheckTag.vue'
 
 export { default as WTag } from './Tag.vue'
 
-export type { TagFieldProps, TagOption, TagSlotScope, TagValue } from './types'
+export type { CheckTagOption, ElCheckTagProps, ElSpaceProps, TagFieldProps, TagOption, TagSlotScope, TagValue } from './types'
