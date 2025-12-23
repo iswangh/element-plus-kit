@@ -15,6 +15,8 @@ interface Props extends /* @vue-ignore */ ElCheckTagProps {
   props?: TagFieldProps
   /** Space 组件属性 */
   spaceProps?: Partial<ElSpaceProps>
+  /** 是否禁用（组件级别） */
+  disabled?: boolean
 }
 
 defineOptions({ name: 'WCheckTag' })
@@ -30,6 +32,28 @@ const emit = defineEmits<{
 }>()
 
 const attrs = useAttrs()
+
+/** 基础属性（排除 CheckTag 组件特有的 props） */
+const baseCheckTagProps = computed(() => {
+  const baseProps = { ...props, ...attrs }
+  // 排除 CheckTag 组件特有的 props 和 key（key 由 v-for 单独处理）
+  const { multiple: _multiple, options: _options, modelValue: _modelValue, props: _fieldProps, onChange: _onChange, key: _key, ...elCheckTagProps } = baseProps
+  return elCheckTagProps
+})
+
+/** 获取传递给 ElCheckTag 的属性 */
+function getCheckTagProps(option: CheckTagOption) {
+  const baseProps = baseCheckTagProps.value
+
+  // 合并选项中的 tagProps（选项级别的属性优先级更高）
+  // 同时排除 tagProps 中的 key
+  if (option.tagProps) {
+    const { key: _tagKey, ...tagPropsWithoutKey } = option.tagProps
+    return { ...baseProps, ...tagPropsWithoutKey }
+  }
+
+  return baseProps
+}
 
 /** 单选模式：获取单个值（如果传入数组，取第一个元素） */
 const singleValue = computed(() => {
@@ -81,8 +105,8 @@ function isChecked(optionValue: TagValue): boolean {
 
 /** 处理标签点击 */
 function handleTagClick(option: CheckTagOption, optionValue: TagValue) {
-  // 组件级别禁用
-  if (props.disabled)
+  // 组件级别禁用（使用 baseCheckTagProps.disabled，已合并 props 和 attrs）
+  if (baseCheckTagProps.value.disabled)
     return
   // 选项级别禁用
   if (option.disabled)
@@ -144,22 +168,6 @@ function getOptionKey(option: CheckTagOption, index: number): PropertyKey {
     return value
   return String(value)
 }
-
-/** 获取传递给 ElCheckTag 的属性 */
-function getCheckTagProps(option: CheckTagOption) {
-  const baseProps = { ...attrs, ...props }
-  // 排除 CheckTag 组件特有的 props 和 key（key 由 v-for 单独处理）
-  const { multiple: _multiple, options: _options, modelValue: _modelValue, props: _fieldProps, onChange: _onChange, key: _key, ...elCheckTagProps } = baseProps
-
-  // 合并选项中的 tagProps（选项级别的属性优先级更高）
-  // 同时排除 tagProps 中的 key
-  if (option.tagProps) {
-    const { key: _tagKey, ...tagPropsWithoutKey } = option.tagProps
-    return { ...elCheckTagProps, ...tagPropsWithoutKey }
-  }
-
-  return elCheckTagProps
-}
 </script>
 
 <template>
@@ -169,7 +177,7 @@ function getCheckTagProps(option: CheckTagOption) {
       :key="getOptionKey(option, index)"
       v-bind="getCheckTagProps(option)"
       :checked="isChecked(getOptionValue(option))"
-      :disabled="props.disabled || option.disabled"
+      :disabled="baseCheckTagProps.disabled || option.disabled"
       @change="() => handleTagClick(option, getOptionValue(option))"
     >
       {{ getOptionLabel(option) }}

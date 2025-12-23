@@ -6,4 +6,5 @@ export const checkTagRouteMeta = {
   // 选项示例 (order: 2) - options 和 value 的使用
   '/check-tag/options': { title: '选项示例', showInSidebar: true, order: 2 },
   '/check-tag/options/field-mapping': { title: '字段映射', description: '自定义字段映射配置', showInSidebar: true, order: 1 },
+  '/check-tag/options/disabled': { title: '禁用状态', description: '组件级别和选项级别的禁用状态', showInSidebar: true, order: 2 },
 } as const
