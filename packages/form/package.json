@@ -38,19 +38,19 @@
   },
   "dependencies": {
     "@iswangh/element-plus-kit-core": "workspace:*",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.22"
   },
   "devDependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@types/lodash-es": "^4.17.12",
-    "@vitejs/plugin-vue": "^6.0.1",
-    "element-plus": "^2.11.8",
-    "sass": "^1.94.0",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "element-plus": "^2.13.0",
+    "sass": "^1.97.1",
     "typescript": "^5.9.3",
-    "vite": "^7.2.2",
+    "vite": "^7.3.0",
     "vite-plugin-dts": "^4.5.4",
-    "vue": "^3.5.24",
-    "vue-tsc": "^3.1.3"
+    "vue": "^3.5.26",
+    "vue-tsc": "^3.2.1"
   },
   "publishConfig": {
     "access": "public",
