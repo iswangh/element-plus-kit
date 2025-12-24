@@ -52,6 +52,7 @@ import 'element-plus/es/components/date-picker-panel/style/css'
 import 'element-plus/es/components/time-picker/style/css'
 import 'element-plus/es/components/time-select/style/css'
 // 其他表单组件
+import 'element-plus/es/components/checkbox/style/css'
 import 'element-plus/es/components/checkbox-group/style/css'
 import 'element-plus/es/components/radio-group/style/css'
 import 'element-plus/es/components/switch/style/css'

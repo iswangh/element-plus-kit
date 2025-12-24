@@ -21,8 +21,9 @@ const form = ref({
   timePicker: '',
   timeSelect: '',
   // 其他组件
-  checkbox: [],
-  radio: '',
+  checkbox: false,
+  checkboxGroup: [],
+  radioGroup: '',
   switch: false,
   slider: 0,
   rate: 0,
@@ -223,8 +224,16 @@ const dateTimeFormItems: FormItems = [
 const otherFormItems: FormItems = [
   {
     prop: 'checkbox',
-    label: '复选框组',
+    label: '同意协议',
     compType: 'checkbox',
+    compProps: {
+      label: '我已阅读并同意相关协议',
+    },
+  },
+  {
+    prop: 'checkboxGroup',
+    label: '复选框组',
+    compType: 'checkbox-group',
     compProps: {
       options: [
         { label: '选项1', value: '1' },
@@ -234,9 +243,9 @@ const otherFormItems: FormItems = [
     },
   },
   {
-    prop: 'radio',
+    prop: 'radioGroup',
     label: '单选框组',
-    compType: 'radio',
+    compType: 'radio-group',
     compProps: {
       options: [
         { label: '选项1', value: '1' },
@@ -361,7 +370,7 @@ const otherFormItems: FormItems = [
         <el-alert type="info" :closable="false" show-icon>
           <template #default>
             <p class="text-sm text-gray-600 m-0">
-              说明：其他组件包括 <code>checkbox</code>、<code>radio</code>、<code>switch</code>、<code>slider</code>、<code>rate</code>、<code>color-picker</code>、<code>color-picker-panel</code>、<code>transfer</code> 等。
+              说明：其他组件包括 <code>checkbox</code>、<code>checkbox-group</code>、<code>radio-group</code>、<code>switch</code>、<code>slider</code>、<code>rate</code>、<code>color-picker</code>、<code>color-picker-panel</code>、<code>transfer</code> 等。
             </p>
           </template>
         </el-alert>

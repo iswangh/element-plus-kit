@@ -1,6 +1,6 @@
 /* eslint-disable ts/no-explicit-any */
 import type { FormItem } from '../types'
-import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
+import { ElAutocomplete, ElCascader, ElCheckbox, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 
 /**
  * 拓展的组件映射
@@ -16,7 +16,8 @@ export const EXPAND_COMP_MAP = { custom: 'div' } as const
 const EL_COMP_MAP = {
   'autocomplete': ElAutocomplete,
   'cascader': ElCascader,
-  'checkbox': ElCheckboxGroup,
+  'checkbox': ElCheckbox,
+  'checkbox-group': ElCheckboxGroup,
   'color-picker-panel': ElColorPickerPanel,
   'color-picker': ElColorPicker,
   'date-picker-panel': ElDatePickerPanel,
@@ -25,7 +26,7 @@ const EL_COMP_MAP = {
   'input-number': ElInputNumber,
   'input-tag': ElInputTag,
   'mention': ElMention,
-  'radio': ElRadioGroup,
+  'radio-group': ElRadioGroup,
   'rate': ElRate,
   'select': ElSelect,
   'select-v2': ElSelectV2,

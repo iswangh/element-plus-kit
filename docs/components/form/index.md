@@ -15,7 +15,9 @@ import { WForm } from '@iswangh/element-plus-kit'
 import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({
-  checkbox: [],
+  checkbox: false,
+  checkboxGroup: [],
+  radioGroup: '',
   inputTag: [],
   transfer: [],
 })
@@ -116,9 +118,17 @@ const formItems: FormItems = [
     compType: 'switch',
   },
   {
-    prop: 'radio',
-    label: '优先级',
-    compType: 'radio',
+    prop: 'checkbox',
+    label: '同意协议',
+    compType: 'checkbox',
+    compProps: {
+      label: '我已阅读并同意相关协议',
+    },
+  },
+  {
+    prop: 'checkboxGroup',
+    label: '兴趣爱好',
+    compType: 'checkbox-group',
     compProps: {
       options: [
         { label: '选项1', value: 'option1' },
@@ -127,9 +137,9 @@ const formItems: FormItems = [
     },
   },
   {
-    prop: 'checkbox',
-    label: '兴趣爱好',
-    compType: 'checkbox',
+    prop: 'radioGroup',
+    label: '优先级',
+    compType: 'radio-group',
     compProps: {
       options: [
         { label: '选项1', value: 'option1' },
@@ -1278,8 +1288,9 @@ async function onChange(extendedParams: FormItemEventExtendedParams) {
 | `time-picker` | 时间选择器 | `{ placeholder: '请选择${label}'（动态），clearable: true }` | [Element Plus TimePicker](https://element-plus.org/zh-CN/component/time-picker.html) |
 | `time-select` | 时间选择 | `{ placeholder: '请选择${label}'（动态），clearable: true }` | [Element Plus TimeSelect](https://element-plus.org/zh-CN/component/time-select.html) |
 | `switch` | 开关 | - | [Element Plus Switch](https://element-plus.org/zh-CN/component/switch.html) |
-| `radio` | 单选框（配合 `options` 属性，实际渲染 [`ElRadioGroup`](https://element-plus.org/zh-CN/component/radio#options-%E5%B1%9E%E6%80%A7)） | - | [Element Plus Radio](https://element-plus.org/zh-CN/component/radio.html) |
-| `checkbox` | 复选框（配合 `options` 属性，实际渲染 [`ElCheckboxGroup`](https://element-plus.org/zh-CN/component/checkbox#options-%E5%B1%9E%E6%80%A7)） | - | [Element Plus Checkbox](https://element-plus.org/zh-CN/component/checkbox.html) |
+| `checkbox` | 复选框（单个） | - | [Element Plus Checkbox](https://element-plus.org/zh-CN/component/checkbox.html) |
+| `checkbox-group` | 复选框组（配合 `options` 属性） | - | [Element Plus CheckboxGroup](https://element-plus.org/zh-CN/component/checkbox.html#checkbox-group-%E5%A4%8D%E9%80%89%E6%A1%86%E7%BB%84) |
+| `radio-group` | 单选框组（配合 `options` 属性） | - | [Element Plus RadioGroup](https://element-plus.org/zh-CN/component/radio.html#radio-group-%E5%8D%95%E9%80%89%E6%A1%86%E7%BB%84) |
 | `rate` | 评分 | - | [Element Plus Rate](https://element-plus.org/zh-CN/component/rate.html) |
 | `slider` | 滑块 | - | [Element Plus Slider](https://element-plus.org/zh-CN/component/slider.html) |
 | `color-picker` | 颜色选择器 | - | [Element Plus ColorPicker](https://element-plus.org/zh-CN/component/color-picker.html) |

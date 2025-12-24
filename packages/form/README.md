@@ -171,7 +171,8 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
 
 - `autocomplete` - 自动完成输入框
 - `cascader` - 级联选择器
-- `checkbox` - 复选框组
+- `checkbox` - 复选框（单个）
+- `checkbox-group` - 复选框组
 - `color-picker` - 颜色选择器
 - `color-picker-panel` - 颜色选择器面板
 - `date-picker` - 日期选择器
@@ -180,7 +181,7 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
 - `input-number` - 数字输入框
 - `input-tag` - 标签输入框
 - `mention` - 提及输入框
-- `radio` - 单选框组
+- `radio-group` - 单选框组
 - `rate` - 评分
 - `select` - 选择器
 - `select-v2` - 虚拟列表选择器

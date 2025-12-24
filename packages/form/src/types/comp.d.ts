@@ -1,4 +1,4 @@
-import type { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
+import type { ElAutocomplete, ElCascader, ElCheckbox, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 import type { EXPAND_COMP_MAP } from '../config'
 
 /**
@@ -10,7 +10,8 @@ import type { EXPAND_COMP_MAP } from '../config'
 interface ElCompMap {
   readonly 'autocomplete': typeof ElAutocomplete
   readonly 'cascader': typeof ElCascader
-  readonly 'checkbox': typeof ElCheckboxGroup
+  readonly 'checkbox': typeof ElCheckbox
+  readonly 'checkbox-group': typeof ElCheckboxGroup
   readonly 'color-picker-panel': typeof ElColorPickerPanel
   readonly 'color-picker': typeof ElColorPicker
   readonly 'date-picker-panel': typeof ElDatePickerPanel
@@ -19,7 +20,7 @@ interface ElCompMap {
   readonly 'input-number': typeof ElInputNumber
   readonly 'input-tag': typeof ElInputTag
   readonly 'mention': typeof ElMention
-  readonly 'radio': typeof ElRadioGroup
+  readonly 'radio-group': typeof ElRadioGroup
   readonly 'rate': typeof ElRate
   readonly 'select': typeof ElSelect
   readonly 'select-v2': typeof ElSelectV2
@@ -54,6 +55,7 @@ export type FormItemComp = 'custom'
   | 'autocomplete'
   | 'cascader'
   | 'checkbox'
+  | 'checkbox-group'
   | 'color-picker'
   | 'color-picker-panel'
   | 'date-picker'
@@ -62,7 +64,7 @@ export type FormItemComp = 'custom'
   | 'input-number'
   | 'input-tag'
   | 'mention'
-  | 'radio'
+  | 'radio-group'
   | 'rate'
   | 'select'
   | 'select-v2'
