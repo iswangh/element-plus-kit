@@ -2,27 +2,33 @@ import type { ResolverFunction } from 'unplugin-auto-import/types'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 
 /**
- * 组件包映射配置
+ * 组件到包的映射配置
+ *
+ * 键：组件名（保持原始大小写，如 'WForm'、'WCheckTag'）
+ * 值：包名（不含 @iswangh/ 前缀，如 'element-plus-kit-form'）
  */
-const COMPONENT_MAP: Record<string, string> = {
-  form: 'element-plus-kit-form',
-  tag: 'element-plus-kit-tag',
+const COMPONENT_TO_PACKAGE: Record<string, string> = {
+  WForm: 'element-plus-kit-form',
+  WTag: 'element-plus-kit-tag',
+  WCheckTag: 'element-plus-kit-tag',
   // 未来扩展
-  // table: 'element-plus-kit-table',
+  // WTable: 'element-plus-kit-table',
+  // WTableColumn: 'element-plus-kit-table',
 }
 
 /**
  * 解析组件名称
+ *
+ * 使用精确匹配，确保只匹配已暴露的组件：
+ * - WForm -> element-plus-kit-form
+ * - WTag -> element-plus-kit-tag
+ * - WCheckTag -> element-plus-kit-tag
  */
 function resolveComponentName(name: string): string | undefined {
-  // 只处理以 W 开头的组件名
   if (!name.startsWith('W'))
     return undefined
 
-  // 移除 W 前缀并转换为小写
-  const componentName = name.slice(1).toLowerCase()
-
-  return COMPONENT_MAP[componentName]
+  return COMPONENT_TO_PACKAGE[name]
 }
 
 /**
