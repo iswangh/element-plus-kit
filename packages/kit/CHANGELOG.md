@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit
 
+## 0.3.2
+
+### Patch Changes
+
+- 修复 WCheckTag 无法自动导入的问题
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@iswangh/element-plus-kit",
   "type": "module",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Element Plus Kit - 基于 Element Plus 的 Vue 3 组件集合",
   "author": "iswangh",
   "license": "Apache-2.0",
