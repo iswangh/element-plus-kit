@@ -1,5 +1,13 @@
 # @iswangh/element-plus-kit
 
+## 0.3.1
+
+### Patch Changes
+
+- 新增 tag checkTag 组件
+- Updated dependencies
+  - @iswangh/element-plus-kit-tag@0.0.1
+
 ## 0.3.0
 
 ### Minor Changes

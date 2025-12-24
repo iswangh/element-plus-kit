@@ -24,7 +24,7 @@
     "release": "changeset publish",
     "docs:dev": "pnpm --filter ./docs dev",
     "docs:build": "pnpm run build && pnpm --filter ./docs build",
-    "docs:preview": "pnpm --filter ./docs preview"
+    "docs:preview": "pnpm run build && pnpm --filter ./docs preview"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
