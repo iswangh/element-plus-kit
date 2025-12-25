@@ -235,7 +235,7 @@ const formItems4: FormItems = [
           <template #form-item-label="{ formItem, label }">
             <span class="flex items-center gap-1">
               <span>{{ label }}</span>
-              <el-tag v-if="formItem?.rules?.some((r: any) => r.required)" size="small" type="danger" effect="plain">必填</el-tag>
+              <el-tag v-if="(Array.isArray(formItem?.rules) ? formItem.rules : formItem?.rules ? [formItem.rules] : []).some((r: any) => r.required)" size="small" type="danger" effect="plain">必填</el-tag>
             </span>
           </template>
 

@@ -21,10 +21,10 @@ interface Props extends ElFormProps {
 
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: FormItemEventExtendedParams, value: T[K]): void
-  (e: 'action', eventName: string, data?: unknown): void
+  (e: 'change', extendedParams: FormItemEventExtendedParams, value: any): void
+  (e: 'action', eventName: string, data?: any): void
   (e: 'search'): void
-  (e: 'reset', resetData: Record<string, unknown>): void
+  (e: 'reset', resetData: Record<string, any>): void
   (e: 'submit'): void
   (e: 'cancel'): void
   (e: 'expand', value: boolean): void
@@ -76,14 +76,6 @@ function isEventAttribute(key: string, value: unknown): boolean {
   return key.startsWith('on') && typeof value === 'function'
 }
 
-/**
- * 提取动态组件的事件
- * useAttrs 会自动过滤掉 defineEmits 中定义的事件
- */
-const dynamicCompEvents = computed(() => {
-  return Object.fromEntries(Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value))) as Record<string, (prop: string, ...args: unknown[]) => void>
-})
-
 /** 提取并合并 form 属性 */
 const mergedAttrs = computed(() => {
   const { formItems: _f, actionConfig: _a, rowProps: _r, ...rest } = props
@@ -91,6 +83,14 @@ const mergedAttrs = computed(() => {
   const filteredAttrs = Object.fromEntries(Object.entries(attrs).filter(([key, value]) => !isEventAttribute(key, value)))
 
   return { ...rest, ...DEFAULT_FORM_PROPS, ...filteredAttrs }
+})
+
+/**
+ * 提取动态组件的事件
+ * useAttrs 会自动过滤掉 defineEmits 中定义的事件
+ */
+const dynamicCompEvents = computed(() => {
+  return Object.fromEntries(Object.entries(attrs).filter(([key, value]) => isEventAttribute(key, value))) as Record<string, (prop: string, ...args: unknown[]) => void>
 })
 
 // 展开/折叠状态（支持 v-model:expanded）
