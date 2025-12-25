@@ -29,6 +29,10 @@ export default defineConfig({
       rollupTypes: true,
       // 日志级别：静默（不输出日志）
       logLevel: 'silent',
+      // 编译器选项：跳过类型检查，避免解析外部依赖的类型声明文件时出错
+      compilerOptions: {
+        skipLibCheck: true,
+      },
     }),
   ],
   // esbuild 配置：开发时转换和生产构建压缩
