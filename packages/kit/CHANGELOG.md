@@ -1,5 +1,14 @@
 # @iswangh/element-plus-kit
 
+## 0.3.3
+
+### Patch Changes
+
+- 更新依赖、form 集成 WCheckTag
+- Updated dependencies
+  - @iswangh/element-plus-kit-form@0.3.1
+  - @iswangh/element-plus-kit-tag@0.0.2
+
 ## 0.3.2
 
 ### Patch Changes

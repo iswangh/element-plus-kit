@@ -77,19 +77,24 @@ export function useLoadOptions(formItems: any[], formData?: Record<string, any>)
 
     try {
       const candidateFormItems = getCandidateFormItems(props)
-      const targetFormItems = candidateFormItems.filter(item => typeof item.compProps?.optionsLoader === 'function')
+      const targetFormItems = candidateFormItems.filter((item) => {
+        const compProps = item.compProps as any
+        return typeof compProps?.optionsLoader === 'function'
+      })
 
       const promises = targetFormItems.map(async (formItem) => {
         try {
-          const optionsLoader = formItem.compProps.optionsLoader
+          const compProps = formItem.compProps as any
+          const optionsLoader = compProps.optionsLoader
           const options = await optionsLoader(formData)
-          formItem.compProps.options = Array.isArray(options) ? options : []
+          compProps.options = Array.isArray(options) ? options : []
         }
         catch (error) {
           const fieldName = formItem.label || formItem.prop
           console.error(`[useLoadOptions] 字段 "${fieldName}" (${formItem.prop}) 的选项加载失败，已跳过该字段:`, error)
           // 失败时设置默认值，确保 options 始终是数组
-          formItem.compProps.options = []
+          const compProps = formItem.compProps as any
+          compProps.options = []
         }
       })
 
@@ -108,20 +113,27 @@ export function useLoadOptions(formItems: any[], formData?: Record<string, any>)
    */
   function getOptions(props?: string | string[]): OptionsResult {
     const candidateFormItems = getCandidateFormItems(props)
-    const targetFormItems = candidateFormItems.filter(item => Array.isArray(item.compProps?.options))
+    const targetFormItems = candidateFormItems.filter((item) => {
+      const compProps = item.compProps as any
+      return Array.isArray(compProps?.options)
+    })
 
     // 单个字段：返回选项数组
     if (props && !Array.isArray(props)) {
       const formItem = targetFormItems.find(item => item.prop === props)
-      const options = formItem?.compProps?.options
+      const compProps = formItem?.compProps as any
+      const options = compProps?.options
       return options ? toRaw(options) : []
     }
 
     // 多个字段或全部：返回 [{prop, options}] 数组
-    return targetFormItems.map(item => ({
-      prop: item.prop,
-      options: item.compProps?.options ? toRaw(item.compProps.options) : [],
-    }))
+    return targetFormItems.map((item) => {
+      const compProps = item.compProps as any
+      return {
+        prop: item.prop,
+        options: compProps?.options ? toRaw(compProps.options) : [],
+      }
+    })
   }
 
   return { loading, loadOptions, getOptions }

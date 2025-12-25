@@ -96,7 +96,7 @@ function onChange(event: any) {
 const processedCompProps = computed(() => {
   const defaults = COMP_DEFAULT_CONFIG.getDefaults(props.formItem)
   const compProps = props.formItem.compProps ?? {}
-  const { optionsLoader: _optionsLoader, slots: _compSlots, ...restCompProps } = compProps
+  const { optionsLoader: _optionsLoader, slots: _compSlots, ...restCompProps } = compProps as any
 
   // 排除事件处理器的辅助函数
   const excludeEvents = (obj: Record<string, any>) => Object.fromEntries(Object.entries(obj).filter(([key]) => !key.startsWith('on')))

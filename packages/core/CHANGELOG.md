@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit-core
 
+## 0.2.2
+
+### Patch Changes
+
+- 更新依赖、form 集成 WCheckTag
+
 ## 0.2.1
 
 ### Patch Changes
