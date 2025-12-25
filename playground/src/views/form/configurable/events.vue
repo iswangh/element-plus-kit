@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /* eslint-disable no-console */
-import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 

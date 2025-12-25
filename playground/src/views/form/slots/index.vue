@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 import { Edit, Lock, QuestionFilled, Search, User, WarningFilled } from '@element-plus/icons-vue'
 import { WForm } from '@iswangh/element-plus-kit'
 

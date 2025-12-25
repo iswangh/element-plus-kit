@@ -2,7 +2,7 @@
 // 不导入，依赖 unplugin-auto-import 和 unplugin-vue-components 自动导入
 // Vue API（ref、computed、watch 等）和 Vue Router API（useRoute、useRouter 等）会自动导入
 // Element Plus 组件和 Element Plus Kit 组件也会自动导入
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const formItems: FormItems = [
   {

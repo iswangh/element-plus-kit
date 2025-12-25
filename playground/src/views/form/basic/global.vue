@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ref 会自动导入，无需手动导入
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 // 全局注册（在 main.ts 中调用）
 // const app = createApp(App)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormActionConfig, FormItems } from '@iswangh/element-plus-kit'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ElMessage } from 'element-plus'
 

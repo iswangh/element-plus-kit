@@ -1,7 +1,7 @@
 <!-- eslint-disable no-console -->
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
-import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItemEventExtendedParams, FormItems } from '@iswangh/element-plus-kit'
 import { WForm } from '@iswangh/element-plus-kit'
 import { ref } from 'vue'
 import { cities, districts, provinces } from './data'

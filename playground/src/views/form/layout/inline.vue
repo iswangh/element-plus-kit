@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormItems } from '@iswangh/element-plus-kit-form'
+import type { FormItems } from '@iswangh/element-plus-kit'
 
 const form = ref({})
 const useColumnLayout = ref(false)

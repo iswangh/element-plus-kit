@@ -49,6 +49,10 @@ export default defineConfig({
         find: '@iswangh/element-plus-kit-form/style.css',
         replacement: resolve(__dirname, '../packages/form/src/style/index.scss'),
       },
+      {
+        find: '@iswangh/element-plus-kit-tag/style.css',
+        replacement: resolve(__dirname, '../packages/tag/src/index.ts'),
+      },
       // 包名别名：开发环境中指向源码，确保 HMR 正常工作
       {
         find: '@iswangh/element-plus-kit-form',
