@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit-form
 
+## 0.3.2
+
+### Patch Changes
+
+- form 包导入 WCheckTag 组件样式
+
 ## 0.3.1
 
 ### Patch Changes

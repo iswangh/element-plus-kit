@@ -27,12 +27,16 @@ export default defineConfig({
       copyDtsFiles: true,
       // 合并类型声明文件：将多个入口的类型声明合并
       rollupTypes: true,
+      // 不插入类型入口（避免解析外部依赖的类型声明文件时出错）
+      insertTypesEntry: false,
       // 日志级别：静默（不输出日志）
       logLevel: 'silent',
       // 编译器选项：跳过类型检查，避免解析外部依赖的类型声明文件时出错
       compilerOptions: {
         skipLibCheck: true,
       },
+      // 排除外部依赖的类型解析（避免解析 workspace 包的类型声明文件时出错）
+      bundledPackages: [],
     }),
   ],
   // esbuild 配置：开发时转换和生产构建压缩
