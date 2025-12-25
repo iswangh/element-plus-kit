@@ -1298,6 +1298,7 @@ async function onChange(extendedParams: FormItemEventExtendedParams) {
 | `transfer` | 穿梭框 | - | [Element Plus Transfer](https://element-plus.org/zh-CN/component/transfer.html) |
 | `mention` | 提及 | `{ placeholder: '请输入${label}'（动态），clearable: true }` | [Element Plus Mention](https://element-plus.org/zh-CN/component/mention.html) |
 | `custom` | 自定义组件（通过插槽实现） | - | - |
+| `w-check-tag` | 可选标签（支持单选/多选，配合 `options` 属性） | - | [Element Plus Kit CheckTag](../check-tag/index.md) |
 
 ##### Options 配置
 

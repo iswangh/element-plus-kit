@@ -1,5 +1,5 @@
+import type { WCheckTag } from '@iswangh/element-plus-kit-tag'
 import type { ElAutocomplete, ElCascader, ElCheckbox, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
-import type { EXPAND_COMP_MAP } from '../config'
 
 /**
  * Element Plus 组件映射类型
@@ -33,16 +33,27 @@ interface ElCompMap {
 }
 
 /**
+ * 扩展组件映射类型
+ *
+ * 手动定义扩展组件的类型映射，确保类型提示正常工作
+ * 与 comp.ts 中的 EXPAND_COMP_MAP 保持同步
+ */
+interface ExpandCompMap {
+  readonly 'custom': typeof HTMLDivElement
+  readonly 'w-check-tag': typeof WCheckTag
+}
+
+/**
  * 表单组件配置映射类型
  *
  * 合并 Element Plus 组件映射和扩展组件映射的类型
  * - ElCompMap: 手动定义，避免类型推断超出限制
- * - typeof EXPAND_COMP_MAP: 从运行时值提取类型（简单映射，不会超出限制）
+ * - ExpandCompMap: 手动定义扩展组件类型，确保类型提示正常工作
  *
  * 注意：不使用 typeof FORM_ITEM_COMP_MAP，因为 FORM_ITEM_COMP_MAP 使用了
  * Record<string, any> 避免类型推断超出编译器序列化限制
  */
-export type FormCompConfig = ElCompMap & typeof EXPAND_COMP_MAP
+export type FormCompConfig = ElCompMap & ExpandCompMap
 
 /**
  * 支持的表单组件枚举
@@ -51,31 +62,31 @@ export type FormCompConfig = ElCompMap & typeof EXPAND_COMP_MAP
  * 注意：由于 FORM_ITEM_COMP_MAP 使用了 Record<string, any> 避免类型推断超出限制，
  * 我们需要显式定义键名类型，而不是从 typeof FORM_ITEM_COMP_MAP 中提取
  */
-export type FormItemComp = 'custom'
-  | 'autocomplete'
-  | 'cascader'
-  | 'checkbox'
-  | 'checkbox-group'
-  | 'color-picker'
-  | 'color-picker-panel'
-  | 'date-picker'
-  | 'date-picker-panel'
-  | 'input'
-  | 'input-number'
-  | 'input-tag'
-  | 'mention'
-  | 'radio-group'
-  | 'rate'
-  | 'select'
-  | 'select-v2'
-  | 'slider'
-  | 'switch'
-  | 'time-picker'
-  | 'time-select'
-  | 'transfer'
-  | 'tree-select'
-  | 'custom'
-
+export type FormItemComp
+  = 'autocomplete'
+    | 'cascader'
+    | 'checkbox'
+    | 'checkbox-group'
+    | 'color-picker'
+    | 'color-picker-panel'
+    | 'date-picker'
+    | 'date-picker-panel'
+    | 'input'
+    | 'input-number'
+    | 'input-tag'
+    | 'mention'
+    | 'radio-group'
+    | 'rate'
+    | 'select'
+    | 'select-v2'
+    | 'slider'
+    | 'switch'
+    | 'time-picker'
+    | 'time-select'
+    | 'transfer'
+    | 'tree-select'
+    | 'custom'
+    | 'w-check-tag'
 /**
  * 根据组件类型获取组件实例类型
  * @template T 组件类型

@@ -15,6 +15,8 @@ const form = ref({
   selectV2: '',
   cascader: [],
   treeSelect: '',
+  checkTagSingle: null,
+  checkTagMultiple: [],
   // 日期时间类组件
   datePicker: '',
   datePickerPanel: '',
@@ -181,6 +183,32 @@ const selectFormItems: FormItems = [
       ],
     },
   },
+  {
+    prop: 'checkTagSingle',
+    label: '可选标签（单选）',
+    compType: 'w-check-tag',
+    compProps: {
+      options: [
+        { label: '选项1', value: '1' },
+        { label: '选项2', value: '2' },
+        { label: '选项3', value: '3' },
+      ],
+    },
+  },
+  {
+    prop: 'checkTagMultiple',
+    label: '可选标签（多选）',
+    compType: 'w-check-tag',
+    compProps: {
+      options: [
+        { label: '选项1', value: '1' },
+        { label: '选项2', value: '2' },
+        { label: '选项3', value: '3' },
+        { label: '选项4', value: '4' },
+      ],
+      multiple: true,
+    },
+  },
 ]
 
 // 示例 3：日期时间类组件
@@ -332,11 +360,11 @@ const otherFormItems: FormItems = [
         <el-alert type="info" :closable="false" show-icon>
           <template #default>
             <p class="text-sm text-gray-600 m-0">
-              说明：选择类组件包括 <code>select</code>、<code>select-v2</code>、<code>cascader</code>、<code>tree-select</code> 等。
+              说明：选择类组件包括 <code>select</code>、<code>select-v2</code>、<code>cascader</code>、<code>tree-select</code>、<code>w-check-tag</code> 等。
             </p>
           </template>
         </el-alert>
-        <WForm :model="form" :form-items="selectFormItems" label-width="120px" />
+        <WForm :model="form" :form-items="selectFormItems" label-width="140px" />
       </el-space>
     </el-card>
 

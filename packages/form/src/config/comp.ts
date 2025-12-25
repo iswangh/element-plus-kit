@@ -1,12 +1,16 @@
 /* eslint-disable ts/no-explicit-any */
 import type { FormItem } from '../types'
+import { WCheckTag } from '@iswangh/element-plus-kit-tag'
 import { ElAutocomplete, ElCascader, ElCheckbox, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 
 /**
  * 拓展的组件映射
  * 导出以便在类型文件中使用 typeof 提取类型
  */
-export const EXPAND_COMP_MAP = { custom: 'div' } as const
+export const EXPAND_COMP_MAP: Record<string, any> = {
+  'custom': 'div',
+  'w-check-tag': WCheckTag,
+} as const
 
 /**
  * Element Plus 组件映射
@@ -79,7 +83,7 @@ export const COMP_DEFAULT_CONFIG = {
     const inputComps: readonly string[] = ['autocomplete', 'input', 'input-number', 'input-tag', 'mention']
 
     // 选择类组件
-    const selectComps: readonly string[] = ['cascader', 'select', 'select-v2', 'tree-select']
+    const selectComps: readonly string[] = ['cascader', 'select', 'select-v2', 'tree-select', 'w-check-tag']
 
     // 日期类组件
     const pickerComps: readonly string[] = ['date-picker', 'time-select', 'time-picker']

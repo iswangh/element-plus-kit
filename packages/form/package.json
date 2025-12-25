@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@iswangh/element-plus-kit-core": "workspace:*",
+    "@iswangh/element-plus-kit-tag": "workspace:*",
     "lodash-es": "^4.17.22"
   },
   "devDependencies": {

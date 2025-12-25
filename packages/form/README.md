@@ -191,6 +191,7 @@ interface FormItem<C extends FormItemComp = FormItemComp> {
 - `time-select` - 时间选择
 - `transfer` - 穿梭框
 - `tree-select` - 树形选择器
+- `w-check-tag` - 可选标签（支持单选/多选）
 - `custom` - 自定义组件（使用插槽）
 
 #### 使用示例

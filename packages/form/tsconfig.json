@@ -21,11 +21,16 @@
     // 输出目录：dist
     "outDir": "./dist"
   },
-  // 项目引用：依赖 core 包（通过 TypeScript Project References 管理类型依赖）
+  // 项目引用：依赖 core 和 tag 包（通过 TypeScript Project References 管理类型依赖）
   "references": [
     {
       "path": "../core",
       // 不前置输出：form 包不包含 core 包的代码
+      "prepend": false
+    },
+    {
+      "path": "../tag",
+      // 不前置输出：form 包不包含 tag 包的代码
       "prepend": false
     }
   ],
