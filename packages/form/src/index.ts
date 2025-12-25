@@ -61,6 +61,11 @@ import 'element-plus/es/components/rate/style/css'
 import 'element-plus/es/components/color-picker/style/css'
 import 'element-plus/es/components/color-picker-panel/style/css'
 import 'element-plus/es/components/transfer/style/css'
+// ============================================
+// 拓展组件样式
+// ============================================
+// 可选标签组件
+import '@iswangh/element-plus-kit-tag/style.css'
 // 导入 WForm 组件的自定义样式
 import './style/index.scss'
 
@@ -70,10 +75,4 @@ export { default } from './Form.vue'
 
 export { default as WForm } from './Form.vue'
 
-export type {
-  FormActionConfig,
-  FormItemEventExtendedParams,
-  FormItems,
-  FormItemSlotScope,
-  RowProps,
-} from './types'
+export type { FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotScope, RowProps } from './types'
