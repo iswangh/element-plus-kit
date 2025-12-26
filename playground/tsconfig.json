@@ -9,6 +9,7 @@
       // playground 内部别名
       "@/*": ["./src/*"],
       // 包名别名：指向包源码，而非构建产物
+      "@iswangh/element-plus-kit-dialog": ["../packages/dialog/src/index.ts"],
       "@iswangh/element-plus-kit-form": ["../packages/form/src/index.ts"],
       "@iswangh/element-plus-kit-tag": ["../packages/tag/src/index.ts"],
       "@iswangh/element-plus-kit": ["../packages/kit/src/index.ts"],

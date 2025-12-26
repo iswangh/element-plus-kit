@@ -11,6 +11,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@iswangh/element-plus-kit": "workspace:*",
+    "@iswangh/element-plus-kit-dialog": "workspace:*",
     "@iswangh/element-plus-kit-form": "workspace:*",
     "element-plus": "^2.13.0",
     "lodash-es": "^4.17.22",

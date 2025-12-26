@@ -1,0 +1,54 @@
+{
+  "name": "@iswangh/element-plus-kit-dialog",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Element Plus Kit Dialog 组件包",
+  "license": "Apache-2.0",
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/style.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "sideEffects": [
+        "./dist/index.js",
+        "./dist/style.css"
+      ]
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "type-check": "vue-tsc --build",
+    "prepublishOnly": "pnpm type-check && pnpm build"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.11.7",
+    "vue": "^3.5.23"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "element-plus": "^2.13.0",
+    "sass": "^1.97.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vue": "^3.5.26",
+    "vue-tsc": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

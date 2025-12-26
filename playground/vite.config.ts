@@ -63,6 +63,10 @@ export default defineConfig({
         replacement: resolve(__dirname, '../packages/core/src/index.ts'),
       },
       {
+        find: '@iswangh/element-plus-kit-dialog',
+        replacement: resolve(__dirname, '../packages/dialog/src/index.ts'),
+      },
+      {
         find: '@iswangh/element-plus-kit-tag',
         replacement: resolve(__dirname, '../packages/tag/src/index.ts'),
       },

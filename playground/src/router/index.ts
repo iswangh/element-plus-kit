@@ -6,7 +6,7 @@
 // 类型导入需要手动导入（类型导入不影响运行时）
 import type { RouteRecordRaw } from 'vue-router'
 // createRouter、createWebHistory 会自动导入，无需手动导入
-import { checkTagRouteMeta, formRouteMeta, tagRouteMeta } from './modules'
+import { checkTagRouteMeta, dialogRouteMeta, formRouteMeta, tagRouteMeta } from './modules'
 
 /**
  * 路由元信息类型
@@ -27,6 +27,7 @@ const routeMetaMap: Record<string, RouteMetaConfig> = {
   ...formRouteMeta,
   ...tagRouteMeta,
   ...checkTagRouteMeta,
+  ...dialogRouteMeta,
 }
 
 /**
