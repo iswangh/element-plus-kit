@@ -79,8 +79,10 @@ export interface DialogInstance {
    * z-index 值（响应式）
    * 由 DialogStack 自动管理，用于控制弹窗层级
    * 通过 el-dialog 的 z-index 属性设置，保持与 el-dialog 原生行为一致
+   * 初始值为 undefined，让 el-dialog 使用默认行为
+   * DialogStack 会在 push 时立即设置正确的 z-index（2000 + index）
    */
-  zIndex: Ref<number>
+  zIndex: Ref<number | undefined>
 
   /**
    * 全局加载状态（自动显示遮罩层）

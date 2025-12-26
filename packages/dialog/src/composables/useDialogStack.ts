@@ -8,7 +8,6 @@ import type { DialogInstance } from '../types'
  */
 export class DialogStack {
   private stack: DialogInstance[] = []
-  private baseZIndex = 2000
 
   /**
    * 添加弹窗实例到栈中
@@ -40,11 +39,9 @@ export class DialogStack {
   private updateZIndex() {
     this.stack.forEach((instance, index) => {
       // 计算每个实例的 z-index
-      const zIndex = this.baseZIndex + index
+      const zIndex = index
       // 更新实例的 zIndex 属性（响应式），el-dialog 会自动应用
-      if (instance.zIndex) {
-        instance.zIndex.value = zIndex
-      }
+      instance.zIndex.value = zIndex
     })
   }
 

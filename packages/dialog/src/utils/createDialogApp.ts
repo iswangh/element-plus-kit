@@ -109,6 +109,7 @@ export function createDialogApp(options: DialogOptions, instance: DialogInstance
       }, { immediate: true })
 
       // z-index 计算属性（确保响应式更新）
+      // 优先级：用户设置的 zIndex > DialogStack 管理的 zIndex > undefined（不传递，让 el-dialog 使用默认行为）
       const zIndex = computed(() => userZIndex ?? instance.zIndex.value)
 
       // 处理关闭事件
@@ -145,7 +146,8 @@ export function createDialogApp(options: DialogOptions, instance: DialogInstance
         'id': instance.id,
         'modelValue': instance.modelValue.value,
         'onUpdate:modelValue': (value: boolean) => instance.modelValue.value = value,
-        'zIndex': zIndex.value,
+        // 只有当 zIndex 有值时才传递，否则让 el-dialog 使用默认行为
+        ...(zIndex.value != null && { zIndex: zIndex.value }),
         onClose,
         onClosed,
         ...elDialogProps,
