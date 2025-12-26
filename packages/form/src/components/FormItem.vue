@@ -1,11 +1,11 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { Slot } from 'vue'
-import type { FormItem, FormItemEventExtendedParams } from './types'
+import type { FormItem, FormItemEventExtendedParams } from '../types'
 import { ElFormItem } from 'element-plus'
 import { computed, nextTick, watch } from 'vue'
-import { useChangeEventState } from './composables'
-import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
+import { useChangeEventState } from '../composables'
+import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from '../config'
 
 interface ProcessedSlot {
   rawSlotName: string

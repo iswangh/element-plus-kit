@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CheckTagOption, TagFieldProps, TagValue } from './types'
-import type { ElCheckTagProps, ElSpaceProps } from './types/el'
+import type { CheckTagOption, ElCheckTagProps, ElSpaceProps, TagFieldProps, TagValue } from '../types'
 import { ElCheckTag, ElSpace } from 'element-plus'
 import { computed, useAttrs } from 'vue'
 

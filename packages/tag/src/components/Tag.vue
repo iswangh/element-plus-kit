@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ElTagProps, TagFieldProps, TagOption, TagSlotScope, TagValue } from './types'
-import type { MatchResult } from './utils'
+import type { ElTagProps, TagFieldProps, TagOption, TagSlotScope, TagValue } from '../types'
+import type { MatchResult } from '../utils'
 import { ElTag } from 'element-plus'
 import { computed, useAttrs, useSlots } from 'vue'
-import { matchOption } from './utils'
+import { matchOption } from '../utils'
 
 interface Props extends /* @vue-ignore */ ElTagProps {
 

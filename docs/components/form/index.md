@@ -1353,7 +1353,7 @@ async function onChange(extendedParams: FormItemEventExtendedParams) {
 | `'reset'` | 重置按钮 | 默认按钮（带刷新图标） |
 | `'search'` | 搜索按钮 | 主要按钮（`type: 'primary'`，带搜索图标） |
 | `'cancel'` | 取消按钮 | 默认按钮 |
-| `'expand'` | 展开/折叠按钮 | 文本按钮（`type: 'text'`，仅在 `inline` 模式下可用） |
+| `'expand'` | 展开/折叠按钮 | 链接按钮（`link: true`，仅在 `inline` 模式下可用） |
 
 **自定义按钮**：
 

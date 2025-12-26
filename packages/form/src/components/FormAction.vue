@@ -1,11 +1,11 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang="ts">
 import type { Slot } from 'vue'
-import type { FormActionButtonItem, FormActionConfig } from './types'
+import type { FormActionButtonItem, FormActionConfig } from '../types'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { ElButton, ElFormItem, ElIcon } from 'element-plus'
 import { computed } from 'vue'
-import { DEFAULT_FORM_ACTION_BUTTONS, FORM_ACTION_DEFAULT_CONFIG } from './config'
+import { DEFAULT_FORM_ACTION_BUTTONS, FORM_ACTION_DEFAULT_CONFIG } from '../config'
 
 interface Props {
   inline?: boolean

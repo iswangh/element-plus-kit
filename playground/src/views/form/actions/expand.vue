@@ -132,7 +132,7 @@ const actionConfig9: FormActionConfig = {
 // 示例 10：使用对象数组配置 buttons（展开放在第一位）
 const actionConfig10: FormActionConfig = {
   buttons: [
-    { eventName: 'expand', type: 'text' },
+    { eventName: 'expand', link: true }, // Element Plus 2.x 推荐使用 link 属性替代 type: 'text'
     { eventName: 'search', label: '搜索', type: 'primary' },
     { eventName: 'reset', label: '重置' },
   ],
@@ -482,7 +482,7 @@ function onReset(resetData: Record<string, unknown>) {
                 <br>
                 <strong>配置说明</strong>：
                 <br>
-                • 展开按钮放在第一位，使用 <code>type: 'text'</code> 样式
+                • 展开按钮放在第一位，使用 <code>link: true</code> 属性（Element Plus 2.x 推荐使用 link 属性替代 type: 'text'）
                 <br>
                 • 搜索按钮使用 <code>type: 'primary'</code> 样式
                 <br>
@@ -642,7 +642,7 @@ function onReset(resetData: Record<string, unknown>) {
                   <el-radio-button
                     v-for="option in scrollBlockOptions"
                     :key="option.value"
-                    :label="option.value"
+                    :value="option.value"
                   >
                     {{ option.label }}
                   </el-radio-button>
@@ -656,7 +656,7 @@ function onReset(resetData: Record<string, unknown>) {
                   <el-radio-button
                     v-for="option in scrollBehaviorOptions"
                     :key="option.value"
-                    :label="option.value"
+                    :value="option.value"
                   >
                     {{ option.label }}
                   </el-radio-button>

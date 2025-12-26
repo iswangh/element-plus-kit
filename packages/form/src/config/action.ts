@@ -9,7 +9,7 @@ export const DEFAULT_FORM_ACTION_BUTTONS: Record<string, Partial<Omit<FormAction
   reset: { label: '重置', icon: Refresh },
   submit: { label: '确认', type: 'primary' },
   cancel: { label: '取消' },
-  expand: { type: 'text' },
+  expand: { link: true },
 }
 
 /**

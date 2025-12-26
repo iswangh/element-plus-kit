@@ -2,16 +2,16 @@
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { Slot } from 'vue'
-import type { Arrayable, CompSlotsConfig, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotsConfig, FormItemSlotScope, RowProps, SlotRenderFn } from './types'
+import type { Arrayable, CompSlotsConfig, ElFormProps, FormActionConfig, FormItemEventExtendedParams, FormItems, FormItemSlotsConfig, FormItemSlotScope, RowProps, SlotRenderFn } from '../types'
 import { checkCondition } from '@iswangh/element-plus-kit-core'
 import { ElCol, ElForm, ElRow } from 'element-plus'
 import { computed, nextTick, onMounted, ref, useAttrs, useSlots, watch } from 'vue'
-import { useAutoExpandOnHover } from './composables'
-import { DEFAULT_FORM_PROPS } from './config'
-import { DEFAULT_SCROLL_OPTIONS } from './config/scroll'
+import { useAutoExpandOnHover } from '../composables'
+import { DEFAULT_FORM_PROPS } from '../config'
+import { DEFAULT_SCROLL_OPTIONS } from '../config/scroll'
+import { cloneDeep, debounce, hasButtonEvent } from '../utils'
 import FormAction from './FormAction.vue'
 import FormItemComp from './FormItem.vue'
-import { cloneDeep, debounce, hasButtonEvent } from './utils'
 
 interface Props extends ElFormProps {
   formItems: FormItems
