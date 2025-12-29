@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 import { WTag } from '@iswangh/element-plus-kit'
 import { ref } from 'vue'
 

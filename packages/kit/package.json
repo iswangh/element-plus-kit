@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@iswangh/element-plus-kit-dialog": "workspace:*",
+    "@iswangh/element-plus-kit-drawer": "workspace:*",
     "@iswangh/element-plus-kit-form": "workspace:*",
     "@iswangh/element-plus-kit-tag": "workspace:*"
   },

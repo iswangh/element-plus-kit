@@ -32,6 +32,16 @@
       "path": "../tag",
       // 不前置输出：kit 包不包含 tag 包的代码
       "prepend": false
+    },
+    {
+      "path": "../dialog",
+      // 不前置输出：kit 包不包含 dialog 包的代码
+      "prepend": false
+    },
+    {
+      "path": "../drawer",
+      // 不前置输出：kit 包不包含 drawer 包的代码
+      "prepend": false
     }
   ],
   "include": ["src/**/*"],

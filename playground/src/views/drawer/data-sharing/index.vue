@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useDialog } from '@iswangh/element-plus-kit'
+import { useDrawer } from '@iswangh/element-plus-kit'
 import { ElButton, ElMessage } from 'element-plus'
 import { defineComponent, h, ref } from 'vue'
 
-const dialog = useDialog()
+const drawer = useDrawer()
 
 // 示例1：onOpened 中获取数据，在 default 插槽中使用
 const userData = ref<{ username: string, email: string } | null>(null)
 
-const { modelValue: dataSharingVisible, loading } = dialog.use({
+const { modelValue: dataSharingVisible, loading } = drawer.use({
   title: '数据共享示例',
-  width: '600px',
+  size: '600px',
   slots: {
     default: () => {
       // 在 default 插槽中访问 onOpened 中获取的数据（通过闭包访问）
@@ -46,8 +46,8 @@ const { modelValue: dataSharingVisible, loading } = dialog.use({
 const headerData = ref<{ title: string, count: number } | null>(null)
 const contentData = ref<string[]>([])
 
-const { modelValue: headerDataSharingVisible } = dialog.use({
-  width: '600px',
+const { modelValue: headerDataSharingVisible } = drawer.use({
+  size: '600px',
   slots: {
     header: () => {
       // 在 header 插槽中访问数据（通过闭包访问）
@@ -135,9 +135,9 @@ const CustomUserCard = defineComponent({
 
 const componentUserData = ref<{ username: string, email: string } | null>(null)
 
-const { modelValue: componentDataSharingVisible, loading: componentLoading } = dialog.use({
+const { modelValue: componentDataSharingVisible, loading: componentLoading } = drawer.use({
   title: '自定义组件数据传递',
-  width: '600px',
+  size: '600px',
   slots: {
     default: () => {
       // 将数据传递给自定义组件，并处理组件事件（通过闭包访问）
@@ -172,8 +172,8 @@ const { modelValue: componentDataSharingVisible, loading: componentLoading } = d
 // 示例4：多个插槽共享数据
 const sharedData = ref<{ message: string, timestamp: string } | null>(null)
 
-const { modelValue: multiSlotSharingVisible } = dialog.use({
-  width: '600px',
+const { modelValue: multiSlotSharingVisible } = drawer.use({
+  size: '600px',
   slots: {
     header: () => {
       // header 插槽访问共享数据（通过闭包访问）
@@ -211,21 +211,21 @@ const { modelValue: multiSlotSharingVisible } = dialog.use({
 })
 
 // 示例5：在插槽中访问 instance 的响应式状态
-const { modelValue: instanceStateVisible, id: instanceStateId, loading: instanceStateLoading, buttonLoadings: instanceStateButtonLoadings } = dialog.use({
+const { modelValue: instanceStateVisible, id: instanceStateId, loading: instanceStateLoading, buttonLoadings: instanceStateButtonLoadings } = drawer.use({
   title: '访问 instance 响应式状态',
-  width: '600px',
+  size: '600px',
   slots: {
     header: () => {
       // 在 header 中访问 instance 的 loading 状态（通过闭包访问）
       return h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
-        h('span', { style: { fontWeight: 'bold' } }, '弹窗标题'),
+        h('span', { style: { fontWeight: 'bold' } }, '抽屉标题'),
         instanceStateLoading.value && h('span', { style: { color: '#409EFF', fontSize: '12px' } }, '加载中...'),
       ])
     },
     default: () => {
       // 在 default 中访问 instance 的状态（通过闭包访问）
       return h('div', [
-        h('p', `弹窗 ID: ${instanceStateId}`),
+        h('p', `抽屉 ID: ${instanceStateId}`),
         h('p', `Loading 状态: ${instanceStateLoading.value ? '是' : '否'}`),
       ])
     },
@@ -330,7 +330,7 @@ const { modelValue: instanceStateVisible, id: instanceStateId, loading: instance
             访问 instance 响应式状态
           </ElButton>
           <p class="text-sm text-gray-500 mt-2">
-            所有插槽的渲染函数都通过闭包访问（从 <code>dialog.use()</code> 解构的变量），可以访问 <code>instance.loading</code>、<code>instance.buttonLoadings</code> 等响应式状态。
+            所有插槽的渲染函数都通过闭包访问（从 <code>drawer.use()</code> 解构的变量），可以访问 <code>instance.loading</code>、<code>instance.buttonLoadings</code> 等响应式状态。
           </p>
         </div>
       </el-space>

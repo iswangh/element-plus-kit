@@ -7,9 +7,9 @@ import dts from 'vite-plugin-dts'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 /**
- * Kit 包构建配置
+ * Drawer 包构建配置
  *
- * 主包，聚合所有组件和工具，提供统一的入口
+ * Drawer 组件包，不依赖其他内部包
  */
 export default defineConfig({
   plugins: [
@@ -25,18 +25,8 @@ export default defineConfig({
       outDir: 'dist',
       // 复制类型声明文件到输出目录
       copyDtsFiles: true,
-      // 合并类型声明文件：将多个入口的类型声明合并
-      rollupTypes: true,
-      // 不插入类型入口（避免解析外部依赖的类型声明文件时出错）
-      insertTypesEntry: false,
       // 日志级别：静默（不输出日志）
       logLevel: 'silent',
-      // 编译器选项：跳过类型检查，避免解析外部依赖的类型声明文件时出错
-      compilerOptions: {
-        skipLibCheck: true,
-      },
-      // 排除外部依赖的类型解析（避免解析 workspace 包的类型声明文件时出错）
-      bundledPackages: [],
     }),
   ],
   // esbuild 配置：开发时转换和生产构建压缩
@@ -49,39 +39,30 @@ export default defineConfig({
   build: {
     // 库模式配置
     lib: {
-      // 多入口配置：支持多个入口点
-      entry: {
-        // 主入口：组件库主入口
-        index: resolve(__dirname, 'src/index.ts'),
-        // resolver 入口：用于 unplugin-vue-components 的自动导入解析器
-        resolver: resolve(__dirname, 'src/utils/resolver.ts'),
-      },
+      // 入口文件
+      entry: resolve(__dirname, 'src/index.ts'),
       // 库名称（用于 UMD 格式，当前仅使用 ES 格式）
-      name: 'ElementPlusKit',
-      // 输出文件名：根据入口名称生成
-      fileName: (format, entryName) => `${entryName}.js`,
+      name: 'ElementPlusKitDrawer',
+      // 输出文件名
+      fileName: 'index',
       // 输出格式：仅 ES 模块
       formats: ['es'],
     },
     rollupOptions: {
       // 外部依赖：不打包到库中，由使用者提供
-      external: [
-        'vue',
-        'element-plus',
-        '@iswangh/element-plus-kit-core',
-        '@iswangh/element-plus-kit-form',
-        '@iswangh/element-plus-kit-tag',
-        '@iswangh/element-plus-kit-dialog',
-        '@iswangh/element-plus-kit-drawer',
-      ],
+      external: ['vue', 'element-plus'],
       output: {
         // 全局变量映射（用于 UMD 格式，当前未使用）
         globals: {
           'vue': 'Vue',
           'element-plus': 'ElementPlus',
         },
+        // 样式文件输出名称：统一输出为 style.css
+        assetFileNames: 'style.css',
       },
     },
+    // 禁用 CSS 代码分割：所有样式合并到一个文件
+    cssCodeSplit: false,
     // 使用 esbuild 进行代码压缩和优化
     minify: 'esbuild',
   },

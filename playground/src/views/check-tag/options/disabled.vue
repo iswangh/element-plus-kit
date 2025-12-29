@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 import { WCheckTag } from '@iswangh/element-plus-kit'
 import { ref } from 'vue'
 

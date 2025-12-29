@@ -9,6 +9,9 @@
       "path": "./packages/dialog"
     },
     {
+      "path": "./packages/drawer"
+    },
+    {
       "path": "./packages/form"
     },
     {

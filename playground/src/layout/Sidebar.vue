@@ -2,7 +2,7 @@
 import type { PropType } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
 import router from '@/router'
-import { checkTagRouteMeta, dialogRouteMeta, formRouteMeta, tagRouteMeta } from '@/router/modules'
+import { checkTagRouteMeta, dialogRouteMeta, drawerRouteMeta, formRouteMeta, tagRouteMeta } from '@/router/modules'
 
 const route = useRoute()
 
@@ -19,6 +19,11 @@ function getRouteMeta(path: string) {
   const dialogMeta = dialogRouteMeta[path as keyof typeof dialogRouteMeta]
   if (dialogMeta)
     return dialogMeta
+
+  // 从 drawerRouteMeta 中查找
+  const drawerMeta = drawerRouteMeta[path as keyof typeof drawerRouteMeta]
+  if (drawerMeta)
+    return drawerMeta
 
   // 从 formRouteMeta 中查找
   const formMeta = formRouteMeta[path as keyof typeof formRouteMeta]

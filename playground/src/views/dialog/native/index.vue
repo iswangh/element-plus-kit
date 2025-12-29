@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDialog } from '@iswangh/element-plus-kit-dialog'
+import { useDialog } from '@iswangh/element-plus-kit'
 import { ElButton, ElMessage, ElMessageBox } from 'element-plus'
 import { h, ref } from 'vue'
 
