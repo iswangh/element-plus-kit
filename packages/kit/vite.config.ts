@@ -68,8 +68,10 @@ export default defineConfig({
       external: [
         'vue',
         'element-plus',
-        '@iswangh/element-plus-kit-form',
         '@iswangh/element-plus-kit-core',
+        '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-tag',
+        '@iswangh/element-plus-kit-dialog',
       ],
       output: {
         // 全局变量映射（用于 UMD 格式，当前未使用）

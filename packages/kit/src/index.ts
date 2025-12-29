@@ -1,4 +1,10 @@
-export type * from './types'
-export { default, ElementPlusKitResolver, install } from './utils'
-export { useLoadOptions, WForm } from '@iswangh/element-plus-kit-form'
-export { WCheckTag, WTag } from '@iswangh/element-plus-kit-tag'
+export * from './utils'
+
+export * from '@iswangh/element-plus-kit-dialog'
+export type * from '@iswangh/element-plus-kit-dialog'
+
+export * from '@iswangh/element-plus-kit-form'
+export type * from '@iswangh/element-plus-kit-form'
+
+export * from '@iswangh/element-plus-kit-tag'
+export type * from '@iswangh/element-plus-kit-tag'

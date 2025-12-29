@@ -45,6 +45,7 @@
     "vue": "^3.5.23"
   },
   "dependencies": {
+    "@iswangh/element-plus-kit-dialog": "workspace:*",
     "@iswangh/element-plus-kit-form": "workspace:*",
     "@iswangh/element-plus-kit-tag": "workspace:*"
   },
