@@ -1,5 +1,4 @@
 import type { Component, VNode } from 'vue'
-import type { DrawerInstance } from '../types'
 import { h } from 'vue'
 
 /**
@@ -10,12 +9,12 @@ import { h } from 'vue'
  * 渲染函数通过闭包访问，不接收 instance 参数
  *
  * @param content - 内容（字符串、VNode、组件、渲染函数）
- * @param instance - Drawer 实例（用于判断是否为渲染函数）
+ * @param instance - 实例（用于判断是否为渲染函数，可以是任意类型）
  * @returns VNode
  */
 export function renderContent(
   content?: string | VNode | Component | (() => string | Component | VNode),
-  instance?: DrawerInstance,
+  instance?: unknown,
 ): VNode | null {
   if (!content)
     return null

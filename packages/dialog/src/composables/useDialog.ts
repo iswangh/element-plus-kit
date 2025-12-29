@@ -1,8 +1,8 @@
 import type { App } from 'vue'
 import type { DialogGlobalConfig, DialogInstance, DialogOptions, UseDialogReturn } from '../types'
+import { generateId } from '@iswangh/element-plus-kit-core'
 import { computed, getCurrentInstance, onUnmounted, ref, watch } from 'vue'
 import { createDialogApp } from '../utils/createDialogApp'
-import { generateId } from '../utils/generateId'
 import { useDialogStack } from './useDialogStack'
 
 /**
@@ -20,7 +20,7 @@ export function useDialog(globalConfig?: DialogGlobalConfig): UseDialogReturn {
     use(options: DialogOptions): DialogInstance {
       // 合并全局配置和实例配置（实例配置优先）
       const mergedOptions = { ...globalConfig, ...options } as DialogOptions
-      const id = generateId()
+      const id = generateId('dialog')
       const modelValue = ref(false)
       const loading = ref(mergedOptions.loading?.value ?? false)
       const buttonLoadings = ref<Record<string, boolean>>(mergedOptions.buttonLoadings?.value ?? {})

@@ -1,8 +1,8 @@
 import type { App, VNode } from 'vue'
 import type { DialogInstance, DialogOptions } from '../types'
+import { renderContent } from '@iswangh/element-plus-kit-core'
 import { ElDialog, ElLoading, ElScrollbar } from 'element-plus'
 import { createApp, h, nextTick, watch } from 'vue'
-import { renderContent } from './renderContent'
 
 /**
  * 创建弹窗内容区域

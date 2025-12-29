@@ -1,8 +1,8 @@
 import type { App } from 'vue'
 import type { DrawerGlobalConfig, DrawerInstance, DrawerOptions, UseDrawerReturn } from '../types'
+import { generateId } from '@iswangh/element-plus-kit-core'
 import { computed, getCurrentInstance, onUnmounted, ref, watch } from 'vue'
 import { createDrawerApp } from '../utils/createDrawerApp'
-import { generateId } from '../utils/generateId'
 import { useDrawerStack } from './useDrawerStack'
 
 /**
@@ -20,7 +20,7 @@ export function useDrawer(globalConfig?: DrawerGlobalConfig): UseDrawerReturn {
     use(options: DrawerOptions): DrawerInstance {
       // 合并全局配置和实例配置（实例配置优先）
       const mergedOptions = { ...globalConfig, ...options } as DrawerOptions
-      const id = generateId()
+      const id = generateId('drawer')
       const modelValue = ref(false)
       const loading = ref(mergedOptions.loading?.value ?? false)
       const buttonLoadings = ref<Record<string, boolean>>(mergedOptions.buttonLoadings?.value ?? {})

@@ -1,8 +1,8 @@
 import type { App, VNode } from 'vue'
 import type { DrawerInstance, DrawerOptions } from '../types'
+import { renderContent } from '@iswangh/element-plus-kit-core'
 import { ElDrawer, ElLoading } from 'element-plus'
 import { createApp, h, nextTick, watch } from 'vue'
-import { renderContent } from './renderContent'
 
 /**
  * 创建抽屉内容区域

@@ -50,7 +50,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // 外部依赖：不打包到库中，由使用者提供
-      external: ['vue', 'element-plus'],
+      external: ['vue', 'element-plus', '@iswangh/element-plus-kit-core'],
       output: {
         // 全局变量映射（用于 UMD 格式，当前未使用）
         globals: {

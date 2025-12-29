@@ -10,7 +10,7 @@
     "baseUrl": ".",
     // 根目录：src 目录
     "rootDir": "./src",
-    // 路径别名：清空继承的 paths，dialog 包不依赖其他内部包
+    // 路径别名：清空继承的 paths
     "paths": {},
     // 生成类型声明文件（.d.ts）
     "declaration": true,
@@ -26,6 +26,12 @@
     // Vue 版本：3（Vue 3）
     "target": 3
   },
+  "references": [
+    {
+      "path": "../core",
+      "prepend": false
+    }
+  ],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
