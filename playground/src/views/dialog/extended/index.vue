@@ -51,11 +51,11 @@ const { modelValue: contentComponentVisible } = dialog.use({
   content: () => ContentComponent,
 })
 
-// 示例4：全局 loading
+// 示例4：弹窗 loading
 const { modelValue: globalLoadingVisible, loading: globalLoading } = dialog.use({
-  title: '全局 Loading',
+  title: '弹窗 Loading',
   width: '500px',
-  content: '这个弹窗展示了全局 loading 功能，loading 遮罩层只作用在内容区域。',
+  content: '这个弹窗展示了弹窗 loading 功能，loading 遮罩层只作用在内容区域。',
 })
 
 function handleGlobalLoading() {
@@ -223,11 +223,11 @@ const { modelValue: quickLoadingVisible, cancelLoading: quickCancelLoading, conf
         </el-space>
 
         <el-divider content-position="left">
-          <span class="text-base font-semibold">全局 Loading</span>
+          <span class="text-base font-semibold">弹窗 Loading</span>
         </el-divider>
         <div>
           <ElButton type="primary" @click="handleGlobalLoading">
-            全局 Loading（默认配置）
+            弹窗 Loading（默认配置）
           </ElButton>
         </div>
 

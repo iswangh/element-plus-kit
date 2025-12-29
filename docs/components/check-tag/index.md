@@ -17,7 +17,7 @@ WCheckTag 组件支持单选和多选两种模式，通过 `multiple` 属性控�
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '选项1', value: '1' },
@@ -45,7 +45,7 @@ const value = ref<string | null>(null)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '选项1', value: '1' },
@@ -74,7 +74,7 @@ const values = ref<string[]>([])
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '成功', value: 'success', tagProps: { type: 'success' } },
@@ -103,7 +103,7 @@ const value = ref<string | null>(null)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '正常', value: 'normal' },
@@ -177,7 +177,7 @@ const multipleValue = ref<string[]>([])
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const singleOptions: CheckTagOption[] = [
   { text: '选项1', id: '1' },
@@ -240,7 +240,7 @@ const fieldProps = {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '选项1', value: '1' },
@@ -304,7 +304,7 @@ const value = ref<string | null>(null)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '选项1', value: '1' },
@@ -341,7 +341,7 @@ const value = ref<string | null>('invalid')
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WCheckTag } from '@iswangh/element-plus-kit'
-import type { CheckTagOption } from '@iswangh/element-plus-kit-tag'
+import type { CheckTagOption } from '@iswangh/element-plus-kit'
 
 const options: CheckTagOption[] = [
   { label: '选项1', value: '1' },

@@ -100,7 +100,7 @@ import { WTag } from '@iswangh/element-plus-kit'
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '选项1', value: 1 },
@@ -132,7 +132,7 @@ const value = ref(1)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '选项1', value: 1 },
@@ -168,7 +168,7 @@ const values = ref([1, 2])
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '选项1', value: 1 },
@@ -202,7 +202,7 @@ const values = ref([1, 2, 3])
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '成功', value: 'success', tagProps: { type: 'success' } },
@@ -240,7 +240,7 @@ const value = ref('success')
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '成功', value: 'success', tagProps: { type: 'success' } },
@@ -322,7 +322,7 @@ const value = ref('success')
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '选项1', value: 1 },
@@ -352,7 +352,7 @@ const value = ref(1)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { name: '苹果', id: 'apple' },
@@ -391,7 +391,7 @@ const values = ref(['apple', 'banana'])
 ```vue
 <script setup lang="ts">
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 // 场景 1: 数字 1 匹配字符串 '1'
 const options3Scene1: TagOption[] = [
@@ -552,7 +552,7 @@ const options3Scene4: TagOption[] = [
 <script setup lang="ts">
 import { ref } from 'vue'
 import { WTag } from '@iswangh/element-plus-kit'
-import type { TagOption } from '@iswangh/element-plus-kit-tag'
+import type { TagOption } from '@iswangh/element-plus-kit'
 
 const options: TagOption[] = [
   { label: '成功', value: 'success', tagProps: { type: 'success' as const } },

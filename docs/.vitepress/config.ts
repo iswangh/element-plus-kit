@@ -60,6 +60,7 @@ export default defineConfig({
             { text: 'Form 表单', link: '/components/form/' },
             { text: 'Tag 标签', link: '/components/tag/' },
             { text: 'CheckTag 可选标签', link: '/components/check-tag/' },
+            { text: 'Dialog 弹窗', link: '/components/dialog/' },
           ],
         },
       ],
@@ -149,6 +150,7 @@ export default defineConfig({
         '@iswangh/element-plus-kit',
         '@iswangh/element-plus-kit-tag',
         '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-dialog',
       ],
     },
     // SSR 配置：确保组件在服务端和客户端都能正确渲染
@@ -158,6 +160,7 @@ export default defineConfig({
         '@iswangh/element-plus-kit',
         '@iswangh/element-plus-kit-tag',
         '@iswangh/element-plus-kit-form',
+        '@iswangh/element-plus-kit-dialog',
         '@iswangh/element-plus-kit-core',
       ],
     },

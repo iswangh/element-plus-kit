@@ -1,6 +1,6 @@
 # @iswangh/element-plus-kit-dialog
 
-Element Plus Kit Dialog 组件，基于 Element Plus Dialog 的封装组件。
+Element Plus Kit Dialog 组件，基于 Element Plus Dialog 的封装组件，提供组合式函数 `useDialog`，支持完全独立使用，无需在模板中添加组件。
 
 ## 📦 安装
 
@@ -8,13 +8,15 @@ Element Plus Kit Dialog 组件，基于 Element Plus Dialog 的封装组件。
 npm install @iswangh/element-plus-kit-dialog
 ```
 
+**注意**：此包依赖 `vue` 和 `element-plus`，安装时会自动安装。
+
 ## 🚀 快速开始
 
 ### 基础用法
 
 **useDialog 组合式函数（完全独立使用，无需模板组件）：**
 
-```typescript
+```vue
 <script setup lang="ts">
 import { useDialog } from '@iswangh/element-plus-kit-dialog'
 
@@ -105,7 +107,7 @@ const { modelValue, loading, buttonLoadings, confirmLoading, cancelLoading } = d
 // 控制弹窗显示/隐藏
 modelValue.value = true
 
-// 控制全局 loading
+// 控制弹窗 loading
 loading.value = true
 
 // 控制按钮 loading（方式1：使用 buttonLoadings）
@@ -128,7 +130,9 @@ cancelLoading.value = true
 
 **DialogOptions：**
 
-继承所有 `ElDialogProps` 属性（包括 `beforeClose`、`@opened`、`@closed` 等生命周期钩子），并添加以下扩展属性：
+支持 [`ElDialog`](https://element-plus.org/zh-CN/component/dialog.html) 所有的属性（包括 `beforeClose`、`@opened`、`@closed` 等生命周期钩子）。
+
+**拓展属性**：
 
 - `content`：内容（支持字符串、VNode、组件、渲染函数）
   - 字符串：直接显示文本内容
@@ -146,9 +150,9 @@ cancelLoading.value = true
   - `slots.default` 优先级高于 `content` 属性
 - `onConfirm`：确认按钮钩子（可选）
 - `onCancel`：取消按钮钩子（可选）
-- `loading`：全局 loading 状态（Ref<boolean>，可选）
+- `loading`：弹窗 loading 状态（Ref<boolean>，可选）
   - 如果传入则使用用户的，否则使用内部的
-  - 全局 loading 只作用在弹窗内容区域，不是整个弹窗
+  - 弹窗 loading 只作用在弹窗内容区域，不是整个弹窗
 - `buttonLoadings`：按钮 loading 状态（Ref<Record<string, boolean>>，可选）
   - 如果传入则使用用户的，否则使用内部的
   - 键名对应按钮的 eventName（如 'confirm'、'cancel' 等）
@@ -162,11 +166,20 @@ cancelLoading.value = true
 
 - `id`：唯一标识符（string）
 - `modelValue`：v-model 绑定的响应式值（Ref<boolean>），唯一控制方式
-- `zIndex`：z-index 值（Ref<number>），由 DialogStack 自动管理，用于控制弹窗层级
-- `loading`：全局加载状态（Ref<boolean>），自动显示遮罩层
+  - 直接设置 `modelValue.value = true/false` 即可控制弹窗显示/隐藏
+  - 使用 `modelValue` 命名，符合 Vue 3 v-model 标准和 Element Plus 规范
+- `loading`：弹窗加载状态（Ref<boolean>），自动显示遮罩层
+  - 弹窗 loading 只作用在弹窗内容区域，不是整个弹窗
+  - 通过 `instance.loading.value = true/false` 控制
 - `buttonLoadings`：统一的按钮 loading 管理（Ref<Record<string, boolean>>）
-- `confirmLoading`：确认按钮 loading（WritableComputedRef<boolean>），快捷方式，等同于 `buttonLoadings.value.confirm`
-- `cancelLoading`：取消按钮 loading（WritableComputedRef<boolean>），快捷方式，等同于 `buttonLoadings.value.cancel`
+  - 键名对应按钮的 eventName（如 'confirm'、'cancel'、'draft' 等）
+  - 直接使用 `buttonLoadings.value.buttonName = true/false` 即可
+- `confirmLoading`：确认按钮 loading（WritableComputedRef<boolean>），快捷方式
+  - 等同于 `buttonLoadings.value.confirm`
+  - 可以直接设置 `confirmLoading.value = true/false`
+- `cancelLoading`：取消按钮 loading（WritableComputedRef<boolean>），快捷方式
+  - 等同于 `buttonLoadings.value.cancel`
+  - 可以直接设置 `cancelLoading.value = true/false`
 
 ## 💡 使用建议
 
@@ -174,8 +187,8 @@ cancelLoading.value = true
 - ✅ `useDialog` 完全独立使用，通过 `createDialogApp` 自动创建和挂载 Vue 应用，弹窗自动渲染到 DOM，**无需在模板中添加任何组件**
 - ✅ 只使用 `v-model` 控制弹窗显示/隐藏（`modelValue.value = true/false`）
 - ✅ 支持 `ElDialog` 的原生生命周期钩子（`beforeClose`、`@opened`、`@closed`），支持异步
-- ✅ 内置 loading 状态管理（全局和按钮级别）
-  - 全局 loading：通过 `instance.loading.value = true/false` 控制，自动显示遮罩层
+- ✅ 内置 loading 状态管理（弹窗和按钮级别）
+  - 弹窗 loading：通过 `instance.loading.value = true/false` 控制，自动显示遮罩层
   - 按钮 loading：通过 `instance.buttonLoadings.value.buttonName = true/false` 或 `instance.confirmLoading.value = true/false` 控制
 - ✅ 支持多个弹窗实例，自动管理 z-index（通过 DialogStack 自动分配和更新）
 - ✅ 完全透传 Element Plus Dialog 的所有属性、事件、插槽
@@ -322,7 +335,11 @@ const { modelValue, loading } = dialog.use({
 loading.value = true
 ```
 
-详细的使用示例请参考项目文档或 playground 示例。
+## 🔗 相关链接
+
+- [主包文档](../kit/README.md)
+- [Element Plus Dialog 文档](https://element-plus.org/zh-CN/component/dialog.html)
+- [详细使用示例和可交互文档](../../docs/components/dialog/index.md)
 
 ## 📄 许可证
 

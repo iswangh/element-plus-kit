@@ -19,7 +19,7 @@ export const dialogRouteMeta = {
   '/dialog/lifecycle/async': { title: '异步钩子', description: '异步生命周期钩子的使用', showInSidebar: true, order: 2 },
   // Loading 示例 (order: 3)
   '/dialog/loading': { title: 'Loading 状态', showInSidebar: true, order: 3 },
-  '/dialog/loading/global': { title: '全局 Loading', description: '全局 loading 遮罩层（只作用在内容区域）', showInSidebar: true, order: 1 },
+  '/dialog/loading/global': { title: '弹窗 Loading', description: '弹窗 loading 遮罩层（只作用在内容区域）', showInSidebar: true, order: 1 },
   '/dialog/loading/button': { title: '按钮 Loading', description: '按钮级别的 loading 状态', showInSidebar: true, order: 2 },
   '/dialog/loading/custom': { title: '自定义按钮', description: '自定义按钮的 loading 状态', showInSidebar: true, order: 3 },
   // 表单集成示例 (order: 4)

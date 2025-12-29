@@ -53,7 +53,7 @@ export interface DialogOptions extends /* @vue-ignore */ Partial<ElDialogProps> 
 
   /**
    * Loading 状态（可选，如果传入则使用用户的，否则使用内部的）
-   * 全局 loading 只作用在弹窗内容区域，不是整个弹窗
+   * 弹窗 loading 只作用在弹窗内容区域，不是整个弹窗
    */
   loading?: Ref<boolean>
   buttonLoadings?: Ref<Record<string, boolean>>
@@ -76,7 +76,7 @@ export interface DialogInstance {
   modelValue: Ref<boolean>
 
   /**
-   * 全局加载状态（自动显示遮罩层）
+   * 弹窗加载状态（自动显示遮罩层）
    */
   loading: Ref<boolean>
 
