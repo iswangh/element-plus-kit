@@ -1,5 +1,16 @@
 # @iswangh/element-plus-kit
 
+## 0.3.5
+
+### Patch Changes
+
+- 新增 dialog drawer 包，统一在各包中的 index.ts 中导出对外使用的数据
+- Updated dependencies
+  - @iswangh/element-plus-kit-dialog@0.0.2
+  - @iswangh/element-plus-kit-drawer@0.0.2
+  - @iswangh/element-plus-kit-form@0.3.3
+  - @iswangh/element-plus-kit-tag@0.0.3
+
 ## 0.3.4
 
 ### Patch Changes

@@ -25,8 +25,9 @@ export default defineConfig({
       outDir: 'dist',
       // 复制类型声明文件到输出目录
       copyDtsFiles: true,
-      // 合并类型声明文件：将多个入口的类型声明合并
-      rollupTypes: true,
+      // 不合并类型声明文件：kit 包只是重新导出其他包的内容，不需要合并类型声明文件
+      // 禁用 rollupTypes 可以避免 vite-plugin-dts 尝试分析 workspace 包的类型声明文件时出错
+      rollupTypes: false,
       // 不插入类型入口（避免解析外部依赖的类型声明文件时出错）
       insertTypesEntry: false,
       // 日志级别：静默（不输出日志）
@@ -35,8 +36,6 @@ export default defineConfig({
       compilerOptions: {
         skipLibCheck: true,
       },
-      // 排除外部依赖的类型解析（避免解析 workspace 包的类型声明文件时出错）
-      bundledPackages: [],
     }),
   ],
   // esbuild 配置：开发时转换和生产构建压缩
