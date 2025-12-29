@@ -1,5 +1,16 @@
 # @iswangh/element-plus-kit
 
+## 0.3.6
+
+### Patch Changes
+
+- 新增 dialog drawer 包,抽离公共函数到 core （重新发布）
+- Updated dependencies
+  - @iswangh/element-plus-kit-dialog@0.0.3
+  - @iswangh/element-plus-kit-drawer@0.0.3
+  - @iswangh/element-plus-kit-form@0.3.4
+  - @iswangh/element-plus-kit-tag@0.0.4
+
 ## 0.3.5
 
 ### Patch Changes

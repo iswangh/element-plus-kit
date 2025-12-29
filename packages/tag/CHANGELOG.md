@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit-tag
 
+## 0.0.4
+
+### Patch Changes
+
+- 新增 dialog drawer 包,抽离公共函数到 core （重新发布）
+
 ## 0.0.3
 
 ### Patch Changes
