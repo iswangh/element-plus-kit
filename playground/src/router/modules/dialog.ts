@@ -1,6 +1,6 @@
 export const dialogRouteMeta = {
   // Dialog 父菜单（不在侧边栏显示，仅用于获取中文标题，但需要 order 值用于排序）
-  '/dialog': { title: '弹窗组件', showInSidebar: false, order: 4 },
+  '/dialog': { title: '弹窗', showInSidebar: false, order: 4 },
   // 基础示例 (order: 1) - 入门必看
   '/dialog/basic': { title: '基础示例', showInSidebar: true, order: 1 },
   '/dialog/basic/index': { title: '基础用法', description: 'useDialog 基础用法', showInSidebar: true, order: 1 },

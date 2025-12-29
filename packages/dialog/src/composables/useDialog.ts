@@ -41,15 +41,9 @@ export function useDialog(globalConfig?: DialogGlobalConfig): UseDialogReturn {
         set: (value: boolean) => finalButtonLoadings.value.cancel = value,
       })
 
-      // z-index（由 DialogStack 自动管理）
-      // 初始值为 undefined，让 el-dialog 使用默认行为
-      // DialogStack 会在 push 时立即设置正确的 z-index
-      const zIndex = ref<number | undefined>(undefined)
-
       const instance: DialogInstance = {
         id,
         modelValue,
-        zIndex,
         loading: finalLoading,
         buttonLoadings: finalButtonLoadings,
         confirmLoading,

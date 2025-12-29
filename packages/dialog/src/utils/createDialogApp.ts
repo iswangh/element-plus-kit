@@ -1,7 +1,7 @@
 import type { App, VNode } from 'vue'
 import type { DialogInstance, DialogOptions } from '../types'
 import { ElDialog, ElLoading, ElScrollbar } from 'element-plus'
-import { computed, createApp, h, nextTick, watch } from 'vue'
+import { createApp, h, nextTick, watch } from 'vue'
 import { renderContent } from './renderContent'
 
 /**
@@ -55,7 +55,6 @@ export function createDialogApp(options: DialogOptions, instance: DialogInstance
     onCancel: _onCancel,
     loading: _loading,
     buttonLoadings: _buttonLoadings,
-    zIndex: userZIndex,
     onClosed: _onClosed,
     ...elDialogProps
   } = options
@@ -108,10 +107,6 @@ export function createDialogApp(options: DialogOptions, instance: DialogInstance
         loading ? showLoading() : hideLoading()
       }, { immediate: true })
 
-      // z-index 计算属性（确保响应式更新）
-      // 优先级：用户设置的 zIndex > DialogStack 管理的 zIndex > undefined（不传递，让 el-dialog 使用默认行为）
-      const zIndex = computed(() => userZIndex ?? instance.zIndex.value)
-
       // 处理关闭事件
       function onClose() {
         instance.modelValue.value = false
@@ -146,8 +141,6 @@ export function createDialogApp(options: DialogOptions, instance: DialogInstance
         'id': instance.id,
         'modelValue': instance.modelValue.value,
         'onUpdate:modelValue': (value: boolean) => instance.modelValue.value = value,
-        // 只有当 zIndex 有值时才传递，否则让 el-dialog 使用默认行为
-        ...(zIndex.value != null && { zIndex: zIndex.value }),
         onClose,
         onClosed,
         ...elDialogProps,

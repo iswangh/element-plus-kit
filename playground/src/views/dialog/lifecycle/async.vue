@@ -7,8 +7,7 @@ const dialog = useDialog()
 
 const userData = ref<{ username: string, email: string } | null>(null)
 
-// 注意：需要获取 zIndex 以确保 MessageBox 的层级高于 dialog
-const { modelValue, loading, zIndex } = dialog.use({
+const { modelValue, loading } = dialog.use({
   title: '异步钩子',
   width: '500px',
   content: () => h('div', [
@@ -38,12 +37,12 @@ const { modelValue, loading, zIndex } = dialog.use({
   // 如果需要访问 instance，通过闭包访问（从 dialog.use() 解构的变量）
   beforeClose: async (done) => {
     try {
-      // 确保 MessageBox 的 z-index 比当前 dialog 更高
       // 注意：ElMessageBox 的类型定义可能不包含 zIndex，但实际支持
       // 使用类型断言来设置 zIndex（Element Plus 内部支持，但类型定义可能不完整）
+      // 如果需要在 beforeClose 中设置 MessageBox 的 z-index，可以手动设置一个足够大的值
       await ElMessageBox.confirm('确定要关闭弹窗吗？', '提示', {
         type: 'warning',
-        zIndex: zIndex.value + 1,
+        zIndex: 3000,
       } as Parameters<typeof ElMessageBox.confirm>[2] & { zIndex?: number })
       done()
     }

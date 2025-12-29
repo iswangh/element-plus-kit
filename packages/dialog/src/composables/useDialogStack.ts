@@ -3,8 +3,7 @@ import type { DialogInstance } from '../types'
 /**
  * 弹窗栈管理类
  *
- * 用于管理多个弹窗实例，自动管理 z-index
- * 通过更新 DialogInstance 的 zIndex 属性来管理层级，而不是直接操作 DOM
+ * 用于管理多个弹窗实例
  */
 export class DialogStack {
   private stack: DialogInstance[] = []
@@ -16,7 +15,6 @@ export class DialogStack {
    */
   push(instance: DialogInstance) {
     this.stack.push(instance)
-    this.updateZIndex()
   }
 
   /**
@@ -28,21 +26,7 @@ export class DialogStack {
     const index = this.stack.findIndex(i => i.id === instance.id)
     if (index > -1) {
       this.stack.splice(index, 1)
-      this.updateZIndex()
     }
-  }
-
-  /**
-   * 更新所有弹窗的 z-index
-   * 通过更新 DialogInstance 的 zIndex 属性，由 el-dialog 原生处理 z-index
-   */
-  private updateZIndex() {
-    this.stack.forEach((instance, index) => {
-      // 计算每个实例的 z-index
-      const zIndex = index
-      // 更新实例的 zIndex 属性（响应式），el-dialog 会自动应用
-      instance.zIndex.value = zIndex
-    })
   }
 
   /**

@@ -211,7 +211,7 @@ const { modelValue: multiSlotSharingVisible } = dialog.use({
 })
 
 // 示例5：在插槽中访问 instance 的响应式状态
-const { modelValue: instanceStateVisible, id: instanceStateId, loading: instanceStateLoading, zIndex: instanceStateZIndex, buttonLoadings: instanceStateButtonLoadings } = dialog.use({
+const { modelValue: instanceStateVisible, id: instanceStateId, loading: instanceStateLoading, buttonLoadings: instanceStateButtonLoadings } = dialog.use({
   title: '访问 instance 响应式状态',
   width: '600px',
   slots: {
@@ -227,7 +227,6 @@ const { modelValue: instanceStateVisible, id: instanceStateId, loading: instance
       return h('div', [
         h('p', `弹窗 ID: ${instanceStateId}`),
         h('p', `Loading 状态: ${instanceStateLoading.value ? '是' : '否'}`),
-        h('p', `Z-Index: ${instanceStateZIndex.value}`),
       ])
     },
     footer: () => {
@@ -331,7 +330,7 @@ const { modelValue: instanceStateVisible, id: instanceStateId, loading: instance
             访问 instance 响应式状态
           </ElButton>
           <p class="text-sm text-gray-500 mt-2">
-            所有插槽的渲染函数都接收 <code>instance</code> 参数，可以访问 <code>instance.loading</code>、<code>instance.buttonLoadings</code>、<code>instance.zIndex</code> 等响应式状态。
+            所有插槽的渲染函数都通过闭包访问（从 <code>dialog.use()</code> 解构的变量），可以访问 <code>instance.loading</code>、<code>instance.buttonLoadings</code> 等响应式状态。
           </p>
         </div>
       </el-space>

@@ -10,6 +10,8 @@ const { modelValue: visible, loading } = dialog.use({
   content: '这是使用 useDialog 组合式函数创建的弹窗内容。弹窗会自动渲染到 DOM，无需在模板中添加组件。',
   onOpened: async () => {
     loading.value = true
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    loading.value = false
   },
 })
 </script>
