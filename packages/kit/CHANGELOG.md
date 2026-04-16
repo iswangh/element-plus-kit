@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit
 
+## 0.4.1
+
+### Patch Changes
+
+- 主包 resolver-size-effects 注入自动导入样式
+
 ## 0.4.0
 
 ### Minor Changes
