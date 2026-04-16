@@ -23,8 +23,12 @@
       "import": "./dist/index.js"
     },
     "./resolver": {
-      "types": "./dist/resolver.d.ts",
+      "types": "./dist/utils/resolver.d.ts",
       "import": "./dist/resolver.js"
+    },
+    "./resolver-side-effects": {
+      "types": "./dist/utils/resolver-side-effects.d.ts",
+      "import": "./dist/resolver-side-effects.js"
     }
   },
   "main": "./dist/index.js",

@@ -51,9 +51,11 @@ export default defineConfig({
       // 多入口配置：支持多个入口点
       entry: {
         // 主入口：组件库主入口
-        index: resolve(__dirname, 'src/index.ts'),
+        'index': resolve(__dirname, 'src/index.ts'),
         // resolver 入口：用于 unplugin-vue-components 的自动导入解析器
-        resolver: resolve(__dirname, 'src/utils/resolver.ts'),
+        'resolver': resolve(__dirname, 'src/utils/resolver.ts'),
+        // 自动导入样式副作用入口（供 resolver 的 sideEffects 使用）
+        'resolver-side-effects': resolve(__dirname, 'src/utils/resolver-side-effects.ts'),
       },
       // 库名称（用于 UMD 格式，当前仅使用 ES 格式）
       name: 'ElementPlusKit',

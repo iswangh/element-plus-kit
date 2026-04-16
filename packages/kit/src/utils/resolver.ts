@@ -20,6 +20,9 @@ const EXPOSED_COMPONENTS = new Set([
   // 'WTableColumn',
 ])
 
+/** 主包内统一样式副作用子路径（与 package.json exports 一致） */
+const RESOLVER_STYLE_SIDE_EFFECTS = `${MAIN_PACKAGE_NAME}/resolver-side-effects`
+
 /**
  * 解析组件名称
  *
@@ -70,6 +73,7 @@ export function ElementPlusKitResolver(): ComponentResolver & ResolverFunction {
       return {
         name: componentName,
         from: MAIN_PACKAGE_NAME,
+        sideEffects: RESOLVER_STYLE_SIDE_EFFECTS,
       }
     },
   }
