@@ -2,8 +2,6 @@
   // 继承根目录的基础 TypeScript 配置
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
-    // 基础路径：playground 目录
-    "baseUrl": ".",
     // 路径别名：用于开发时直接引用包源码，支持 HMR
     "paths": {
       // playground 内部别名

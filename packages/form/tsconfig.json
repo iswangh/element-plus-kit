@@ -6,8 +6,6 @@
     "composite": true,
     // 增量编译信息文件路径
     "tsBuildInfoFile": "../../node_modules/.tmp/packages-form.tsbuildinfo",
-    // 基础路径：当前包目录
-    "baseUrl": ".",
     // 根目录：src 目录
     "rootDir": "./src",
     // 路径别名：清空继承的 paths

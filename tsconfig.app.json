@@ -6,8 +6,6 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     // 类型库：ES2022 和 DOM API
     "lib": ["ES2022", "DOM"],
-    // 基础路径：项目根目录
-    "baseUrl": ".",
     // 模块系统：ESNext（ES 模块）
     "module": "ESNext",
     // 模块解析策略：使用 bundler 模式（适用于 Vite 等现代构建工具）
