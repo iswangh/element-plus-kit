@@ -8,6 +8,9 @@ interface ImportMeta {
    * 动态导入模块
    * @param pattern - 文件匹配模式
    * @param options - 导入选项
+   * @param options.eager - 是否立即导入模块
+   * @param options.import - 指定导入的命名导出
+   * @param options.query - 附加到导入路径的查询参数
    */
   glob: <T = unknown>(
     pattern: string,
