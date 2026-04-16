@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit-core
 
+## 0.3.0
+
+### Minor Changes
+
+- 依赖更新
+
 ## 0.2.4
 
 ### Patch Changes

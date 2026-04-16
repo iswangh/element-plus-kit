@@ -1,5 +1,16 @@
 # @iswangh/element-plus-kit-drawer
 
+## 0.1.0
+
+### Minor Changes
+
+- 依赖更新
+
+### Patch Changes
+
+- Updated dependencies
+  - @iswangh/element-plus-kit-core@0.3.0
+
 ## 0.0.3
 
 ### Patch Changes

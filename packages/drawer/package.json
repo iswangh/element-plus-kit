@@ -1,7 +1,7 @@
 {
   "name": "@iswangh/element-plus-kit-drawer",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Element Plus Kit Drawer 组件包",
   "license": "Apache-2.0",
   "sideEffects": [

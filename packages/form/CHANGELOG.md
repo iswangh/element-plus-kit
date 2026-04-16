@@ -1,5 +1,17 @@
 # @iswangh/element-plus-kit-form
 
+## 0.4.0
+
+### Minor Changes
+
+- 依赖更新
+
+### Patch Changes
+
+- Updated dependencies
+  - @iswangh/element-plus-kit-core@0.3.0
+  - @iswangh/element-plus-kit-tag@0.1.0
+
 ## 0.3.4
 
 ### Patch Changes

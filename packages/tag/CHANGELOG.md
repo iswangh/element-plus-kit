@@ -1,5 +1,11 @@
 # @iswangh/element-plus-kit-tag
 
+## 0.1.0
+
+### Minor Changes
+
+- 依赖更新
+
 ## 0.0.4
 
 ### Patch Changes
